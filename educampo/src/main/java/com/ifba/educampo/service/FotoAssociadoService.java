@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import com.ifba.educampo.domain.Associado;
 import com.ifba.educampo.domain.FotoAssociado;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.repository.FotoAssociadoRepository;

@@ -28,6 +28,21 @@ public class AssociadoService {
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
+	public Associado findAssociadoByName(String nome) {
+		return associadoRepository.findByNome(nome)
+				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
+	}
+	
+	public Associado findAssociadoByCpf(String cpf) {
+		return associadoRepository.findByCpf(cpf)
+				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
+	}
+	
+	public Associado findAssociadoByCarteiraSindical(Long carteira) {
+		return associadoRepository.findByCarteiraSindical(carteira)
+				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
+	}
+	
 	public List<Associado> listAll() {
         return associadoRepository.findAll();
     }

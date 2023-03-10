@@ -40,6 +40,21 @@ public class AssociadoController {
         return ResponseEntity.ok(associadoService.findAssociado(id));
     }
 	
+	@GetMapping(path = "associado/nome/{name}")
+    public ResponseEntity<Associado> findByName(@PathVariable String name){
+        return ResponseEntity.ok(associadoService.findAssociadoByName(name));
+    }
+	
+	@GetMapping(path = "associado/cpf/{cpf}")
+    public ResponseEntity<Associado> findByCpf(@PathVariable String cpf){
+        return ResponseEntity.ok(associadoService.findAssociadoByCpf(cpf));
+    }
+	
+	@GetMapping(path = "associado/carteira/{carteira}")
+    public ResponseEntity<Associado> findByCarteiraSindical(@PathVariable Long carteira){
+        return ResponseEntity.ok(associadoService.findAssociadoByCarteiraSindical(carteira));
+    }
+	
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable long id){
 		associadoService.delete(id);
