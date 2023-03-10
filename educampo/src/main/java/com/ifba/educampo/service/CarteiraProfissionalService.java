@@ -2,6 +2,7 @@ package com.ifba.educampo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import com.ifba.educampo.domain.CarteiraProfissional;
 import com.ifba.educampo.exception.BadRequestException;
@@ -9,7 +10,10 @@ import com.ifba.educampo.repository.CarteiraProfissionalRepository;
 import com.ifba.educampo.requests.CarteiraProfissionalPostRequestBody;
 import com.ifba.educampo.requests.CarteiraProfissionalPutRequestBody;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import javax.transaction.Transactional;
 
@@ -50,6 +54,17 @@ public class CarteiraProfissionalService {
 										.build();
 		
 		carteiraRepository.save(carteira);
+	}
+	
+	public void updateByFields(long id, Map<String, Object> fields) {
+		CarteiraProfissional savedCarteira = findCarteira(id);
+		
+		fields.forEach((key,value)->{
+			Field field = ReflectionUtils.findField(CarteiraProfissional.class, key);
+			field.setAccessible(true);
+			ReflectionUtils.setField(field, savedCarteira, value);
+		});
+		carteiraRepository.save(savedCarteira);
 	}
 	
 }

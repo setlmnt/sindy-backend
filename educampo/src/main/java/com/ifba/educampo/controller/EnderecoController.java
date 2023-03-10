@@ -1,12 +1,14 @@
 package com.ifba.educampo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,6 +54,12 @@ public class EnderecoController {
 	@PutMapping
 	public ResponseEntity<Void> replace(@RequestBody EnderecoPutRequestBody enderecoPutRequestBody){
 		enderecoService.replace(enderecoPutRequestBody);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
+		enderecoService.updateByFields(id, fields);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
