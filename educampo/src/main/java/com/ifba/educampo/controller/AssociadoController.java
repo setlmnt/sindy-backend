@@ -1,12 +1,14 @@
 package com.ifba.educampo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +40,21 @@ public class AssociadoController {
         return ResponseEntity.ok(associadoService.findAssociado(id));
     }
 	
+	@GetMapping(path = "associado/nome/{name}")
+    public ResponseEntity<Associado> findByName(@PathVariable String name){
+        return ResponseEntity.ok(associadoService.findAssociadoByName(name));
+    }
+	
+	@GetMapping(path = "associado/cpf/{cpf}")
+    public ResponseEntity<Associado> findByCpf(@PathVariable String cpf){
+        return ResponseEntity.ok(associadoService.findAssociadoByCpf(cpf));
+    }
+	
+	@GetMapping(path = "associado/carteira/{carteira}")
+    public ResponseEntity<Associado> findByCarteiraSindical(@PathVariable Long carteira){
+        return ResponseEntity.ok(associadoService.findAssociadoByCarteiraSindical(carteira));
+    }
+	
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable long id){
 		associadoService.delete(id);
@@ -54,4 +71,12 @@ public class AssociadoController {
 		associadoService.replace(associadoPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
+		associadoService.updateByFields(id, fields);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+	}
+	
 }
