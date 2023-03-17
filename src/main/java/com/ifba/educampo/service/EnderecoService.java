@@ -48,18 +48,17 @@ public class EnderecoService {
 				);
 	}
 	
-	public void replace(EnderecoPutRequestBody enderecoPutRequestBody) {
+	public Endereco replace(EnderecoPutRequestBody enderecoPutRequestBody) {
 		Endereco savedEndereco = findEndereco(enderecoPutRequestBody.getId());
-		Endereco endereco = Endereco.builder()
+		return enderecoRepository.save(Endereco.builder()
 										.id(savedEndereco.getId())
 										.rua(enderecoPutRequestBody.getRua())
 										.numero(enderecoPutRequestBody.getNumero())
 										.complemento(enderecoPutRequestBody.getComplemento())
 										.bairro(enderecoPutRequestBody.getBairro())
 										.cpf(enderecoPutRequestBody.getCpf())
-										.build();
+										.build());
 		
-		enderecoRepository.save(endereco);
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {

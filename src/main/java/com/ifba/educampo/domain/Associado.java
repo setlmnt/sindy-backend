@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -55,7 +56,7 @@ public class Associado {
 	private String nome;
 	private String profissao;
 	private String nacionalidade;
-	private Date edataNascimento;
+	private Date dataNascimento;
 	private Date dataAssociacao;
 	private String localTrabalho;
 	private Long carteiraSindical;

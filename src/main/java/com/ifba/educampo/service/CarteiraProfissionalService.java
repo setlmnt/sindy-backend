@@ -45,15 +45,14 @@ public class CarteiraProfissionalService {
 				);
 	}
 	
-	public void replace(CarteiraProfissionalPutRequestBody carteiraPutRequestBody) {
+	public CarteiraProfissional replace(CarteiraProfissionalPutRequestBody carteiraPutRequestBody) {
 		CarteiraProfissional savedCarteira = findCarteira(carteiraPutRequestBody.getId());
-		CarteiraProfissional carteira = CarteiraProfissional.builder()
+		return carteiraRepository.save(CarteiraProfissional.builder()
 										.id(savedCarteira.getId())
 										.numero(carteiraPutRequestBody.getNumero())
 										.serie(carteiraPutRequestBody.getSerie())
-										.build();
+										.build());
 		
-		carteiraRepository.save(carteira);
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {

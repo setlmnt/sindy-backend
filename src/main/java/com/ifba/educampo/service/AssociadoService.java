@@ -13,6 +13,7 @@ import com.ifba.educampo.requests.AssociadoPutRequestBody;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import javax.transaction.Transactional;
@@ -22,6 +23,18 @@ import javax.transaction.Transactional;
 public class AssociadoService {
 	@Autowired
 	private AssociadoRepository associadoRepository;
+	@Autowired
+	private EnderecoService enderecoService;
+	@Autowired
+	private CarteiraProfissionalService carteiraService;
+	@Autowired
+	private DependentesService dependentesService;
+	@Autowired
+	private FiliacaoService filiacaoService;
+	@Autowired
+	private FotoAssociadoService fotoAssociadoService;
+	@Autowired
+	private NaturalidadeService naturalidadeService;
 	
 	public Associado findAssociado(Long id) {
 		return associadoRepository.findById(id)
@@ -55,6 +68,23 @@ public class AssociadoService {
 	public Associado save(AssociadoPostRequestBody associadoPostRequestBody) {
 		return associadoRepository.save(Associado.builder()
 						.nome(associadoPostRequestBody.getNome())
+						.profissao(associadoPostRequestBody.getProfissao())		
+						.nacionalidade(associadoPostRequestBody.getNacionalidade())	
+						.dataNascimento(associadoPostRequestBody.getDataNascimento())	
+						.dataAssociacao(associadoPostRequestBody.getDataAssociacao())	
+						.localTrabalho(associadoPostRequestBody.getLocalTrabalho())	
+						.carteiraSindical(associadoPostRequestBody.getCarteiraSindical())
+						.cpf(associadoPostRequestBody.getCpf())	
+						.rg(associadoPostRequestBody.getRg())
+						.sabeLer(associadoPostRequestBody.isSabeLer())	
+						.eleitor(associadoPostRequestBody.isEleitor())
+						.estadoCivil(associadoPostRequestBody.getEstadoCivil())
+						.endereco(enderecoService.save(associadoPostRequestBody.getEndereco()))
+						.carteiraProfissional(carteiraService.save(associadoPostRequestBody.getCarteiraProfissional()))
+						.dependentes(dependentesService.save(associadoPostRequestBody.getDependentes()))
+						.filiacao(filiacaoService.save(associadoPostRequestBody.getFiliacao()))
+						.fotoAssociado(fotoAssociadoService.save(associadoPostRequestBody.getFotoAssociado()))
+						.naturalidade(naturalidadeService.save(associadoPostRequestBody.getNaturalidade()))
 						.build()
 				);
 	}
@@ -64,9 +94,27 @@ public class AssociadoService {
 		Associado associado = Associado.builder()
 										.id(savedAssociado.getId())
 										.nome(associadoPutRequestBody.getNome())
+										.estadoCivil(associadoPutRequestBody.getEstadoCivil())
+										.profissao(associadoPutRequestBody.getProfissao())
+										.nacionalidade(associadoPutRequestBody.getNacionalidade())
+										.dataNascimento(associadoPutRequestBody.getDataNascimento())
+										.dataAssociacao(associadoPutRequestBody.getDataAssociacao())
+										.localTrabalho(associadoPutRequestBody.getLocalTrabalho())
+										.carteiraSindical(associadoPutRequestBody.getCarteiraSindical())
+										.cpf(associadoPutRequestBody.getCpf())
+										.rg(associadoPutRequestBody.getRg())
+										.sabeLer(associadoPutRequestBody.isSabeLer())
+										.eleitor(associadoPutRequestBody.isEleitor())
+										.endereco(enderecoService.replace(associadoPutRequestBody.getEndereco()))
+										.dependentes(dependentesService.replace(associadoPutRequestBody.getDependentes()))
+										.filiacao(filiacaoService.replace(associadoPutRequestBody.getFiliacao()))
+										.naturalidade(naturalidadeService.replace(associadoPutRequestBody.getNaturalidade()))
+										.fotoAssociado(fotoAssociadoService.replace(associadoPutRequestBody.getFotoAssociado()))
+										.carteiraProfissional(carteiraService.replace(associadoPutRequestBody.getCarteiraProfissional()))
 										.build();
 		
 		associadoRepository.save(associado);
+		
 	}
 
 	public void updateByFields(long id, Map<String, Object> fields) {

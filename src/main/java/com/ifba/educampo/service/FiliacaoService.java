@@ -45,15 +45,13 @@ public class FiliacaoService {
 				);
 	}
 	
-	public void replace(FiliacaoPutRequestBody filiacaoPutRequestBody) {
+	public Filiacao replace(FiliacaoPutRequestBody filiacaoPutRequestBody) {
 		Filiacao savedFiliacao = findFiliacao(filiacaoPutRequestBody.getId());
-		Filiacao filiacao = Filiacao.builder()
+		return filiacaoRepository.save(Filiacao.builder()
 										.id(savedFiliacao.getId())
 										.nomeMae(filiacaoPutRequestBody.getNomeMae())
 										.nomePai(filiacaoPutRequestBody.getNomePai())
-										.build();
-		
-		filiacaoRepository.save(filiacao);
+										.build());
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {

@@ -47,17 +47,15 @@ public class DependentesService {
 				);
 	}
 	
-	public void replace(DependentesPutRequestBody dependentesPutRequestBody) {
+	public Dependentes replace(DependentesPutRequestBody dependentesPutRequestBody) {
 		Dependentes savedDependentes = findDependente(dependentesPutRequestBody.getId());
-		Dependentes dependentes = Dependentes.builder()
+		return dependentesRepository.save(Dependentes.builder()
 										.id(savedDependentes.getId())
 										.filhosMenores(dependentesPutRequestBody.getFilhosMenores())
 										.filhosHomens(dependentesPutRequestBody.getFilhosHomens())
 										.filhosMulheres(dependentesPutRequestBody.getFilhosMulheres())
 										.outrosDependentes(dependentesPutRequestBody.getOutrosDependentes())
-										.build();
-		
-		dependentesRepository.save(dependentes);
+										.build());
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {

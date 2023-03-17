@@ -45,15 +45,13 @@ public class NaturalidadeService {
 				);
 	}
 	
-	public void replace(NaturalidadePutRequestBody naturalidadePutRequestBody) {
+	public Naturalidade replace(NaturalidadePutRequestBody naturalidadePutRequestBody) {
 		Naturalidade savedNaturalidade = findNaturalidade(naturalidadePutRequestBody.getId());
-		Naturalidade naturalidade = Naturalidade.builder()
+		return naturalidadeRepository.save(Naturalidade.builder()
 										.id(savedNaturalidade.getId())
 										.municipio(naturalidadePutRequestBody.getMunicipio())
 										.estado(naturalidadePutRequestBody.getEstado())
-										.build();
-		
-		naturalidadeRepository.save(naturalidade);
+										.build());
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {

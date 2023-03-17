@@ -46,16 +46,15 @@ public class FotoAssociadoService {
 				);
 	}
 	
-	public void replace(FotoAssociadoPutRequestBody fotoAssociadoPutRequestBody) {
+	public FotoAssociado replace(FotoAssociadoPutRequestBody fotoAssociadoPutRequestBody) {
 		FotoAssociado savedFotoAssociado = findFotoAssociado(fotoAssociadoPutRequestBody.getId());
-		FotoAssociado fotoAssociado = FotoAssociado.builder()
+		return fotoAssociadoRepository.save(FotoAssociado.builder()
 										.id(savedFotoAssociado.getId())
 										.nomeArquivo(fotoAssociadoPutRequestBody.getNomeArquivo())
 										.contentType(fotoAssociadoPutRequestBody.getContentType())
 										.tamanho(fotoAssociadoPutRequestBody.getTamanho())
-										.build();
+										.build());
 		
-		fotoAssociadoRepository.save(fotoAssociado);
 	}
 	
 	public void updateByFields(long id, Map<String, Object> fields) {
