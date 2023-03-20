@@ -27,4 +27,5 @@ public class AssociadoPutRequestBody {
 	private String rg;
 	private boolean sabeLer;
 	private boolean eleitor;
+	private String celular;
 }

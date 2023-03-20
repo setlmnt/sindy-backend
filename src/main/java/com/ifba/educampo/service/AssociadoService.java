@@ -84,6 +84,7 @@ public class AssociadoService {
 						.filiacao(filiacaoService.save(associadoPostRequestBody.getFiliacao()))
 						.fotoAssociado(fotoAssociadoService.save(associadoPostRequestBody.getFotoAssociado()))
 						.naturalidade(naturalidadeService.save(associadoPostRequestBody.getNaturalidade()))
+						.celular(associadoPostRequestBody.getCelular())					
 						.build()
 				);
 	}
@@ -110,6 +111,7 @@ public class AssociadoService {
 										.naturalidade(naturalidadeService.replace(associadoPutRequestBody.getNaturalidade()))
 										.fotoAssociado(fotoAssociadoService.replace(associadoPutRequestBody.getFotoAssociado()))
 										.carteiraProfissional(carteiraService.replace(associadoPutRequestBody.getCarteiraProfissional()))
+										.celular(associadoPutRequestBody.getCelular())
 										.build();
 		
 		associadoRepository.save(associado);

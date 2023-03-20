@@ -56,6 +56,7 @@ public class Associado {
 	private String nome;
 	private String profissao;
 	private String nacionalidade;
+	private String celular;
 	private Date dataNascimento;
 	private Date dataAssociacao;
 	private String localTrabalho;

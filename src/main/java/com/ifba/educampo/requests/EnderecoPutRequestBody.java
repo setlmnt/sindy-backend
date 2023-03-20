@@ -9,5 +9,5 @@ public class EnderecoPutRequestBody {
 	private int numero;
 	private String complemento;
 	private String bairro;
-	private String cpf;
+	private String cep;
 }

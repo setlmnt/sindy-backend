@@ -43,7 +43,7 @@ public class EnderecoService {
 						.numero(enderecoPostRequestBody.getNumero())
 						.complemento(enderecoPostRequestBody.getComplemento())
 						.bairro(enderecoPostRequestBody.getBairro())
-						.cpf(enderecoPostRequestBody.getCpf())
+						.cep(enderecoPostRequestBody.getCep())
 						.build()
 				);
 	}
@@ -56,7 +56,7 @@ public class EnderecoService {
 										.numero(enderecoPutRequestBody.getNumero())
 										.complemento(enderecoPutRequestBody.getComplemento())
 										.bairro(enderecoPutRequestBody.getBairro())
-										.cpf(enderecoPutRequestBody.getCpf())
+										.cep(enderecoPutRequestBody.getCep())
 										.build());
 		
 	}

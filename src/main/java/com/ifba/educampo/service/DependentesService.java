@@ -39,6 +39,7 @@ public class DependentesService {
 	@Transactional
 	public Dependentes save(DependentesPostRequestBody dependentesPostRequestBody) {
 		return dependentesRepository.save(Dependentes.builder()
+						.nomeEsposa(dependentesPostRequestBody.getNomeEsposa())
 						.filhosMenores(dependentesPostRequestBody.getFilhosMenores())
 						.filhosHomens(dependentesPostRequestBody.getFilhosHomens())
 						.filhosMulheres(dependentesPostRequestBody.getFilhosMulheres())
@@ -51,6 +52,7 @@ public class DependentesService {
 		Dependentes savedDependentes = findDependente(dependentesPutRequestBody.getId());
 		return dependentesRepository.save(Dependentes.builder()
 										.id(savedDependentes.getId())
+										.nomeEsposa(dependentesPutRequestBody.getNomeEsposa())
 										.filhosMenores(dependentesPutRequestBody.getFilhosMenores())
 										.filhosHomens(dependentesPutRequestBody.getFilhosHomens())
 										.filhosMulheres(dependentesPutRequestBody.getFilhosMulheres())
