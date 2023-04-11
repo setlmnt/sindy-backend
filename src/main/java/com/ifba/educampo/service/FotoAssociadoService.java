@@ -46,8 +46,8 @@ public class FotoAssociadoService {
 				);
 	}
 	
-	public FotoAssociado replace(FotoAssociadoPutRequestBody fotoAssociadoPutRequestBody) {
-		FotoAssociado savedFotoAssociado = findFotoAssociado(fotoAssociadoPutRequestBody.getId());
+	public FotoAssociado replace(FotoAssociadoPutRequestBody fotoAssociadoPutRequestBody, Long fotoId) {
+		FotoAssociado savedFotoAssociado = findFotoAssociado(fotoId);
 		return fotoAssociadoRepository.save(FotoAssociado.builder()
 										.id(savedFotoAssociado.getId())
 										.nomeArquivo(fotoAssociadoPutRequestBody.getNomeArquivo())

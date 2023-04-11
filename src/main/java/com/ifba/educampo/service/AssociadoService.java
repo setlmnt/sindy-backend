@@ -40,17 +40,17 @@ public class AssociadoService {
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public Associado findAssociadoByName(String nome) {
+	public List<Associado> findAssociadoByName(String nome) {
 		return associadoRepository.findByNome(nome)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public Associado findAssociadoByCpf(String cpf) {
+	public List<Associado> findAssociadoByCpf(String cpf) {
 		return associadoRepository.findByCpf(cpf)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public Associado findAssociadoByCarteiraSindical(Long carteira) {
+	public List<Associado> findAssociadoByCarteiraSindical(Long carteira) {
 		return associadoRepository.findByCarteiraSindical(carteira)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
@@ -105,12 +105,24 @@ public class AssociadoService {
 										.rg(associadoPutRequestBody.getRg())
 										.sabeLer(associadoPutRequestBody.isSabeLer())
 										.eleitor(associadoPutRequestBody.isEleitor())
-										.endereco(enderecoService.replace(associadoPutRequestBody.getEndereco()))
-										.dependentes(dependentesService.replace(associadoPutRequestBody.getDependentes()))
-										.filiacao(filiacaoService.replace(associadoPutRequestBody.getFiliacao()))
-										.naturalidade(naturalidadeService.replace(associadoPutRequestBody.getNaturalidade()))
-										.fotoAssociado(fotoAssociadoService.replace(associadoPutRequestBody.getFotoAssociado()))
-										.carteiraProfissional(carteiraService.replace(associadoPutRequestBody.getCarteiraProfissional()))
+										.endereco(enderecoService
+												.replace(associadoPutRequestBody.getEndereco(), 
+														savedAssociado.getEndereco().getId()))
+										.dependentes(dependentesService
+												.replace(associadoPutRequestBody.getDependentes(), 
+												savedAssociado.getDependentes().getId()))
+										.filiacao(filiacaoService
+												.replace(associadoPutRequestBody.getFiliacao(),
+												savedAssociado.getFiliacao().getId()))
+										.naturalidade(naturalidadeService
+												.replace(associadoPutRequestBody.getNaturalidade(),
+												savedAssociado.getNaturalidade().getId()))
+										.fotoAssociado(fotoAssociadoService
+												.replace(associadoPutRequestBody.getFotoAssociado(),
+												savedAssociado.getFotoAssociado().getId()))
+										.carteiraProfissional(carteiraService
+												.replace(associadoPutRequestBody.getCarteiraProfissional(),
+												savedAssociado.getCarteiraProfissional().getId()))
 										.celular(associadoPutRequestBody.getCelular())
 										.build();
 		

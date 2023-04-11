@@ -45,8 +45,8 @@ public class FiliacaoService {
 				);
 	}
 	
-	public Filiacao replace(FiliacaoPutRequestBody filiacaoPutRequestBody) {
-		Filiacao savedFiliacao = findFiliacao(filiacaoPutRequestBody.getId());
+	public Filiacao replace(FiliacaoPutRequestBody filiacaoPutRequestBody, Long filiacaoId) {
+		Filiacao savedFiliacao = findFiliacao(filiacaoId);
 		return filiacaoRepository.save(Filiacao.builder()
 										.id(savedFiliacao.getId())
 										.nomeMae(filiacaoPutRequestBody.getNomeMae())

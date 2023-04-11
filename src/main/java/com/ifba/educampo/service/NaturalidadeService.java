@@ -45,8 +45,8 @@ public class NaturalidadeService {
 				);
 	}
 	
-	public Naturalidade replace(NaturalidadePutRequestBody naturalidadePutRequestBody) {
-		Naturalidade savedNaturalidade = findNaturalidade(naturalidadePutRequestBody.getId());
+	public Naturalidade replace(NaturalidadePutRequestBody naturalidadePutRequestBody, Long naturalidadeId) {
+		Naturalidade savedNaturalidade = findNaturalidade(naturalidadeId);
 		return naturalidadeRepository.save(Naturalidade.builder()
 										.id(savedNaturalidade.getId())
 										.municipio(naturalidadePutRequestBody.getMunicipio())
