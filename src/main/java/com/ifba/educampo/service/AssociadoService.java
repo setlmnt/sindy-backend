@@ -1,6 +1,8 @@
 package com.ifba.educampo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -11,7 +13,6 @@ import com.ifba.educampo.requests.AssociadoPostRequestBody;
 import com.ifba.educampo.requests.AssociadoPutRequestBody;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
@@ -40,23 +41,23 @@ public class AssociadoService {
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public List<Associado> findAssociadoByName(String nome) {
-		return associadoRepository.findByNome(nome)
+	public Page<Associado> findAssociadoByName(String nome, Pageable pageable) {
+		return associadoRepository.findByNome(nome, pageable)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public List<Associado> findAssociadoByCpf(String cpf) {
-		return associadoRepository.findByCpf(cpf)
+	public Page<Associado> findAssociadoByCpf(String cpf, Pageable pageable) {
+		return associadoRepository.findByCpf(cpf, pageable)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public List<Associado> findAssociadoByCarteiraSindical(Long carteira) {
-		return associadoRepository.findByCarteiraSindical(carteira)
+	public Page<Associado> findAssociadoByCarteiraSindical(Long carteira, Pageable pageable) {
+		return associadoRepository.findByCarteiraSindical(carteira, pageable)
 				.orElseThrow(()-> new BadRequestException("Associado Not Found"));
 	}
 	
-	public List<Associado> listAll() {
-        return associadoRepository.findAll();
+	public Page<Associado> listAll(Pageable pageable) {
+        return associadoRepository.findAll(pageable);
     }
 	
 	public void delete(long id) {

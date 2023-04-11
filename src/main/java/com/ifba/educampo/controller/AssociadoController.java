@@ -1,9 +1,10 @@
 package com.ifba.educampo.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,8 +32,8 @@ public class AssociadoController {
 	private AssociadoService associadoService;
 	
 	@GetMapping
-	public ResponseEntity<List<Associado>> listAssociado(){
-		return ResponseEntity.ok(associadoService.listAll());
+	public ResponseEntity<Page<Associado>> listAssociado(Pageable pageable){
+		return ResponseEntity.ok(associadoService.listAll(pageable));
 	}
 	
 	@GetMapping(path = "/{id}")
@@ -41,18 +42,18 @@ public class AssociadoController {
     }
 	
 	@GetMapping(path = "/nome/{name}")
-    public ResponseEntity<List<Associado>> findAssociadoByName(@PathVariable String name){
-        return ResponseEntity.ok(associadoService.findAssociadoByName(name));
+    public ResponseEntity<Page<Associado>> findAssociadoByName(@PathVariable String name, Pageable pageable){
+        return ResponseEntity.ok(associadoService.findAssociadoByName(name, pageable));
     }
 	
 	@GetMapping(path = "/cpf/{cpf}")
-    public ResponseEntity<List<Associado>> findAssociadoByCpf(@PathVariable String cpf){
-        return ResponseEntity.ok(associadoService.findAssociadoByCpf(cpf));
+    public ResponseEntity<Page<Associado>> findAssociadoByCpf(@PathVariable String cpf, Pageable pageable){
+        return ResponseEntity.ok(associadoService.findAssociadoByCpf(cpf, pageable));
     }
 	
 	@GetMapping(path = "/carteira/{carteira}")
-    public ResponseEntity<List<Associado>> findAssociadoByCarteiraSindical(@PathVariable Long carteira){
-        return ResponseEntity.ok(associadoService.findAssociadoByCarteiraSindical(carteira));
+    public ResponseEntity<Page<Associado>> findAssociadoByCarteiraSindical(@PathVariable Long carteira, Pageable pageable){
+        return ResponseEntity.ok(associadoService.findAssociadoByCarteiraSindical(carteira, pageable));
     }
 	
 	@DeleteMapping(path = "/{id}")
