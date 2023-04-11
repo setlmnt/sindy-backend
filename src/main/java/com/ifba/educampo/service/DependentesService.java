@@ -48,8 +48,8 @@ public class DependentesService {
 				);
 	}
 	
-	public Dependentes replace(DependentesPutRequestBody dependentesPutRequestBody) {
-		Dependentes savedDependentes = findDependente(dependentesPutRequestBody.getId());
+	public Dependentes replace(DependentesPutRequestBody dependentesPutRequestBody, Long dependenteId) {
+		Dependentes savedDependentes = findDependente(dependenteId);
 		return dependentesRepository.save(Dependentes.builder()
 										.id(savedDependentes.getId())
 										.nomeEsposa(dependentesPutRequestBody.getNomeEsposa())

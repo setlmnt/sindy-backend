@@ -48,8 +48,8 @@ public class EnderecoService {
 				);
 	}
 	
-	public Endereco replace(EnderecoPutRequestBody enderecoPutRequestBody) {
-		Endereco savedEndereco = findEndereco(enderecoPutRequestBody.getId());
+	public Endereco replace(EnderecoPutRequestBody enderecoPutRequestBody, Long enderecoId) {
+		Endereco savedEndereco = findEndereco(enderecoId);
 		return enderecoRepository.save(Endereco.builder()
 										.id(savedEndereco.getId())
 										.rua(enderecoPutRequestBody.getRua())

@@ -45,8 +45,8 @@ public class CarteiraProfissionalService {
 				);
 	}
 	
-	public CarteiraProfissional replace(CarteiraProfissionalPutRequestBody carteiraPutRequestBody) {
-		CarteiraProfissional savedCarteira = findCarteira(carteiraPutRequestBody.getId());
+	public CarteiraProfissional replace(CarteiraProfissionalPutRequestBody carteiraPutRequestBody, Long carteiraId) {
+		CarteiraProfissional savedCarteira = findCarteira(carteiraId);
 		return carteiraRepository.save(CarteiraProfissional.builder()
 										.id(savedCarteira.getId())
 										.numero(carteiraPutRequestBody.getNumero())
