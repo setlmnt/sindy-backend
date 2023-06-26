@@ -10,8 +10,8 @@ import lombok.Data;
 public class AssociatePostRequestBody {
 	private String name;
 	private Long unionCard;
-	private Long cpf;
-	private Long rg;
+	private String cpf;
+	private String rg;
 	private String profession;
 	private String workplace;
 	private String phone;
