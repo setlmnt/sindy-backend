@@ -12,6 +12,7 @@ import com.ifba.educampo.requests.AssociatePostRequestBody;
 import com.ifba.educampo.requests.AssociatePutRequestBody;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
@@ -32,19 +33,9 @@ public class AssociateService { // Classe de serviço para o Associado
 		return associateRepository.findById(id)
 				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
 	}
-	
-	public Page<Associate> findAssociateByName(String name, Pageable pageable) {
-		return associateRepository.findByName(name, pageable)
-				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
-	}
-	
-	public Page<Associate> findAssociateByCpf(Long cpf, Pageable pageable) {
-		return associateRepository.findByCpf(cpf, pageable)
-				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
-	}
 
-	public Page<Associate> findAssociateByUnionCard(Long unionCard, Pageable pageable) {
-		return associateRepository.findByUnionCard(unionCard, pageable)
+	public Page<Associate> findAssociateByNameOrCpfOrUnionCard(String query, Pageable pageable) {
+		return associateRepository.findByNameOrCpfOrUnionCard(query, pageable)
 				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
 	}
 	
