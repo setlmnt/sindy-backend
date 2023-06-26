@@ -31,20 +31,20 @@ public class Associate { // Associado
 	private String name; // Nome
 
 	@NotNull(message = "Union card is required")
-	@NotBlank(message = "Union card is required")
 	@Column(unique = true)
 	private Long unionCard; // Carteira Sindical
 
 	@NotNull(message = "CPF is required")
 	@NotBlank(message = "CPF is required")
 	@Column(unique = true)
-	@Size(max = 11, message = "CPF must be 11 characters long")
-	private Long cpf; // CPF
+	@Size(min = 14, max = 14, message = "CPF must be 14 characters long")
+	@Pattern(regexp = "^(?!(\\d)\\1{10})\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in the format xxx.xxx.xxx-xx")
+	private String cpf; // CPF
 
 	@NotNull(message = "RG is required")
 	@NotBlank(message = "RG is required")
 	@Column(unique = true)
-	private Long rg; // RG
+	private String rg; // RG
 
 	@NotNull(message = "Profession is required")
 	@NotBlank(message = "Profession is required")
@@ -56,7 +56,8 @@ public class Associate { // Associado
 
 	@NotNull(message = "Phone is required")
 	@NotBlank(message = "Phone is required")
-	@Pattern(regexp = "^\\d{11}$", message = "Phone must be in the format xxxxxxxxxxx")
+	@Size(min = 12, max = 13, message = "Phone must be 12 or 13 characters long")
+	@Pattern(regexp = "^(?:\\d{2} \\d{5}-\\d{4}|\\d{2} \\d{4}-\\d{4})$", message = "Phone must be in the format xx xxxx-xxxx or xx xxxxx-xxxx")
 	private String phone; // Telefone
 
 	@NotNull(message = "Nationality is required")

@@ -26,7 +26,6 @@ public class Address { // Endereço
 	@Size(min = 3, message = "City name must be at least 3 characters long")
 	private String city; // Cidade
 
-	@Size(min = 1, message = "State name must be at least 1 characters long")
 	private int number; // Número
 
 	@Size(min = 3, message = "State name must be at least 3 characters long")
@@ -35,7 +34,7 @@ public class Address { // Endereço
 	@Size(min = 3, message = "Neighborhood name must be at least 3 characters long")
 	private String neighborhood; // Bairro
 
-	@Pattern(regexp = "^\\d{5}\\d{3}$", message = "Zip code must be in the format xxxxxxxx")
+	@Pattern(regexp = "(^\\d{5}-\\d{3}$)", message = "Zip code must be in the format xxxxx-xxx")
 	private String zipCode; // CEP
 
 	@Temporal(TemporalType.TIMESTAMP)
