@@ -24,6 +24,8 @@ import com.ifba.educampo.service.AssociateService;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping(value = "/associates")
 @RequiredArgsConstructor
@@ -56,6 +58,7 @@ public class AssociatesController { // Classe de controle para o Associado
     }
 	
 	@DeleteMapping(path = "/{id}")
+	@Transactional
 	public ResponseEntity<Void> delete(@PathVariable long id){
 		associateService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -67,12 +70,14 @@ public class AssociatesController { // Classe de controle para o Associado
 	}
 	
 	@PutMapping
+	@Transactional
 	public ResponseEntity<Void> replace(@RequestBody AssociatePutRequestBody associatePutRequestBody){
 		associateService.replace(associatePutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	@PatchMapping
+	@Transactional
 	public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
 		associateService.updateByFields(id, fields);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

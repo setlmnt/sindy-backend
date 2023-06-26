@@ -38,7 +38,7 @@ public class AssociateService { // Classe de serviço para o Associado
 				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
 	}
 	
-	public Page<Associate> findAssociateByCpf(long cpf, Pageable pageable) {
+	public Page<Associate> findAssociateByCpf(Long cpf, Pageable pageable) {
 		return associateRepository.findByCpf(cpf, pageable)
 				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
 	}
@@ -51,7 +51,8 @@ public class AssociateService { // Classe de serviço para o Associado
 	public Page<Associate> listAll(Pageable pageable) {
         return associateRepository.findAll(pageable);
     }
-	
+
+	@Transactional
 	public void delete(long id) {
 		associateRepository.delete(findAssociate(id));
 	}
@@ -72,7 +73,7 @@ public class AssociateService { // Classe de serviço para o Associado
 						.isVoter(associatePostRequestBody.isVoter())
 						.maritalStatus(associatePostRequestBody.getMaritalStatus())
 						.associationDate(associatePostRequestBody.getAssociationDate())
-						.address(addressService.save(associatePostRequestBody.getAddress()))
+						.address(associatePostRequestBody.getAddress() != null ? addressService.save(associatePostRequestBody.getAddress()) : null)
 						.dependents(dependentsService.save(associatePostRequestBody.getDependents()))
 						.affiliation(affiliationService.save(associatePostRequestBody.getAffiliation()))
 						.placeOfBirth(placeOfBirthService.save(associatePostRequestBody.getPlaceOfBirth()))
@@ -81,7 +82,8 @@ public class AssociateService { // Classe de serviço para o Associado
 						.build()
 				);
 	}
-	
+
+	@Transactional
 	public void replace(AssociatePutRequestBody associatePutRequestBody) {
 		Associate savedAssociate = findAssociate(associatePutRequestBody.getId());
 		Associate associate = Associate.builder()
@@ -123,6 +125,7 @@ public class AssociateService { // Classe de serviço para o Associado
 		
 	}
 
+	@Transactional
 	public void updateByFields(long id, Map<String, Object> fields) {
 		Associate savedAssociate = findAssociate(id);
 		
