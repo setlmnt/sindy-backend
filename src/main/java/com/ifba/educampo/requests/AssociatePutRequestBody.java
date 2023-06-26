@@ -29,4 +29,5 @@ public class AssociatePutRequestBody {
 	private PlaceOfBirthPutRequestBody placeOfBirth;
 	private AssociatePhotoPutRequestBody associatePhoto;
 	private WorkRecordPutRequestBody workRecord;
+	private Long localOfficeId;
 }

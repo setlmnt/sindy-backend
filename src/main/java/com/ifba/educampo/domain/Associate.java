@@ -92,6 +92,11 @@ public class Associate { // Associado
 
 
 	@Nullable
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "localOfficeId")
+	private LocalOffice localOffice; // Delegacia (Escritório Local)
+
+	@Nullable
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "addressId")
 	private Address address; // Endereço

@@ -28,6 +28,7 @@ public class AssociateService { // Classe de serviço para o Associado
 	private final AffiliationService affiliationService;
 	private final AssociatePhotoService associatePhotoService;
 	private final PlaceOfBirthService placeOfBirthService;
+	private final LocalOfficeService localOfficeService;
 	
 	public Associate findAssociate(Long id) {
 		return associateRepository.findById(id)
@@ -64,12 +65,21 @@ public class AssociateService { // Classe de serviço para o Associado
 						.isVoter(associatePostRequestBody.isVoter())
 						.maritalStatus(associatePostRequestBody.getMaritalStatus())
 						.associationDate(associatePostRequestBody.getAssociationDate())
-						.address(associatePostRequestBody.getAddress() != null ? addressService.save(associatePostRequestBody.getAddress()) : null)
+						.address(
+								associatePostRequestBody.getAddress() != null ?
+										addressService.save(associatePostRequestBody.getAddress()) :
+										null
+						)
 						.dependents(dependentsService.save(associatePostRequestBody.getDependents()))
 						.affiliation(affiliationService.save(associatePostRequestBody.getAffiliation()))
 						.placeOfBirth(placeOfBirthService.save(associatePostRequestBody.getPlaceOfBirth()))
 						.associatePhoto(associatePhotoService.save(associatePostRequestBody.getAssociatePhoto()))
 						.workRecord(workRecordService.save(associatePostRequestBody.getWorkRecord()))
+						.localOffice(
+								associatePostRequestBody.getLocalOfficeId() != null ?
+								localOfficeService.findLocalOffice(associatePostRequestBody.getLocalOfficeId()) :
+								null
+						)
 						.build()
 				);
 	}
@@ -110,6 +120,11 @@ public class AssociateService { // Classe de serviço para o Associado
 										.workRecord(workRecordService
 												.replace(associatePutRequestBody.getWorkRecord(),
 												savedAssociate.getWorkRecord().getId()))
+										.localOffice(
+												associatePutRequestBody.getLocalOfficeId() != null ?
+												localOfficeService.findLocalOffice(associatePutRequestBody.getLocalOfficeId()) :
+												null
+										)
 										.build();
 		
 		associateRepository.save(associate);
