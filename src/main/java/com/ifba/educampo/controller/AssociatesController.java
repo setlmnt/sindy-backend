@@ -54,7 +54,7 @@ public class AssociatesController { // Classe de controle para o Associado
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@PatchMapping
+	@PatchMapping(path = "/{id}")
 	@Transactional
 	public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
 		associateService.updateByFields(id, fields);

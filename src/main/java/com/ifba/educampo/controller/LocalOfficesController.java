@@ -53,7 +53,7 @@ public class LocalOfficesController { // Classe de controle para as Delegacias (
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping
+    @PatchMapping(path = "/{id}")
     public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
         localOfficeService.updateByFields(id, fields);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

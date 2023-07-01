@@ -35,9 +35,8 @@ public class LocalOfficeService { // Delegacia (Escritorio Local)
         return localOfficeRepository.findAll(pageable);
     }
 
-    public ResponseEntity<Void> delete(long id) {
+    public void delete(long id) {
         localOfficeRepository.delete(findLocalOffice(id));
-        return ResponseEntity.noContent().build();
     }
 
     public LocalOffice save(LocalOfficePostRequestBody localOfficePostRequestBody) {

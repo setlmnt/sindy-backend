@@ -12,7 +12,6 @@ import com.ifba.educampo.requests.AssociatePostRequestBody;
 import com.ifba.educampo.requests.AssociatePutRequestBody;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;

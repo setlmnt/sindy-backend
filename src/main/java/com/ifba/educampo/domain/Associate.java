@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -64,21 +65,21 @@ public class Associate { // Associado
 	@NotBlank(message = "Nationality is required")
 	private String nationality; // Nacionalidade
 
-	@NotNull
+	@NotNull(message = "Birth Date is required")
 	@Temporal(TemporalType.TIMESTAMP)
 	private java.util.Date birthDate; // Data de Nascimento
 
-	@NotNull
+	@NotNull(message = "Is Literate is required")
 	private boolean isLiterate; // Alfabetizado
 
-	@NotNull
+	@NotNull(message = "Is Voter is required")
 	private boolean isVoter; // Eleitor
 
-	@NotNull
+	@NotNull(message = "Marital Status is required")
 	@Enumerated(EnumType.STRING)
 	private MaritalStatus maritalStatus; // Estado Civil
 
-	@NotNull
+	@NotNull(message = "Associate Date is required")
 	private java.util.Date associationDate; // Data de Associação
 
 
@@ -92,33 +93,35 @@ public class Associate { // Associado
 
 
 	@Nullable
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "localOfficeId")
+	@JoinColumn(name = "localOfficeId", nullable = true)
 	private LocalOffice localOffice; // Delegacia (Escritório Local)
 
 	@Nullable
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "addressId")
+	@JoinColumn(name = "addressId", nullable = true)
 	private Address address; // Endereço
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "dependentsId")
+	@JoinColumn(name = "dependentsId", nullable = false)
 	private Dependents dependents; // Dependentes
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "affiliationId")
+	@JoinColumn(name = "affiliationId", nullable = false)
 	private Affiliation affiliation; // Filiação
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "placeOfBirthId")
+	@JoinColumn(name = "placeOfBirthId", nullable = false)
 	private PlaceOfBirth placeOfBirth; // Naturalidade
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "associatePhotoId")
+	@JoinColumn(name = "associatePhotoId", nullable = false)
 	private AssociatePhoto associatePhoto; // Foto do Associado
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "workRecordId")
+	@JoinColumn(name = "workRecordId", nullable = false)
 	private WorkRecord workRecord; // Carteira de Trabalho
 
 	@PrePersist
