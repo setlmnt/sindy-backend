@@ -2,7 +2,9 @@ package com.ifba.educampo.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ifba.educampo.domain.MaritalStatus;
+import com.ifba.educampo.utils.PdfUtil;
+import org.thymeleaf.context.Context;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import com.ifba.educampo.service.AssociateService;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 @RestController
@@ -23,6 +26,32 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class AssociatesController { // Classe de controle para o Associado
 	private final AssociateService associateService;
+
+	@GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
+	public byte[] exportAssociateToPdf(
+			@PathVariable long id,
+			HttpServletResponse response
+	){
+		Associate associate = associateService.findAssociate(id);
+
+		if (associate == null) return null;
+
+		response.setContentType("application/pdf");
+		response.setHeader(
+				"Content-Disposition",
+				"attachment; filename=" + associate.getName() + "-" + associate.getUnionCard() + ".pdf"
+		);
+
+		Context context = new Context();
+		context.setVariable("associate", associate);
+		context.setVariable("divorced", MaritalStatus.DIVORCED);
+		context.setVariable("never_married", MaritalStatus.NEVER_MARRIED);
+		context.setVariable("married", MaritalStatus.MARRIED);
+		context.setVariable("widowed", MaritalStatus.WIDOWED);
+
+		PdfUtil pdfUtil = new PdfUtil();
+		return pdfUtil.generatePdf("associate", context);
+	}
 	
 	@GetMapping
 	public ResponseEntity<Page<Associate>> listAssociate(@RequestParam(required = false) String query, Pageable pageable){

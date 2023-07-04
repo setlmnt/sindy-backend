@@ -116,6 +116,8 @@ public class Associate { // Associado
 	@JoinColumn(name = "placeOfBirthId", nullable = false)
 	private PlaceOfBirth placeOfBirth; // Naturalidade
 
+	@Nullable
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "associatePhotoId", nullable = false)
 	private AssociatePhoto associatePhoto; // Foto do Associado
