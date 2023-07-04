@@ -38,6 +38,8 @@ public class MonthlyFeeController { // Classe de controle para as Mensalidades
     ) {
         MonthlyFee monthlyFee = monthlyFeeService.findMonthlyFee(id);
 
+        if (monthlyFee == null) return null;
+
         response.setContentType("application/pdf");
         response.setHeader(
                 "Content-Disposition",
