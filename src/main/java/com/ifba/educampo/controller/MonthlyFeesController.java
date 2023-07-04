@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/monthly-fee")
+@RequestMapping("/monthly-fees")
 @RequiredArgsConstructor
-public class MonthlyFeeController { // Classe de controle para as Mensalidades
+public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
     private final AssociateService associateService;
 
