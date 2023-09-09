@@ -2,11 +2,9 @@ package com.ifba.educampo.exception.handler;
 
 import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.AssociateException;
-import com.ifba.educampo.exception.MonthlyFeeExcepetion;
+import com.ifba.educampo.exception.MonthlyFeeException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.exception.response.ExceptionResponse;
-import org.hibernate.query.SemanticException;
-import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -65,9 +63,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(MonthlyFeeExcepetion.class)
+    @ExceptionHandler(MonthlyFeeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleMonthlyFeeException(MonthlyFeeExcepetion ex, WebRequest request) {
+    public ExceptionResponse handleMonthlyFeeException(MonthlyFeeException ex, WebRequest request) {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),

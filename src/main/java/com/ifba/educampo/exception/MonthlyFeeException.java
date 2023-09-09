@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class MonthlyFeeExcepetion extends RuntimeException {
-    public MonthlyFeeExcepetion(String message) {
+public class MonthlyFeeException extends RuntimeException {
+    public MonthlyFeeException(String message) {
         super(message);
     }
 }

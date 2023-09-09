@@ -1,6 +1,6 @@
 package com.ifba.educampo.controller;
 
-import com.ifba.educampo.exception.MonthlyFeeExcepetion;
+import com.ifba.educampo.exception.MonthlyFeeException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.model.dto.MonthlyFeeDto;
 import com.ifba.educampo.model.entity.Associate;
@@ -84,7 +84,7 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
                         !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
                                 associationDate.getYear() != monthlyFeeDate.getYear()
                 )
-        ) throw new MonthlyFeeExcepetion("Association Date is after Monthly Fee Payment Date");
+        ) throw new MonthlyFeeException("Association Date is after Monthly Fee Payment Date");
 
         // Garantir que a mensalidade não existe
         Optional<MonthlyFee> monthlyFee = monthlyFeeService
@@ -93,7 +93,7 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
                         monthlyFeeDto.getPaymentMonth(),
                         monthlyFeeDto.getPaymentYear()
                 );
-        if (monthlyFee.isPresent()) throw new MonthlyFeeExcepetion("Monthly Fee Already Exists");
+        if (monthlyFee.isPresent()) throw new MonthlyFeeException("Monthly Fee Already Exists");
 
         return new ResponseEntity<>(monthlyFeeService.save(monthlyFeeDto), HttpStatus.CREATED);
     }
