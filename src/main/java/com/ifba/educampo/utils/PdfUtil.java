@@ -1,4 +1,5 @@
 package com.ifba.educampo.utils;
+
 import com.lowagie.text.DocumentException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -22,6 +23,7 @@ public class PdfUtil {
         templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
     }
+
     public String parseThymeleafTemplate(String template, Context context) {
         return templateEngine.process(template, context);
     }

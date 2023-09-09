@@ -1,9 +1,8 @@
 package com.ifba.educampo.repository;
 
+import com.ifba.educampo.model.entity.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ifba.educampo.domain.Address;
-
-public interface AddressRepository extends JpaRepository<Address, Long>{ // Interface de repositório para o endereço
+public interface AddressRepository extends JpaRepository<Address, Long> { // Interface de repositório para o endereço
 
 }

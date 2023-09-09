@@ -1,66 +1,44 @@
 package com.ifba.educampo.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-
-import com.ifba.educampo.domain.WorkRecord;
-import com.ifba.educampo.exception.BadRequestException;
+import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.mapper.GenericMapper;
+import com.ifba.educampo.model.dto.WorkRecordDto;
+import com.ifba.educampo.model.entity.WorkRecord;
 import com.ifba.educampo.repository.WorkRecordRepository;
-import com.ifba.educampo.requests.WorkRecordPutRequestBody;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class WorkRecordService { // Carteira de trabalho
-	private final WorkRecordRepository workRecordRepository;
-	
-	public WorkRecord findWorkRecord(Long id) {
-		return workRecordRepository.findById(id)
-				.orElseThrow(()-> new BadRequestException("Work Record Not Found"));
-	}
-	
-	public List<WorkRecord> listAll() {
+    private final GenericMapper<WorkRecordDto, WorkRecord> modelMapper;
+    private final WorkRecordRepository workRecordRepository;
+
+    public WorkRecord findWorkRecord(Long id) {
+        return workRecordRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Work Record Not Found"));
+    }
+
+    public List<WorkRecord> listAll() {
         return workRecordRepository.findAll();
     }
-	
-	public void delete(long id) {
-		workRecordRepository.delete(findWorkRecord(id));
-	}
-	
-	@Transactional
-	public WorkRecord save(WorkRecordPutRequestBody workRecordPostRequestBody) {
-		return workRecordRepository.save(WorkRecord.builder()
-						.number(workRecordPostRequestBody.getNumber())
-						.series(workRecordPostRequestBody.getSeries())
-						.build()
-				);
-	}
-	
-	public WorkRecord replace(WorkRecordPutRequestBody workRecordPutRequestBody, Long carteiraId) {
-		WorkRecord savedCarteira = findWorkRecord(carteiraId);
-		return workRecordRepository.save(WorkRecord.builder()
-										.id(savedCarteira.getId())
-										.number(workRecordPutRequestBody.getNumber())
-										.series(workRecordPutRequestBody.getSeries())
-										.build());
-		
-	}
-	
-	public void updateByFields(long id, Map<String, Object> fields) {
-		WorkRecord savedWorkRecord = findWorkRecord(id);
-		
-		fields.forEach((key,value)->{
-			Field field = ReflectionUtils.findField(WorkRecord.class, key);
-			field.setAccessible(true);
-			ReflectionUtils.setField(field, savedWorkRecord, value);
-		});
-		workRecordRepository.save(savedWorkRecord);
-	}
-	
+
+    public void delete(long id) {
+        workRecordRepository.delete(findWorkRecord(id));
+    }
+
+    @Transactional
+    public WorkRecord save(WorkRecordDto workRecordDto) {
+        return workRecordRepository.save(modelMapper.mapDtoToModel(workRecordDto, WorkRecord.class));
+    }
+
+    public WorkRecord replace(WorkRecordDto workRecordDto, Long carteiraId) {
+        WorkRecord savedCarteira = findWorkRecord(carteiraId);
+        workRecordDto.setId(savedCarteira.getId());
+
+        return workRecordRepository.save(modelMapper.mapDtoToModel(workRecordDto, WorkRecord.class));
+    }
 }

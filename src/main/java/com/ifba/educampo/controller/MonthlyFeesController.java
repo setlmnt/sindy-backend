@@ -1,9 +1,8 @@
 package com.ifba.educampo.controller;
 
-import com.ifba.educampo.domain.Associate;
-import com.ifba.educampo.domain.MonthlyFee;
-import com.ifba.educampo.requests.MonthlyFeePostRequestBody;
-import com.ifba.educampo.requests.MonthlyFeePutRequestBody;
+import com.ifba.educampo.model.dto.MonthlyFeeDto;
+import com.ifba.educampo.model.entity.Associate;
+import com.ifba.educampo.model.entity.MonthlyFee;
 import com.ifba.educampo.service.AssociateService;
 import com.ifba.educampo.service.MonthlyFeeService;
 import com.ifba.educampo.utils.PdfUtil;
@@ -13,15 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.thymeleaf.context.Context;
-import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,28 +26,6 @@ import java.util.Optional;
 public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
     private final AssociateService associateService;
-
-    @GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
-    public byte[] exportMonthlyFeeToPdf(
-            @PathVariable long id,
-            HttpServletResponse response
-    ) {
-        MonthlyFee monthlyFee = monthlyFeeService.findMonthlyFee(id);
-
-        if (monthlyFee == null) return null;
-
-        response.setContentType("application/pdf");
-        response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=" + monthlyFee.getAssociate().getName() + "-mensalidade-" + monthlyFee.getPaymentMonth() + "-" + monthlyFee.getPaymentYear() + ".pdf"
-        );
-
-        Context context = new Context();
-        context.setVariable("monthlyFee", monthlyFee);
-
-        PdfUtil pdfUtil = new PdfUtil();
-        return pdfUtil.generatePdf("monthly-fee", context);
-    }
 
     @GetMapping
     public ResponseEntity<Page<MonthlyFee>> listMonthlyFees(
@@ -95,14 +69,14 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
     }
 
     @PostMapping
-    public ResponseEntity<MonthlyFee> save(@RequestBody MonthlyFeePostRequestBody monthlyFeePostRequestBody) {
+    public ResponseEntity<MonthlyFee> save(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
         // Garantir que o associado existe
-        Associate associate = associateService.findAssociate(monthlyFeePostRequestBody.getAssociateId());
+        Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
         if (associate == null) return ResponseEntity.badRequest().build();
 
         // Garantir que a data de associacao é anterior a data de pagamento
         LocalDate associationDate = associate.getAssociationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeePostRequestBody.getPaymentYear(), monthlyFeePostRequestBody.getPaymentMonth(), 1);
+        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeeDto.getPaymentYear(), monthlyFeeDto.getPaymentMonth(), 1);
         if (monthlyFeeDate.isBefore(associationDate) &&
                 (
                         !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
@@ -113,13 +87,13 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
         // Garantir que a mensalidade não existe
         Optional<MonthlyFee> monthlyFee = monthlyFeeService
                 .findMonthlyFeeByAssociateIdAndMonthAndYear(
-                        monthlyFeePostRequestBody.getAssociateId(),
-                        monthlyFeePostRequestBody.getPaymentMonth(),
-                        monthlyFeePostRequestBody.getPaymentYear()
+                        monthlyFeeDto.getAssociateId(),
+                        monthlyFeeDto.getPaymentMonth(),
+                        monthlyFeeDto.getPaymentYear()
                 );
         if (monthlyFee.isPresent()) return ResponseEntity.badRequest().build();
 
-        return new ResponseEntity<>(monthlyFeeService.save(monthlyFeePostRequestBody), HttpStatus.CREATED);
+        return new ResponseEntity<>(monthlyFeeService.save(monthlyFeeDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -129,14 +103,14 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody MonthlyFeePutRequestBody monthlyFeePutRequestBody) {
+    public ResponseEntity<Void> replace(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
         // Garantir que o associado existe
-        Associate associate = associateService.findAssociate(monthlyFeePutRequestBody.getAssociateId());
+        Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
         if (associate == null) return ResponseEntity.badRequest().build();
 
         // Garantir que a data de associacao é anterior a data de pagamento
         LocalDate associationDate = associate.getAssociationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeePutRequestBody.getPaymentYear(), monthlyFeePutRequestBody.getPaymentMonth(), 1);
+        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeeDto.getPaymentYear(), monthlyFeeDto.getPaymentMonth(), 1);
         if (monthlyFeeDate.isBefore(associationDate) &&
                 (
                         !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
@@ -147,21 +121,37 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
         // Garantir que a mensalidade não existe e que a mensalidade não é a mesma
         Optional<MonthlyFee> monthlyFee = monthlyFeeService
                 .findMonthlyFeeByAssociateIdAndMonthAndYear(
-                        monthlyFeePutRequestBody.getAssociateId(),
-                        monthlyFeePutRequestBody.getPaymentMonth(),
-                        monthlyFeePutRequestBody.getPaymentYear()
+                        monthlyFeeDto.getAssociateId(),
+                        monthlyFeeDto.getPaymentMonth(),
+                        monthlyFeeDto.getPaymentYear()
                 );
 
-        if (monthlyFee.isPresent() && !monthlyFee.get().getId().equals(monthlyFeePutRequestBody.getId()))
+        if (monthlyFee.isPresent() && !monthlyFee.get().getId().equals(monthlyFeeDto.getId()))
             return ResponseEntity.badRequest().build();
 
-        monthlyFeeService.replace(monthlyFeePutRequestBody);
+        monthlyFeeService.replace(monthlyFeeDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields) {
-        monthlyFeeService.updateByFields(id, fields);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
+    public byte[] exportMonthlyFeeToPdf(
+            @PathVariable long id,
+            HttpServletResponse response
+    ) {
+        MonthlyFee monthlyFee = monthlyFeeService.findMonthlyFee(id);
+
+        if (monthlyFee == null) return null;
+
+        response.setContentType("application/pdf");
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + monthlyFee.getAssociate().getName() + "-mensalidade-" + monthlyFee.getPaymentMonth() + "-" + monthlyFee.getPaymentYear() + ".pdf"
+        );
+
+        Context context = new Context();
+        context.setVariable("monthlyFee", monthlyFee);
+
+        PdfUtil pdfUtil = new PdfUtil();
+        return pdfUtil.generatePdf("monthly-fee", context);
     }
 }

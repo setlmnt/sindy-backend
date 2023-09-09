@@ -1,6 +1,6 @@
 package com.ifba.educampo.repository;
 
-import com.ifba.educampo.domain.MonthlyFee;
+import com.ifba.educampo.model.entity.MonthlyFee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface MonthlyFeeRepository extends JpaRepository<MonthlyFee, Long> { // Interface de repositório para a mensalidade
-    @Query("SELECT m FROM MonthlyFee m WHERE m.associate.id = ?1") // Query para buscar a mensalidade pelo associado id
+    @Query(
+            "SELECT m FROM MonthlyFee m WHERE m.associate.id = ?1"
+    )
+        // Query para buscar a mensalidade pelo associado id
     Optional<Page<MonthlyFee>> findAllByAssociateId(long associateId, Pageable pageable); // Método para buscar todas as mensalidades de um associado
 
     Optional<MonthlyFee> findByAssociateIdAndPaymentMonthAndPaymentYear(long associateId, int paymentMonth, int paymentYear); // Método para buscar uma mensalidade pelo id do associado e mês e ano de pagamento

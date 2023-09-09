@@ -80,7 +80,13 @@
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>flying-saucer-pdf</artifactId>
-			<version>9.1.20</version>
+			<version>9.1.22</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 
 	</dependencies>
