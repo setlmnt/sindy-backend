@@ -8,10 +8,10 @@ import java.util.List;
 
 @Getter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidAssociateException extends RuntimeException {
+public class AssociateException extends RuntimeException {
     private final List<ErrorType> errors;
 
-    public InvalidAssociateException(String message, List<ErrorType> errorList) {
+    public AssociateException(String message, List<ErrorType> errorList) {
         super(message);
         this.errors = errorList;
     }

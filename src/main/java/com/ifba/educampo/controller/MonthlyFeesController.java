@@ -1,11 +1,15 @@
 package com.ifba.educampo.controller;
 
+import com.ifba.educampo.exception.MonthlyFeeExcepetion;
+import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.model.dto.MonthlyFeeDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.MonthlyFee;
 import com.ifba.educampo.service.AssociateService;
 import com.ifba.educampo.service.MonthlyFeeService;
 import com.ifba.educampo.utils.PdfUtil;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -72,9 +74,9 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
     public ResponseEntity<MonthlyFee> save(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
         // Garantir que o associado existe
         Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
-        if (associate == null) return ResponseEntity.badRequest().build();
+        if (associate == null) throw new NotFoundException("Associate Not Found");
 
-        // Garantir que a data de associacao é anterior a data de pagamento
+        // Garantir que a data de criação do associação é anterior a data de pagamento
         LocalDate associationDate = associate.getAssociationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate monthlyFeeDate = LocalDate.of(monthlyFeeDto.getPaymentYear(), monthlyFeeDto.getPaymentMonth(), 1);
         if (monthlyFeeDate.isBefore(associationDate) &&
@@ -82,7 +84,7 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
                         !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
                                 associationDate.getYear() != monthlyFeeDate.getYear()
                 )
-        ) return ResponseEntity.badRequest().build();
+        ) throw new MonthlyFeeExcepetion("Association Date is after Monthly Fee Payment Date");
 
         // Garantir que a mensalidade não existe
         Optional<MonthlyFee> monthlyFee = monthlyFeeService
@@ -91,7 +93,7 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
                         monthlyFeeDto.getPaymentMonth(),
                         monthlyFeeDto.getPaymentYear()
                 );
-        if (monthlyFee.isPresent()) return ResponseEntity.badRequest().build();
+        if (monthlyFee.isPresent()) throw new MonthlyFeeExcepetion("Monthly Fee Already Exists");
 
         return new ResponseEntity<>(monthlyFeeService.save(monthlyFeeDto), HttpStatus.CREATED);
     }

@@ -5,6 +5,9 @@ import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import com.ifba.educampo.service.AssociateService;
 import com.ifba.educampo.utils.PdfUtil;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/associates")

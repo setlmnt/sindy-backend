@@ -2,11 +2,10 @@ package com.ifba.educampo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.model.enums.MaritalStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Data

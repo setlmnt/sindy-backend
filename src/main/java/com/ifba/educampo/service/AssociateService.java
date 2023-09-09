@@ -1,18 +1,18 @@
 package com.ifba.educampo.service;
 
 import com.ifba.educampo.exception.ErrorType;
-import com.ifba.educampo.exception.InvalidAssociateException;
+import com.ifba.educampo.exception.AssociateException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
 import com.ifba.educampo.model.dto.*;
 import com.ifba.educampo.model.entity.*;
 import com.ifba.educampo.repository.AssociateRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -75,7 +75,7 @@ public class AssociateService { // Classe de serviço para o Associado
         }
 
         if (!errorList.isEmpty()) {
-            throw new InvalidAssociateException("Invalid Associate", errorList);
+            throw new AssociateException("Invalid Associate", errorList);
         }
 
         Associate associate = modelMapper.mapDtoToModel(associateDto, Associate.class);
@@ -85,6 +85,9 @@ public class AssociateService { // Classe de serviço para o Associado
         associate.getAffiliation().setId(null);
         associate.getAssociatePhoto().setId(null);
         associate.getPlaceOfBirth().setId(null);
+        if (associateDto.getLocalOfficeId() != null) {
+            associate.setLocalOffice(localOfficeService.findLocalOffice(associateDto.getLocalOfficeId()));
+        }
 
         return associateRepository.save(associate);
     }
@@ -112,7 +115,7 @@ public class AssociateService { // Classe de serviço para o Associado
         }
 
         if (!errorList.isEmpty()) {
-            throw new InvalidAssociateException("Invalid Associate", errorList);
+            throw new AssociateException("Invalid Associate", errorList);
         }
 
         // Mapeie os objetos DTO para entidades atualizadas

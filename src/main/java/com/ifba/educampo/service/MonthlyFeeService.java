@@ -72,7 +72,9 @@ public class MonthlyFeeService {
     }
 
     public MonthlyFee save(MonthlyFeeDto monthlyFeeDto) {
-        return monthlyFeeRepository.save(modelMapper.mapDtoToModel(monthlyFeeDto, MonthlyFee.class));
+        MonthlyFee monthlyFee = modelMapper.mapDtoToModel(monthlyFeeDto, MonthlyFee.class);
+        monthlyFee.setAssociate(associateService.findAssociate(monthlyFeeDto.getAssociateId()));
+        return monthlyFeeRepository.save(monthlyFee);
     }
 
     public void replace(MonthlyFeeDto monthlyFeeDto) {

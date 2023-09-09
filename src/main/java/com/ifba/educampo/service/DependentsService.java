@@ -5,10 +5,10 @@ import com.ifba.educampo.mapper.GenericMapper;
 import com.ifba.educampo.model.dto.DependentsDto;
 import com.ifba.educampo.model.entity.Dependents;
 import com.ifba.educampo.repository.DependentsRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service

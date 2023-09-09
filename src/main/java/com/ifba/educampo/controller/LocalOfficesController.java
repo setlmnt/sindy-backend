@@ -4,14 +4,13 @@ import com.ifba.educampo.model.dto.LocalOfficeDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.service.LocalOfficeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 
 @RestController
