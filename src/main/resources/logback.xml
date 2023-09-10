@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Define o padrão de log -->
+    <property name="LOG_PATTERN" value="[%thread] | %-5level | %d{yyyy-MM-dd HH:mm:ss} | %logger{36} - %msg%n"/>
+
+    <!-- Define o padrão de nome de arquivo para os logs normais -->
+    <property name="APPLICATION_LOG_FILE" value="logs/application.log" />
+
+    <!-- Define um appender para os logs normais -->
+    <appender name="APPLICATION_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${APPLICATION_LOG_FILE}</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${FILE}-%d{yyyy-MM-dd}-%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>100</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Appender para o console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%thread] | %highlight(%-5level) | %d{yyyy-MM-dd HH:mm:ss.SSS} | %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Defina o nível de log padrão para toda a aplicação -->
+    <root level="INFO">
+        <appender-ref ref="APPLICATION_FILE" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
