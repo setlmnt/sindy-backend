@@ -7,7 +7,7 @@ import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.MonthlyFee;
 import com.ifba.educampo.service.AssociateService;
 import com.ifba.educampo.service.MonthlyFeeService;
-import com.ifba.educampo.utils.PdfUtil;
+import com.ifba.educampo.service.PdfService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ import java.util.Optional;
 public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
     private final AssociateService associateService;
+    private final PdfService pdfService;
 
     @GetMapping
     public ResponseEntity<Page<MonthlyFee>> listMonthlyFees(
@@ -153,7 +154,6 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
         Context context = new Context();
         context.setVariable("monthlyFee", monthlyFee);
 
-        PdfUtil pdfUtil = new PdfUtil();
-        return pdfUtil.generatePdf("monthly-fee", context);
+        return pdfService.generatePdfByTemplate("monthly-fee", context);
     }
 }

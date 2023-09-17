@@ -1,7 +1,7 @@
 package com.ifba.educampo.exception.handler;
 
-import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.AssociateException;
+import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.MonthlyFeeException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.exception.response.ExceptionResponse;

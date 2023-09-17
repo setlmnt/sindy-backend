@@ -4,7 +4,7 @@ import com.ifba.educampo.model.dto.AssociateDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import com.ifba.educampo.service.AssociateService;
-import com.ifba.educampo.utils.PdfUtil;
+import com.ifba.educampo.service.PdfService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -21,6 +21,7 @@ import org.thymeleaf.context.Context;
 @RequiredArgsConstructor
 public class AssociatesController { // Classe de controle para o Associado
     private final AssociateService associateService;
+    private final PdfService pdfService;
 
     @GetMapping
     public ResponseEntity<Page<Associate>> listAssociate(
@@ -77,7 +78,6 @@ public class AssociatesController { // Classe de controle para o Associado
         context.setVariable("married", MaritalStatus.MARRIED);
         context.setVariable("widowed", MaritalStatus.WIDOWED);
 
-        PdfUtil pdfUtil = new PdfUtil();
-        return pdfUtil.generatePdf("associate", context);
+        return pdfService.generatePdfByTemplate("associate", context);
     }
 }

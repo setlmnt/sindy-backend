@@ -1,7 +1,7 @@
 package com.ifba.educampo.service;
 
-import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.AssociateException;
+import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
 import com.ifba.educampo.model.dto.*;

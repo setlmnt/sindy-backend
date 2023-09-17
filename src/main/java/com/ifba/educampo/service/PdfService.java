@@ -1,4 +1,4 @@
-package com.ifba.educampo.utils;
+package com.ifba.educampo.service;
 
 import com.lowagie.text.DocumentException;
 import org.thymeleaf.TemplateEngine;
@@ -11,10 +11,10 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class PdfUtil {
+public class PdfService {
     private final TemplateEngine templateEngine;
 
-    public PdfUtil() {
+    public PdfService() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setSuffix(".html");
         templateResolver.setPrefix("templates/");
@@ -28,7 +28,7 @@ public class PdfUtil {
         return templateEngine.process(template, context);
     }
 
-    public byte[] generatePdf(String template, Context context) {
+    public byte[] generatePdfByTemplate(String template, Context context) {
         String html = parseThymeleafTemplate(template, context);
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ITextRenderer renderer = new ITextRenderer();
