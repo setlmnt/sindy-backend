@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Data
 public class AssociateDto {
@@ -26,8 +27,7 @@ public class AssociateDto {
 
     @NotNull(message = "CPF is required")
     @NotBlank(message = "CPF is required")
-    @Size(min = 14, max = 14, message = "CPF must be 14 characters long")
-    @Pattern(regexp = "^(?!(\\d)\\1{10})\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in the format xxx.xxx.xxx-xx")
+    @CPF(message = "CPF is invalid")
     private String cpf; // CPF
 
     @NotNull(message = "RG is required")
@@ -69,13 +69,13 @@ public class AssociateDto {
     @NotNull
     private java.util.Date associationDate; // Data de Associação
 
+    @Nullable
+    private Long localOfficeId;
+
     private AddressDto address;
     private DependentsDto dependents;
     private AffiliationDto affiliation;
     private PlaceOfBirthDto placeOfBirth;
     private AssociatePhotoDto associatePhoto;
     private WorkRecordDto workRecord;
-
-    @Nullable
-    private Long localOfficeId;
 }
