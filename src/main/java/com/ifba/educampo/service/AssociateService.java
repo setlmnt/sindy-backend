@@ -1,6 +1,7 @@
 package com.ifba.educampo.service;
 
 import com.ifba.educampo.exception.AssociateException;
+import com.ifba.educampo.exception.AssociatePhotoException;
 import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,6 @@ public class AssociateService { // Classe de serviço para o Associado
     private final DependentsService dependentsService;
     private final GenericMapper<AffiliationDto, Affiliation> affiliationModelMapper;
     private final AffiliationService affiliationService;
-    private final GenericMapper<AssociatePhotoDto, AssociatePhoto> associatePhotoModelMapper;
-    private final AssociatePhotoService associatePhotoService;
     private final GenericMapper<PlaceOfBirthDto, PlaceOfBirth> placeOfBirthModelMapper;
     private final PlaceOfBirthService placeOfBirthService;
     private final LocalOfficeService localOfficeService;
@@ -166,7 +166,6 @@ public class AssociateService { // Classe de serviço para o Associado
             WorkRecord updatedWorkRecord = workRecordService.replace(associateDto.getWorkRecord(), savedAssociate.getWorkRecord().getId());
             Dependents updatedDependents = dependentsService.replace(associateDto.getDependents(), savedAssociate.getDependents().getId());
             Affiliation updatedAffiliation = affiliationService.replace(associateDto.getAffiliation(), savedAssociate.getAffiliation().getId());
-            AssociatePhoto updatedAssociatePhoto = associatePhotoService.replace(associateDto.getAssociatePhoto(), savedAssociate.getAssociatePhoto().getId());
             PlaceOfBirth updatedPlaceOfBirth = placeOfBirthService.replace(associateDto.getPlaceOfBirth(), savedAssociate.getPlaceOfBirth().getId());
 
             // Atualize os valores do associado
@@ -175,7 +174,6 @@ public class AssociateService { // Classe de serviço para o Associado
             associateDto.setWorkRecord(workRecordModelMapper.mapModelToDto(updatedWorkRecord, WorkRecordDto.class));
             associateDto.setDependents(dependentsModelMapper.mapModelToDto(updatedDependents, DependentsDto.class));
             associateDto.setAffiliation(affiliationModelMapper.mapModelToDto(updatedAffiliation, AffiliationDto.class));
-            associateDto.setAssociatePhoto(associatePhotoModelMapper.mapModelToDto(updatedAssociatePhoto, AssociatePhotoDto.class));
             associateDto.setPlaceOfBirth(placeOfBirthModelMapper.mapModelToDto(updatedPlaceOfBirth, PlaceOfBirthDto.class));
 
             // Atualize o ID do local office se for fornecido

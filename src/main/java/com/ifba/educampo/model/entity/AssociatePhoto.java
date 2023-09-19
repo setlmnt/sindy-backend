@@ -1,6 +1,7 @@
 package com.ifba.educampo.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +21,16 @@ public class AssociatePhoto { // Foto do Associado
     private String archiveName; // Nome do Arquivo
 
     @Column(nullable = false)
+    private String originalName; // Nome Original
+
+    @Column(nullable = false)
     private String contentType; // Tipo de Conteúdo
 
     @Column(nullable = false)
     private Long size; // Tamanho
+
+    @Column(nullable = false)
+    private String url; // URL
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt", nullable = false, updatable = false)

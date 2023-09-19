@@ -1,9 +1,6 @@
 package com.ifba.educampo.exception.handler;
 
-import com.ifba.educampo.exception.AssociateException;
-import com.ifba.educampo.exception.ErrorType;
-import com.ifba.educampo.exception.MonthlyFeeException;
-import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.exception.*;
 import com.ifba.educampo.exception.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -69,6 +66,30 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                List.of(new ErrorType(ex.getMessage())),
+                request.getDescription(false),
+                new Date()
+        );
+    }
+
+    @ExceptionHandler(AssociatePhotoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleInvalidAssociatePhotoException(AssociatePhotoException ex, WebRequest request) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                List.of(new ErrorType(ex.getMessage())),
+                request.getDescription(false),
+                new Date()
+        );
+    }
+
+    @ExceptionHandler(AssociatePhotoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleAssociatePhotoNotFoundException(AssociatePhotoNotFoundException ex, WebRequest request) {
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
                 List.of(new ErrorType(ex.getMessage())),
                 request.getDescription(false),
                 new Date()

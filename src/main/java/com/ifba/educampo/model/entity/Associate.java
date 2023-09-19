@@ -90,7 +90,7 @@ public class Associate { // Associado
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "associatePhotoId", nullable = false)
+    @JoinColumn(name = "associatePhotoId")
     private AssociatePhoto associatePhoto; // Foto do Associado
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

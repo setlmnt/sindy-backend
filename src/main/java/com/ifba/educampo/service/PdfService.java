@@ -1,6 +1,7 @@
 package com.ifba.educampo.service;
 
 import com.lowagie.text.DocumentException;
+import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -11,6 +12,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+@Service
 public class PdfService {
     private final TemplateEngine templateEngine;
 
