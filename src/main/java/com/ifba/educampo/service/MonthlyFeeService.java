@@ -1,10 +1,17 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.MonthlyFeeDateDto;
+import com.ifba.educampo.dto.MonthlyFeeDto;
+import com.ifba.educampo.exception.ErrorType;
+import com.ifba.educampo.exception.MonthlyFeeException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.MonthlyFeeDto;
+import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.MonthlyFee;
+import com.ifba.educampo.model.entity.MonthlyFeeDate;
+import com.ifba.educampo.repository.MonthlyFeeCustomRepository;
 import com.ifba.educampo.repository.MonthlyFeeRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -12,141 +19,244 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MonthlyFeeService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonthlyFeeService.class);
     private final GenericMapper<MonthlyFeeDto, MonthlyFee> modelMapper;
+    private final GenericMapper<MonthlyFeeDateDto, MonthlyFeeDate> monthlyFeeDateModelMapper;
+    private final MonthlyFeeCustomRepository monthlyFeeCustomRepository;
     private final MonthlyFeeRepository monthlyFeeRepository;
     private final AssociateService associateService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonthlyFeeService.class);
+    private final PdfService pdfService;
 
-    public Page<MonthlyFee> listAll(Pageable pageable) {
+    public Page<MonthlyFeeDto> listAll(Integer paymentMonth, Integer paymentYear, Pageable pageable) {
         try {
             LOGGER.info("Listing all monthly fees.");
-            return monthlyFeeRepository.findAll(pageable);
+            Page<MonthlyFee> monthlyFees = monthlyFeeCustomRepository
+                    .findAllFromPaymentMonthAndYearAndDeletedFalse(paymentMonth, paymentYear, pageable);
+
+            return monthlyFees.map(monthlyFee -> {
+                MonthlyFeeDto monthlyFeeDto = modelMapper.mapModelToDto(monthlyFee, MonthlyFeeDto.class);
+                monthlyFeeDto.setAssociateId(monthlyFee.getAssociate().getId());
+                return monthlyFeeDto;
+            });
         } catch (Exception e) {
             LOGGER.error("An error occurred while listing monthly fees.", e);
             throw new NotFoundException("An error occurred while listing monthly fees.");
         }
     }
 
-    public Page<MonthlyFee> listAllByMonthAndYear(int paymentMonth, int paymentYear, Pageable pageable) {
-        LOGGER.info("Listing all monthly fees by month and year.");
-        return monthlyFeeRepository.findAllByPaymentYearAndPaymentMonth(paymentYear, paymentMonth, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by month {} and year {} not found.", paymentMonth, paymentYear);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public Page<MonthlyFee> listAllByYear(int paymentYear, Pageable pageable) {
-        LOGGER.info("Listing all monthly fees by year.");
-        return monthlyFeeRepository.findAllByPaymentYear(paymentYear, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by year {} not found.", paymentYear);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public Page<MonthlyFee> listAllByMonth(int paymentMonth, Pageable pageable) {
-        return monthlyFeeRepository.findAllByPaymentMonth(paymentMonth, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by month {} not found.", paymentMonth);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public MonthlyFee findMonthlyFee(long id) {
-        return monthlyFeeRepository.findById(id)
+    public MonthlyFeeDto findMonthlyFee(Long id) {
+        MonthlyFee monthlyFee = monthlyFeeRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> {
                     LOGGER.error("Monthly fee with ID {} not found.", id);
                     return new NotFoundException("Monthly Fee Not Found");
                 });
+
+        MonthlyFeeDto monthlyFeeDto = modelMapper.mapModelToDto(monthlyFee, MonthlyFeeDto.class);
+        monthlyFeeDto.setAssociateId(monthlyFee.getAssociate().getId());
+        return monthlyFeeDto;
     }
 
-    public Page<MonthlyFee> listAllByAssociateId(long associateId, Pageable pageable) {
-        return monthlyFeeRepository.findAllByAssociateId(associateId, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by associate ID {} not found.", associateId);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public Optional<MonthlyFee> findMonthlyFeeByAssociateIdAndMonthAndYear(long associateId, int paymentMonth, int paymentYear) {
+    public Page<MonthlyFeeDto> listAllByAssociateIdAndMonthAndYear(
+            Long associateId,
+            Integer paymentMonth,
+            Integer paymentYear,
+            Pageable pageable
+    ) {
         try {
-            LOGGER.info("Finding monthly fee by associate ID {} and month {} and year {}.", associateId, paymentMonth, paymentYear);
-            return monthlyFeeRepository.findByAssociateIdAndPaymentMonthAndPaymentYear(associateId, paymentMonth, paymentYear);
+            LOGGER.info("Finding monthly fee by associate ID {}.", associateId);
+            Page<MonthlyFee> monthlyFees = monthlyFeeCustomRepository
+                    .findAllFromAssociateIdPaymentMonthAndYearAndDeletedFalse(associateId, paymentMonth, paymentYear, pageable);
+
+            return monthlyFees.map(monthlyFee -> {
+                MonthlyFeeDto monthlyFeeDto = modelMapper.mapModelToDto(monthlyFee, MonthlyFeeDto.class);
+                monthlyFeeDto.setAssociateId(monthlyFee.getAssociate().getId());
+                return monthlyFeeDto;
+            });
         } catch (Exception e) {
-            LOGGER.error("An error occurred while finding monthly fee by associate ID {} and month {} and year {}.", associateId, paymentMonth, paymentYear, e);
+            LOGGER.error("An error occurred while finding monthly fee by associate ID {}.", associateId, e);
             throw new NotFoundException("An error occurred while finding monthly fee by associate ID {} and month {} and year {}.");
         }
     }
 
-    public Page<MonthlyFee> listAllByAssociateIdAndMonthAndYear(long associateId, int paymentMonth, int paymentYear, Pageable pageable) {
-        LOGGER.info("Listing all monthly fees by associate ID {} and month {} and year {}.", associateId, paymentMonth, paymentYear);
-        return monthlyFeeRepository.findAllByAssociateIdAndPaymentMonthAndPaymentYear(associateId, paymentMonth, paymentYear, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by associate ID {} and month {} and year {} not found.", associateId, paymentMonth, paymentYear);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public Page<MonthlyFee> listAllByAssociateIdAndYear(long associateId, int paymentYear, Pageable pageable) {
-        LOGGER.info("Listing all monthly fees by associate ID {} and year {}.", associateId, paymentYear);
-        return monthlyFeeRepository.findAllByAssociateIdAndPaymentYear(associateId, paymentYear, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by associate ID {} and year {} not found.", associateId, paymentYear);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    public Page<MonthlyFee> listAllByAssociateIdAndMonth(long associateId, int paymentMonth, Pageable pageable) {
-        LOGGER.info("Listing all monthly fees by associate ID {} and month {}.", associateId, paymentMonth);
-        return monthlyFeeRepository.findAllByAssociateIdAndPaymentMonth(associateId, paymentMonth, pageable)
-                .orElseThrow(() -> {
-                    LOGGER.error("Monthly fees by associate ID {} and month {} not found.", associateId, paymentMonth);
-                    return new NotFoundException("Monthly Fee Not Found");
-                });
-    }
-
-    @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         try {
             LOGGER.info("Deleting monthly fee with ID: {}", id);
-            monthlyFeeRepository.deleteById(id);
+            MonthlyFee monthlyFee = monthlyFeeRepository.getReferenceById(id);
+            monthlyFee.delete();
         } catch (Exception e) {
             LOGGER.error("An error occurred while listing monthly fees.", e);
             throw new NotFoundException("An error occurred while deleting monthly fee.");
         }
     }
 
-    @Transactional
-    public MonthlyFee save(MonthlyFeeDto monthlyFeeDto) {
+    public MonthlyFeeDto save(MonthlyFeeDto monthlyFeeDto) {
         try {
             LOGGER.info("Saving monthly fee.");
+
+            Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
+
+            ifMonthlyFeeDateAreTheSameThrow(monthlyFeeDto);
+            ifMonthlyFeeIsBeforeAssociationDateThrow(associate.getAssociationAt(), monthlyFeeDto);
+            ifMonthlyFeeAlreadyExistsThrow(monthlyFeeDto);
+
             MonthlyFee monthlyFee = modelMapper.mapDtoToModel(monthlyFeeDto, MonthlyFee.class);
-            monthlyFee.setAssociate(associateService.findAssociate(monthlyFeeDto.getAssociateId()));
-            return monthlyFeeRepository.save(monthlyFee);
+
+            monthlyFee.getPaymentDates().forEach(monthlyFeeDate -> monthlyFeeDate.setMonthlyFee(monthlyFee));
+            monthlyFee.setAssociate(associate);
+
+            monthlyFee.setTotalAmount(
+                    monthlyFeeDto
+                            .getFeeValue()
+                            .multiply(BigDecimal.valueOf(monthlyFeeDto.getPaymentDates().size()))
+            );
+            monthlyFee.setTotalMonthsPaid(monthlyFeeDto.getPaymentDates().size());
+
+            monthlyFeeDto = modelMapper.mapModelToDto(monthlyFeeRepository.save(monthlyFee), MonthlyFeeDto.class);
+            monthlyFeeDto.setAssociateId(associate.getId());
+            return monthlyFeeDto;
+        } catch (MonthlyFeeException e) {
+            LOGGER.error(e.getMessage());
+            throw e;
         } catch (Exception e) {
             LOGGER.error("An error occurred while saving monthly fee.", e);
             throw new NotFoundException("An error occurred while saving monthly fee.");
         }
     }
 
-    @Transactional
-    public void replace(MonthlyFeeDto monthlyFeeDto) {
+    public MonthlyFeeDto update(Long id, MonthlyFeeDto monthlyFeeDto) {
         try {
-            LOGGER.info("Replacing monthly fee with ID: {}", monthlyFeeDto.getId());
-            MonthlyFee savedMonthlyFee = findMonthlyFee(monthlyFeeDto.getId());
-            monthlyFeeDto.setId(savedMonthlyFee.getId());
+            LOGGER.info("Replacing monthly fee with ID: {}", id);
 
-            monthlyFeeRepository.save(modelMapper.mapDtoToModel(monthlyFeeDto, MonthlyFee.class));
+            Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
+
+            ifMonthlyFeeDateAreTheSameThrow(monthlyFeeDto);
+            ifMonthlyFeeIsBeforeAssociationDateThrow(associate.getAssociationAt(), monthlyFeeDto);
+            ifMonthlyFeeAlreadyExistsThrow(monthlyFeeDto);
+
+            MonthlyFee monthlyFee = monthlyFeeRepository.getReferenceById(id);
+
+            List<MonthlyFeeDate> monthlyFeeDates = monthlyFeeDateModelMapper.mapList(monthlyFeeDto.getPaymentDates(), MonthlyFeeDate.class);
+            monthlyFee.setPaymentDates(monthlyFeeDates);
+            monthlyFee.getPaymentDates().forEach(monthlyFeeDate -> monthlyFeeDate.setMonthlyFee(monthlyFee));
+            monthlyFee.setAssociate(associate);
+
+            monthlyFee.setTotalAmount(
+                    monthlyFeeDto
+                            .getFeeValue()
+                            .multiply(BigDecimal.valueOf(monthlyFeeDto.getPaymentDates().size()))
+            );
+            monthlyFee.setTotalMonthsPaid(monthlyFeeDto.getPaymentDates().size());
+            monthlyFee.setFeeValue(monthlyFeeDto.getFeeValue());
+
+            monthlyFeeDto = modelMapper.mapModelToDto(monthlyFee, MonthlyFeeDto.class);
+            monthlyFeeDto.setAssociateId(associate.getId());
+            return monthlyFeeDto;
         } catch (Exception e) {
             LOGGER.error("An error occurred while replacing monthly fee.", e);
             throw new NotFoundException("An error occurred while replacing monthly fee.");
         }
+    }
+
+    public byte[] exportToPdf(Long id, HttpServletResponse response) {
+        Optional<MonthlyFee> monthlyFee = monthlyFeeRepository.findById(id);
+
+        if (monthlyFee.isEmpty()) return null;
+
+        response.setContentType("application/pdf");
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + monthlyFee.get().getAssociate().getName() + "-mensalidade.pdf"
+        );
+
+        Context context = new Context();
+        context.setVariable("monthlyFee", monthlyFee);
+
+        return pdfService.generatePdfByTemplate("monthly-fee", context);
+    }
+
+    private void ifMonthlyFeeDateAreTheSameThrow(MonthlyFeeDto monthlyFeeDto) {
+        List<ErrorType> errors = new ArrayList<>();
+
+        for (int i = 1; i < monthlyFeeDto.getPaymentDates().size(); i++) {
+            if (monthlyFeeDto.getPaymentDates().get(0).equals(monthlyFeeDto.getPaymentDates().get(i))) {
+                errors.add(new ErrorType(
+                        "Payment Date must be different.",
+                        "paymentDates")
+                );
+                break;
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            LOGGER.error("Payment Date must be different.");
+            throw new MonthlyFeeException("Invalid Monthly Fee", errors);
+        }
+    }
+
+    private void ifMonthlyFeeAlreadyExistsThrow(MonthlyFeeDto monthlyFeeDto) {
+        List<ErrorType> errors = new ArrayList<>();
+
+        // Garantir que a mensalidade não existe para o associado no mês e ano
+        for (MonthlyFeeDateDto monthlyFeeDateDto : monthlyFeeDto.getPaymentDates()) {
+            Optional<MonthlyFee> monthlyFeeOptional = monthlyFeeRepository.findByAssociateIdAndPaymentMonthAndPaymentYear(
+                    monthlyFeeDto.getAssociateId(),
+                    monthlyFeeDateDto.getMonth(),
+                    monthlyFeeDateDto.getYear()
+            );
+
+            if (monthlyFeeOptional.isPresent() && !monthlyFeeOptional.get().getId().equals(monthlyFeeDto.getId())) {
+                errors.add(new ErrorType(
+                        "Monthly Fee already exists for this associate (" + monthlyFeeDto.getAssociateId() + ") in this month (" + monthlyFeeDateDto.getMonth() + ") and year (" + monthlyFeeDateDto.getYear() + ")",
+                        "paymentDates")
+                );
+                break;
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            LOGGER.error("Monthly fee already exists for this associate in this month and year.");
+            throw new MonthlyFeeException("Monthly fee already exists for this associate in this month and year.", errors);
+        }
+    }
+
+    private void ifMonthlyFeeIsBeforeAssociationDateThrow(LocalDateTime associationDate, MonthlyFeeDto monthlyFeeDto) {
+        List<ErrorType> errors = new ArrayList<>();
+
+        for (MonthlyFeeDateDto monthlyFeeDateDto : monthlyFeeDto.getPaymentDates()) {
+            if (isMonthlyFeeBeforeAssociationDate(associationDate, monthlyFeeDateDto)) {
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yyyy"); // Define o formato desejado
+                LocalDateTime monthlyFeeDate = LocalDateTime.of(monthlyFeeDateDto.getYear(), monthlyFeeDateDto.getMonth(), 1, 0, 0, 0);
+                String formattedMonthlyFeeDate = monthlyFeeDate.format(dateFormatter); // Formata a data
+                String formattedAssociationDate = associationDate.format(dateFormatter); // Formata a data
+
+                errors.add(new ErrorType(
+                        "Payment Date must be after the association date. " +
+                                formattedMonthlyFeeDate + " is before " + formattedAssociationDate + ".",
+                        "paymentDates")
+                );
+            }
+        }
+
+        if (!errors.isEmpty()) throw new MonthlyFeeException("Invalid Monthly Fee", errors);
+    }
+
+    private boolean isMonthlyFeeBeforeAssociationDate(LocalDateTime associationDate, MonthlyFeeDateDto monthlyFeeDateDto) {
+        LocalDateTime monthlyFeeDate = LocalDateTime.of(monthlyFeeDateDto.getYear(), monthlyFeeDateDto.getMonth(), 1, 0, 0, 0);
+        return monthlyFeeDate.isBefore(associationDate) &&
+                (
+                        !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
+                                associationDate.getYear() != monthlyFeeDate.getYear()
+                );
     }
 }

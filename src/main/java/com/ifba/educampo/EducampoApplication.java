@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 @OpenAPIDefinition
 public class EducampoApplication {
     private static final Logger LOGGER = Logger.getLogger(EducampoApplication.class.getName());
+
     public static void main(String[] args) {
         LOGGER.info("Starting application...");
         SpringApplication.run(EducampoApplication.class, args);

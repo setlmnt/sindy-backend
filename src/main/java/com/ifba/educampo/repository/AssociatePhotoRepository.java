@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface AssociatePhotoRepository extends JpaRepository<AssociatePhoto, Long> { // Interface de repositório para a foto do associado
     @Query(
             "SELECT ap FROM AssociatePhoto ap WHERE ap.id = (SELECT a.associatePhoto.id FROM Associate a WHERE a.id = :associateId)"
-    ) // Query para buscar a foto do Associado pelo id do Associado
+    )
+        // Query para buscar a foto do Associado pelo id do Associado
     AssociatePhoto findAssociatePhotoByAssociateId(Long associateId); // Query para buscar a foto do Associado pelo id do Associado
 
     @Modifying

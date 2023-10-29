@@ -1,11 +1,10 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.*;
 import com.ifba.educampo.exception.AssociateException;
-import com.ifba.educampo.exception.AssociatePhotoException;
 import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.*;
 import com.ifba.educampo.model.entity.*;
 import com.ifba.educampo.repository.AssociateRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +22,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class AssociateService { // Classe de serviço para o Associado
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssociateService.class);
     private final GenericMapper<AssociateDto, Associate> modelMapper;
     private final AssociateRepository associateRepository;
     private final GenericMapper<AddressDto, Address> addressModelMapper;
@@ -37,8 +36,6 @@ public class AssociateService { // Classe de serviço para o Associado
     private final GenericMapper<PlaceOfBirthDto, PlaceOfBirth> placeOfBirthModelMapper;
     private final PlaceOfBirthService placeOfBirthService;
     private final LocalOfficeService localOfficeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AssociateService.class);
 
     public Associate findAssociate(Long id) {
         LOGGER.info("Finding associate with ID: {}", id);
@@ -120,7 +117,7 @@ public class AssociateService { // Classe de serviço para o Associado
             }
 
             return associateRepository.save(associate);
-        } catch (AssociateException e) {
+        } catch (AssociateException | NotFoundException e) {
             LOGGER.error(e.getMessage());
             throw e;
         } catch (Exception e) {

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Data
@@ -31,25 +33,48 @@ public class Address { // Endereço
     @Column(nullable = false)
     private String neighborhood; // Bairro
 
-    @Column(nullable = false)
+    @Column(name = "zip_code", nullable = false)
     private String zipCode; // CEP
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private java.util.Date createdAt; // Data de criação
+    @Column(nullable = false)
+    private Boolean deleted = false;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedAt", nullable = false)
-    private java.util.Date updatedAt; // Data de atualização
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt; // Data de Criação
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt; // Data de Atualização
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // Data de Atualização
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = new java.util.Date();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", number=" + number +
+                ", complement='" + complement + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deletedAt=" + deletedAt +
+                '}';
     }
 }

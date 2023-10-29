@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class Associate { // Associado
     @Column(nullable = false)
     private String name; // Nome
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "union_card", unique = true, nullable = false)
     private Long unionCard; // Carteira Sindical
 
     @Column(unique = true, nullable = false)
@@ -42,69 +44,100 @@ public class Associate { // Associado
     private String nationality; // Nacionalidade
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private java.util.Date birthDate; // Data de Nascimento
+    @Column(name = "birth_at", nullable = false)
+    private LocalDateTime birthAt; // Data de Nascimento
 
-    @Column(nullable = false)
+    @Column(name = "is_literate", nullable = false)
     private boolean isLiterate; // Alfabetizado
 
-    @Column(nullable = false)
+    @Column(name = "is_voter", nullable = false)
     private boolean isVoter; // Eleitor
 
-    @Column(nullable = false)
+    @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus; // Estado Civil
 
     @Column(nullable = false)
-    private java.util.Date associationDate; // Data de Associação
+    private Boolean deleted = false;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private java.util.Date createdAt; // Data de Criação
+    @Column(name = "association_at", nullable = false)
+    private LocalDateTime associationAt; // Data de Associação
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedAt", nullable = false)
-    private java.util.Date updatedAt; // Data de Atualização
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt; // Data de Criação
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt; // Data de Atualização
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // Data de Atualização
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "localOfficeId", nullable = true)
+    @JoinColumn(name = "local_office_id", nullable = true)
     private LocalOffice localOffice; // Delegacia (Escritório Local)
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "addressId", nullable = true)
+    @JoinColumn(name = "address_id", nullable = true)
     private Address address; // Endereço
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dependentsId", nullable = false)
+    @JoinColumn(name = "dependents_id", nullable = false)
     private Dependents dependents; // Dependentes
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "affiliationId", nullable = false)
+    @JoinColumn(name = "affiliation_id", nullable = false)
     private Affiliation affiliation; // Filiação
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "placeOfBirthId", nullable = false)
+    @JoinColumn(name = "place_of_birth_id", nullable = false)
     private PlaceOfBirth placeOfBirth; // Naturalidade
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "associatePhotoId")
+    @JoinColumn(name = "associate_photo_id")
     private AssociatePhoto associatePhoto; // Foto do Associado
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "workRecordId", nullable = false)
+    @JoinColumn(name = "work_record_id", nullable = false)
     private WorkRecord workRecord; // Carteira de Trabalho
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = new java.util.Date();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Associate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unionCard=" + unionCard +
+                ", cpf='" + cpf + '\'' +
+                ", rg='" + rg + '\'' +
+                ", profession='" + profession + '\'' +
+                ", workplace='" + workplace + '\'' +
+                ", phone='" + phone + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", birthAt=" + birthAt +
+                ", isLiterate=" + isLiterate +
+                ", isVoter=" + isVoter +
+                ", maritalStatus=" + maritalStatus +
+                ", deleted=" + deleted +
+                ", associationAt=" + associationAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deletedAt=" + deletedAt +
+                '}';
     }
 }

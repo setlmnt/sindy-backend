@@ -1,6 +1,6 @@
 package com.ifba.educampo.model.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,17 +12,22 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "affiliations")
-public class Affiliation { // Afiliação
+@Table(name = "monthly_fee_dates")
+public class MonthlyFeeDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "father_name", nullable = false)
-    private String fatherName; // Nome do Pai
+    @Column(nullable = false)
+    private Integer month;
 
-    @Column(name = "mother_name", nullable = false)
-    private String motherName; // Nome da Mãe
+    @Column(nullable = false)
+    private Integer year;
+
+    @JsonIgnoreProperties("paymentDates")
+    @ManyToOne
+    @JoinColumn(name = "monthly_fee_id", nullable = false)
+    private MonthlyFee monthlyFee;
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -51,14 +56,20 @@ public class Affiliation { // Afiliação
 
     @Override
     public String toString() {
-        return "Affiliation{" +
+        return "MonthlyFeeDate{" +
                 "id=" + id +
-                ", fatherName='" + fatherName + '\'' +
-                ", motherName='" + motherName + '\'' +
+                ", month=" + month +
+                ", year=" + year +
+                ", monthlyFee=" + monthlyFee +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", deletedAt=" + deletedAt +
                 '}';
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 }

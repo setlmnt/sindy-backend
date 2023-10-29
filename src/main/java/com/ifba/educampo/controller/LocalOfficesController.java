@@ -1,6 +1,6 @@
 package com.ifba.educampo.controller;
 
-import com.ifba.educampo.model.dto.LocalOfficeDto;
+import com.ifba.educampo.dto.LocalOfficeDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.service.LocalOfficeService;

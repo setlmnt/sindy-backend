@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.WorkRecordDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.WorkRecordDto;
 import com.ifba.educampo.model.entity.WorkRecord;
 import com.ifba.educampo.repository.WorkRecordRepository;
 import jakarta.transaction.Transactional;
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WorkRecordService { // Carteira de trabalho
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkRecordService.class);
     private final GenericMapper<WorkRecordDto, WorkRecord> modelMapper;
     private final WorkRecordRepository workRecordRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkRecordService.class);
 
     public WorkRecord findWorkRecord(Long id) {
         LOGGER.info("Finding work record with ID: {}", id);

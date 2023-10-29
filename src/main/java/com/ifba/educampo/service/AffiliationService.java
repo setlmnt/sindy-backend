@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.AffiliationDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.AffiliationDto;
 import com.ifba.educampo.model.entity.Affiliation;
 import com.ifba.educampo.repository.AffiliationRepository;
 import jakarta.transaction.Transactional;

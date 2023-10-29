@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.AddressDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.AddressDto;
 import com.ifba.educampo.model.entity.Address;
 import com.ifba.educampo.repository.AddressRepository;
 import jakarta.transaction.Transactional;

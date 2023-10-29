@@ -2,6 +2,7 @@ package com.ifba.educampo.exception.handler;
 
 import com.ifba.educampo.exception.*;
 import com.ifba.educampo.exception.response.ExceptionResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -48,6 +49,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                List.of(new ErrorType(ex.getMessage())),
+                request.getDescription(false),
+                new Date()
+        );
+    }
+
     @ExceptionHandler(AssociateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleInvalidAssociateException(AssociateException ex, WebRequest request) {
@@ -66,7 +79,7 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                List.of(new ErrorType(ex.getMessage())),
+                ex.getErrors(),
                 request.getDescription(false),
                 new Date()
         );
@@ -108,7 +121,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-   @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse handleException(Exception ex, WebRequest request) {
         return new ExceptionResponse(

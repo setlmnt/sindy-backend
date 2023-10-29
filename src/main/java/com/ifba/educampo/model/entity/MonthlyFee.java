@@ -1,53 +1,86 @@
 package com.ifba.educampo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "monthly_fees", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"associateId", "paymentMonth", "paymentYear"})
-})
+@Table(name = "monthly_fees")
 public class MonthlyFee { // Mensalidade
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private float paidAmount; // Valor Pago
+    @Column(name = "fee_value", nullable = false)
+    private BigDecimal feeValue; // Valor da Mensalidade
 
-    @Column(nullable = false)
-    private Integer paymentMonth; // Mês de Pagamento
+    @Column(name = "total_amount", nullable = false)
+    private BigDecimal totalAmount; // Valor Total
 
-    @Column(nullable = false)
-    private Integer paymentYear; // Ano de Pagamento
+    @Column(name = "total_months_paid", nullable = false)
+    private Integer totalMonthsPaid; // Quantidade de meses pagos
+
+    @JsonIgnoreProperties("monthlyFee")
+    @OneToMany(mappedBy = "monthlyFee", cascade = CascadeType.ALL)
+    private List<MonthlyFeeDate> paymentDates; // Datas de Pagamento
 
     @JsonInclude(JsonInclude.Include.CUSTOM)
     @ManyToOne
-    @JoinColumn(name = "associateId", nullable = false)
+    @JoinColumn(name = "associate_id", nullable = false)
     private Associate associate; // Associado relacionado à mensalidade
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private java.util.Date createdAt; // Data de Criação
+    @Column(nullable = false)
+    private Boolean deleted = false;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedAt", nullable = false)
-    private java.util.Date updatedAt; // Data de Atualização
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt; // Data de Criação
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt; // Data de Atualização
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // Data de Atualização
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = new java.util.Date();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "MonthlyFee{" +
+                "id=" + id +
+                ", feeValue=" + feeValue +
+                ", totalAmount=" + totalAmount +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deletedAt=" + deletedAt +
+                '}';
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
+
+        this.paymentDates.forEach(MonthlyFeeDate::delete);
     }
 }

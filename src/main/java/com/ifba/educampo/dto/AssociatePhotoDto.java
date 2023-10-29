@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.dto;
+package com.ifba.educampo.dto;
 
 import lombok.Data;
 

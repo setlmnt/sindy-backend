@@ -1,17 +1,17 @@
-package com.ifba.educampo.model.dto;
+package com.ifba.educampo.dto;
 
 import com.ifba.educampo.model.enums.MaritalStatus;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CPF;
+
+import java.time.LocalDateTime;
 
 @Data
 public class AssociateDto {
@@ -53,8 +53,7 @@ public class AssociateDto {
     private String nationality; // Nacionalidade
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date birthDate; // Data de Nascimento
+    private LocalDateTime birthAt; // Data de Nascimento
 
     @NotNull
     private boolean isLiterate; // Alfabetizado
@@ -67,7 +66,7 @@ public class AssociateDto {
     private MaritalStatus maritalStatus; // Estado Civil
 
     @NotNull
-    private java.util.Date associationDate; // Data de Associação
+    private LocalDateTime associationAt; // Data de Associação
 
     @Nullable
     private Long localOfficeId;

@@ -1,11 +1,12 @@
 package com.ifba.educampo.model.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -17,13 +18,13 @@ public class AssociatePhoto { // Foto do Associado
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "archive_name", nullable = false)
     private String archiveName; // Nome do Arquivo
 
-    @Column(nullable = false)
+    @Column(name = "original_name", nullable = false)
     private String originalName; // Nome Original
 
-    @Column(nullable = false)
+    @Column(name = "content_type", nullable = false)
     private String contentType; // Tipo de Conteúdo
 
     @Column(nullable = false)
@@ -32,22 +33,44 @@ public class AssociatePhoto { // Foto do Associado
     @Column(nullable = false)
     private String url; // URL
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private java.util.Date createdAt; // Data de criação
+    @Column(nullable = false)
+    private Boolean deleted = false;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedAt", nullable = false)
-    private java.util.Date updatedAt; // Data de atualização
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt; // Data de Criação
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt; // Data de Atualização
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // Data de Atualização
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = new java.util.Date();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "AssociatePhoto{" +
+                "id=" + id +
+                ", archiveName='" + archiveName + '\'' +
+                ", originalName='" + originalName + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", size=" + size +
+                ", url='" + url + '\'' +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deletedAt=" + deletedAt +
+                '}';
     }
 }

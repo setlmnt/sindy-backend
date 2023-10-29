@@ -1,159 +1,72 @@
 package com.ifba.educampo.controller;
 
-import com.ifba.educampo.exception.MonthlyFeeException;
-import com.ifba.educampo.exception.NotFoundException;
-import com.ifba.educampo.model.dto.MonthlyFeeDto;
-import com.ifba.educampo.model.entity.Associate;
-import com.ifba.educampo.model.entity.MonthlyFee;
-import com.ifba.educampo.service.AssociateService;
+import com.ifba.educampo.dto.MonthlyFeeDto;
 import com.ifba.educampo.service.MonthlyFeeService;
-import com.ifba.educampo.service.PdfService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.context.Context;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/monthly-fees")
 @RequiredArgsConstructor
 public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
-    private final AssociateService associateService;
-    private final PdfService pdfService;
-
     @GetMapping
-    public ResponseEntity<Page<MonthlyFee>> listMonthlyFees(
+    public Page<MonthlyFeeDto> listMonthlyFees(
             @RequestParam(required = false) Integer paymentMonth,
             @RequestParam(required = false) Integer paymentYear,
             Pageable pageable
     ) {
-        if (paymentYear != null && paymentMonth != null) {
-            return ResponseEntity.ok(monthlyFeeService.listAllByMonthAndYear(paymentMonth, paymentYear, pageable));
-        } else if (paymentYear != null) {
-            return ResponseEntity.ok(monthlyFeeService.listAllByYear(paymentYear, pageable));
-        } else if (paymentMonth != null) {
-            return ResponseEntity.ok(monthlyFeeService.listAllByMonth(paymentMonth, pageable));
-        }
-        return ResponseEntity.ok(monthlyFeeService.listAll(pageable));
+        return monthlyFeeService.listAll(paymentMonth, paymentYear, pageable);
+    }
+
+    @GetMapping(path = "/associates/{associateId}")
+    public Page<MonthlyFeeDto> findMonthlyFeeByAssociateId(
+            @RequestParam(required = false) Integer paymentMonth,
+            @RequestParam(required = false) Integer paymentYear,
+            @PathVariable Long associateId,
+            Pageable pageable
+    ) {
+        return monthlyFeeService
+                .listAllByAssociateIdAndMonthAndYear(associateId, paymentMonth, paymentYear, pageable);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<MonthlyFee> findMonthlyFeeById(
-            @PathVariable long id
+    public MonthlyFeeDto findMonthlyFeeById(
+            @PathVariable Long id
     ) {
-        return ResponseEntity.ok(monthlyFeeService.findMonthlyFee(id));
-    }
-
-    @GetMapping(path = "/{associateId}/associate")
-    public ResponseEntity<Page<MonthlyFee>> findMonthlyFeeByAssociateId(
-            @RequestParam(required = false) Integer paymentMonth,
-            @RequestParam(required = false) Integer paymentYear,
-            @PathVariable long associateId,
-            Pageable pageable
-    ) {
-        if (paymentYear != null && paymentMonth != null) {
-            return ResponseEntity
-                    .ok(monthlyFeeService.listAllByAssociateIdAndMonthAndYear(associateId, paymentMonth, paymentYear, pageable));
-        } else if (paymentYear != null) {
-            return ResponseEntity.ok(monthlyFeeService.listAllByAssociateIdAndYear(associateId, paymentYear, pageable));
-        } else if (paymentMonth != null) {
-            return ResponseEntity.ok(monthlyFeeService.listAllByAssociateIdAndMonth(associateId, paymentMonth, pageable));
-        }
-        return ResponseEntity.ok(monthlyFeeService.listAllByAssociateId(associateId, pageable));
+        return monthlyFeeService.findMonthlyFee(id);
     }
 
     @PostMapping
-    public ResponseEntity<MonthlyFee> save(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
-        // Garantir que o associado existe
-        Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
-        if (associate == null) throw new NotFoundException("Associate Not Found");
-
-        // Garantir que a data de criação do associação é anterior a data de pagamento
-        LocalDate associationDate = associate.getAssociationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeeDto.getPaymentYear(), monthlyFeeDto.getPaymentMonth(), 1);
-        if (monthlyFeeDate.isBefore(associationDate) &&
-                (
-                        !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
-                                associationDate.getYear() != monthlyFeeDate.getYear()
-                )
-        ) throw new MonthlyFeeException("Association Date is after Monthly Fee Payment Date");
-
-        // Garantir que a mensalidade não existe
-        Optional<MonthlyFee> monthlyFee = monthlyFeeService
-                .findMonthlyFeeByAssociateIdAndMonthAndYear(
-                        monthlyFeeDto.getAssociateId(),
-                        monthlyFeeDto.getPaymentMonth(),
-                        monthlyFeeDto.getPaymentYear()
-                );
-        if (monthlyFee.isPresent()) throw new MonthlyFeeException("Monthly Fee Already Exists");
-
-        return new ResponseEntity<>(monthlyFeeService.save(monthlyFeeDto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public MonthlyFeeDto save(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
+        return monthlyFeeService.save(monthlyFeeDto);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         monthlyFeeService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody @Valid MonthlyFeeDto monthlyFeeDto) {
-        // Garantir que o associado existe
-        Associate associate = associateService.findAssociate(monthlyFeeDto.getAssociateId());
-        if (associate == null) return ResponseEntity.badRequest().build();
-
-        // Garantir que a data de associacao é anterior a data de pagamento
-        LocalDate associationDate = associate.getAssociationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate monthlyFeeDate = LocalDate.of(monthlyFeeDto.getPaymentYear(), monthlyFeeDto.getPaymentMonth(), 1);
-        if (monthlyFeeDate.isBefore(associationDate) &&
-                (
-                        !associationDate.getMonth().equals(monthlyFeeDate.getMonth()) ||
-                                associationDate.getYear() != monthlyFeeDate.getYear()
-                )
-        ) return ResponseEntity.badRequest().build();
-
-        // Garantir que a mensalidade não existe e que a mensalidade não é a mesma
-        Optional<MonthlyFee> monthlyFee = monthlyFeeService
-                .findMonthlyFeeByAssociateIdAndMonthAndYear(
-                        monthlyFeeDto.getAssociateId(),
-                        monthlyFeeDto.getPaymentMonth(),
-                        monthlyFeeDto.getPaymentYear()
-                );
-
-        if (monthlyFee.isPresent() && !monthlyFee.get().getId().equals(monthlyFeeDto.getId()))
-            return ResponseEntity.badRequest().build();
-
-        monthlyFeeService.replace(monthlyFeeDto);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping(path = "/{id}")
+    public MonthlyFeeDto update(
+            @RequestBody @Valid MonthlyFeeDto monthlyFeeDto,
+            @PathVariable Long id
+    ) {
+        return monthlyFeeService.update(id, monthlyFeeDto);
     }
 
     @GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
     public byte[] exportMonthlyFeeToPdf(
-            @PathVariable long id,
+            @PathVariable Long id,
             HttpServletResponse response
     ) {
-        MonthlyFee monthlyFee = monthlyFeeService.findMonthlyFee(id);
-
-        if (monthlyFee == null) return null;
-
-        response.setContentType("application/pdf");
-        response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=" + monthlyFee.getAssociate().getName() + "-mensalidade-" + monthlyFee.getPaymentMonth() + "-" + monthlyFee.getPaymentYear() + ".pdf"
-        );
-
-        Context context = new Context();
-        context.setVariable("monthlyFee", monthlyFee);
-
-        return pdfService.generatePdfByTemplate("monthly-fee", context);
+        return monthlyFeeService.exportToPdf(id, response);
     }
 }

@@ -1,10 +1,9 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.AssociatePhotoDto;
 import com.ifba.educampo.exception.AssociatePhotoException;
 import com.ifba.educampo.exception.AssociatePhotoNotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.AssociateDto;
-import com.ifba.educampo.model.dto.AssociatePhotoDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.AssociatePhoto;
 import com.ifba.educampo.repository.AssociatePhotoRepository;
@@ -27,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -38,6 +36,7 @@ public class AssociatePhotoService { // Foto do associado
     private final AssociatePhotoRepository associatePhotoRepository;
     private final AssociateService associateService;
     private final AssociateRepository associateRepository;
+    private final String uploadDir = "uploads";
 
     public AssociatePhoto uploadAndSaveAssociatePhoto(long associateId, MultipartFile file) {
         try {
@@ -156,8 +155,6 @@ public class AssociatePhotoService { // Foto do associado
         }
     }
 
-    private final String uploadDir = "uploads";
-
     public void store(MultipartFile file, String fileName) {
         try {
             LOGGER.info("Storing file: {}", fileName);
@@ -182,7 +179,7 @@ public class AssociatePhotoService { // Foto do associado
             throw new FileNotFoundException("File not found: " + fileName);
         } catch (FileNotFoundException e) {
             LOGGER.error("File not found: {}", fileName);
-            throw new AssociatePhotoNotFoundException("File not found");
+            throw new AssociatePhotoNotFoundException(e.getMessage());
         } catch (MalformedURLException e) {
             LOGGER.error("An error occurred while loading the file: {}", e.getMessage());
             throw new RuntimeException("An error occurred while loading the file", e);

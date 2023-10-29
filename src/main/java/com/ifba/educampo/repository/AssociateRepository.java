@@ -1,7 +1,6 @@
 package com.ifba.educampo.repository;
 
 import com.ifba.educampo.model.entity.Associate;
-import com.ifba.educampo.model.entity.AssociatePhoto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

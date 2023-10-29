@@ -1,7 +1,7 @@
 package com.ifba.educampo.controller;
 
+import com.ifba.educampo.dto.AssociateDto;
 import com.ifba.educampo.exception.AssociatePhotoNotFoundException;
-import com.ifba.educampo.model.dto.AssociateDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.AssociatePhoto;
 import com.ifba.educampo.model.enums.MaritalStatus;

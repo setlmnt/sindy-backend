@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.dto;
+package com.ifba.educampo.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

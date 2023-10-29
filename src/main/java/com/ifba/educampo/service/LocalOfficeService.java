@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.LocalOfficeDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.LocalOfficeDto;
 import com.ifba.educampo.model.entity.Associate;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.repository.LocalOfficeRepository;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LocalOfficeService { // Delegacia (Escritorio Local)
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocalOfficeService.class);
     private final GenericMapper<LocalOfficeDto, LocalOffice> modelMapper;
     private final LocalOfficeRepository localOfficeRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalOfficeService.class);
 
     public Page<Associate> listAllAssociates(long localOfficeId, Pageable pageable) {
         LOGGER.info("Listing all associates from local office with ID: {}", localOfficeId);

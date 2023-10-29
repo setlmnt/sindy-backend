@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.DependentsDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.DependentsDto;
 import com.ifba.educampo.model.entity.Dependents;
 import com.ifba.educampo.repository.DependentsRepository;
 import jakarta.transaction.Transactional;
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DependentsService { // Dependentes
+    private static final Logger LOGGER = LoggerFactory.getLogger(DependentsService.class);
     private final GenericMapper<DependentsDto, Dependents> modelMapper;
     private final DependentsRepository dependentsRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(DependentsService.class);
 
     public Dependents findDependent(Long id) {
         LOGGER.info("Finding dependent with ID: {}", id);

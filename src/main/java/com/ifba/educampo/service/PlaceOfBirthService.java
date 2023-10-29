@@ -1,8 +1,8 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.PlaceOfBirthDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.dto.PlaceOfBirthDto;
 import com.ifba.educampo.model.entity.PlaceOfBirth;
 import com.ifba.educampo.repository.PlaceOfBirthRepository;
 import jakarta.transaction.Transactional;
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PlaceOfBirthService { // Naturalidade
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceOfBirthService.class);
     private final GenericMapper<PlaceOfBirthDto, PlaceOfBirth> modelMapper;
     private final PlaceOfBirthRepository placeOfBirthRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceOfBirthService.class);
 
     public PlaceOfBirth findPlaceOfBirth(Long id) {
         LOGGER.info("Finding place of birth with ID: {}", id);
