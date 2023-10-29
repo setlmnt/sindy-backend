@@ -8,7 +8,7 @@ target/
 ./logs/application.log
 uploads/
 logs/
-src/main/resources/application.secrets.yml
+src/main/resources/application.secrets.properties
 
 ### STS ###
 .apt_generated
