@@ -80,6 +80,11 @@
 			<version>3.1.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version> <!-- Use the latest version -->
+		</dependency>
 	</dependencies>
 
 	<build>
