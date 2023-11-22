@@ -16,17 +16,23 @@ public class MonthlyFeeCustomRepository {
     @PersistenceContext
     private EntityManager em;
 
+    private static void setPagination(Pageable pageable, TypedQuery<MonthlyFee> typedQuery) {
+        typedQuery.setMaxResults(pageable.getPageSize());
+        typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+    }
+
     public Page<MonthlyFee> findAllFromPaymentMonthAndYearAndDeletedFalse(
             Integer month,
             Integer year,
             Pageable pageable
     ) {
-        StringBuilder query = new StringBuilder("SELECT m FROM MonthlyFee m JOIN m.paymentDates pd WHERE m.deleted = false AND pd.deleted = false");
+        StringBuilder query = new StringBuilder(
+                "SELECT m FROM MonthlyFee m JOIN m.paymentDates pd WHERE m.deleted = false AND pd.deleted = false"
+        );
 
         TypedQuery<MonthlyFee> typedQuery = filterQueryByYearAndMonth(query, year, month);
 
-        typedQuery.setMaxResults(pageable.getPageSize());
-        typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        setPagination(pageable, typedQuery);
 
         List<MonthlyFee> resultList = typedQuery.getResultList();
         return new PageImpl<>(resultList, pageable, resultList.size());
@@ -45,8 +51,7 @@ public class MonthlyFeeCustomRepository {
 
         typedQuery.setParameter("associateId", associateId);
 
-        typedQuery.setMaxResults(pageable.getPageSize());
-        typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        setPagination(pageable, typedQuery);
 
         List<MonthlyFee> resultList = typedQuery.getResultList();
         return new PageImpl<>(resultList, pageable, resultList.size());

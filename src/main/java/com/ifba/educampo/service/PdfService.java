@@ -1,6 +1,7 @@
 package com.ifba.educampo.service;
 
 import com.lowagie.text.DocumentException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -13,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Service
+@Slf4j
 public class PdfService {
     private final TemplateEngine templateEngine;
 
@@ -26,11 +28,12 @@ public class PdfService {
         templateEngine.setTemplateResolver(templateResolver);
     }
 
-    public String parseThymeleafTemplate(String template, Context context) {
+    private String parseThymeleafTemplate(String template, Context context) {
         return templateEngine.process(template, context);
     }
 
     public byte[] generatePdfByTemplate(String template, Context context) {
+        log.info("Generating PDF by template {}", template);
         String html = parseThymeleafTemplate(template, context);
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ITextRenderer renderer = new ITextRenderer();
@@ -41,7 +44,8 @@ public class PdfService {
 
             return outputStream.toByteArray();
         } catch (DocumentException | IOException e) {
-            e.printStackTrace();
+            log.error("Error generating PDF by template {}", template);
+            log.error(e.getMessage());
         }
 
         return new byte[0];

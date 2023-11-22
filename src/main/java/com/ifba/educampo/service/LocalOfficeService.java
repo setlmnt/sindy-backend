@@ -1,88 +1,74 @@
 package com.ifba.educampo.service;
 
-import com.ifba.educampo.dto.LocalOfficeDto;
+import com.ifba.educampo.dto.associate.AssociateResponseDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.exception.NotFoundException;
-import com.ifba.educampo.mapper.GenericMapper;
-import com.ifba.educampo.model.entity.Associate;
+import com.ifba.educampo.mapper.LocalOfficeMapper;
+import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.model.entity.LocalOffice;
+import com.ifba.educampo.model.entity.associate.Associate;
 import com.ifba.educampo.repository.LocalOfficeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class LocalOfficeService { // Delegacia (Escritorio Local)
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalOfficeService.class);
-    private final GenericMapper<LocalOfficeDto, LocalOffice> modelMapper;
+    private final LocalOfficeMapper localOfficeMapper;
+    private final AssociateMapper associateMapper;
     private final LocalOfficeRepository localOfficeRepository;
 
-    public Page<Associate> listAllAssociates(long localOfficeId, Pageable pageable) {
-        LOGGER.info("Listing all associates from local office with ID: {}", localOfficeId);
-        return localOfficeRepository.listAllAssociates(localOfficeId, pageable)
+    public Page<AssociateResponseDto> listAllAssociates(Long id, Pageable pageable) {
+        log.info("Listing all associates from local office with ID: {}", id);
+        Page<Associate> associates = localOfficeRepository.listAllAssociates(id, pageable)
                 .orElseThrow(() -> {
-                    LOGGER.error("Associates from local office with ID {} not found.", localOfficeId);
+                    log.error("Associates from local office with ID {} not found.", id);
                     return new NotFoundException("Associates Not Found");
                 });
+        return associates.map(associateMapper::toResponseDto);
     }
 
-    public LocalOffice findLocalOffice(long id) {
-        LOGGER.info("Finding local office with ID: {}", id);
-        return localOfficeRepository.findById(id)
+    public LocalOfficeResponseDto findLocalOffice(Long id) {
+        log.info("Finding local office with ID: {}", id);
+        LocalOffice localOffice = localOfficeRepository.findById(id)
                 .orElseThrow(() -> {
-                    LOGGER.error("Local office with ID {} not found.", id);
+                    log.error("Local office with ID {} not found.", id);
                     return new NotFoundException("Local Office Not Found");
                 });
+        return localOfficeMapper.toResponseDto(localOffice);
     }
 
-    public Page<LocalOffice> listAll(Pageable pageable) {
-        try {
-            LOGGER.info("Listing all local offices.");
-            return localOfficeRepository.findAll(pageable);
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while listing local offices.", e);
-            throw new NotFoundException("An error occurred while listing local offices.");
-        }
+    public Page<LocalOfficeResponseDto> listAll(Pageable pageable) {
+        log.info("Listing all local offices.");
+        return localOfficeRepository.findAllAndDeletedFalse(pageable).map(localOfficeMapper::toResponseDto);
     }
 
-    @Transactional
-    public void delete(long id) {
-        try {
-            LOGGER.info("Deleting local office with ID: {}", id);
-            localOfficeRepository.deleteById(id);
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while listing local offices.", e);
-            throw new NotFoundException("An error occurred while deleting local office.");
-        }
+    public LocalOfficeResponseDto save(LocalOfficePostDto dto) {
+        log.info("Saving local office.");
+        LocalOffice localOffice = localOfficeRepository.save(localOfficeMapper.postDtoToEntity(dto));
+        return localOfficeMapper.toResponseDto(localOffice);
     }
 
-    @Transactional
-    public LocalOffice save(LocalOfficeDto localOfficeDto) {
-        try {
-            LOGGER.info("Saving local office.");
-            return localOfficeRepository.save(modelMapper.mapDtoToModel(localOfficeDto, LocalOffice.class));
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while saving local office.", e);
-            throw new NotFoundException("An error occurred while saving local office.");
-        }
+    public LocalOfficeResponseDto update(Long id, LocalOfficePutDto dto) {
+        log.info("Replacing local office with ID: {}", id);
+
+        LocalOffice localOffice = localOfficeRepository.getReferenceById(id);
+        localOffice.update(localOfficeMapper.putDtoToEntity(dto));
+
+        return localOfficeMapper.toResponseDto(localOffice);
     }
 
-    @Transactional
-    public LocalOffice replace(LocalOfficeDto localOfficeDto) {
-        try {
-            LOGGER.info("Replacing local office with ID: {}", localOfficeDto.getId());
-
-            LocalOffice savedLocalOffice = findLocalOffice(localOfficeDto.getId());
-            localOfficeDto.setId(savedLocalOffice.getId());
-
-            return localOfficeRepository.save(modelMapper.mapDtoToModel(localOfficeDto, LocalOffice.class));
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while replacing local office.", e);
-            throw new NotFoundException("An error occurred while replacing local office.");
-        }
+    public void delete(Long id) {
+        log.info("Deleting local office with ID: {}", id);
+        LocalOffice localOffice = localOfficeRepository.getReferenceById(id);
+        localOffice.delete();
     }
 }

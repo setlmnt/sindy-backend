@@ -45,6 +45,15 @@ public class LocalOffice { // Delegacias (Escritório Local)
         updatedAt = LocalDateTime.now();
     }
 
+    public void update(LocalOffice localOffice) {
+        if (localOffice.getName() != null) setName(localOffice.getName());
+    }
+
+    public void delete() {
+        deleted = true;
+        deletedAt = LocalDateTime.now();
+    }
+
     @Override
     public String toString() {
         return "LocalOffice{" +

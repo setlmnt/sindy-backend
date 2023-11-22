@@ -2,6 +2,7 @@ package com.ifba.educampo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ifba.educampo.model.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
@@ -32,7 +34,7 @@ public class MonthlyFee { // Mensalidade
 
     @JsonIgnoreProperties("monthlyFee")
     @OneToMany(mappedBy = "monthlyFee", cascade = CascadeType.ALL)
-    private List<MonthlyFeeDate> paymentDates; // Datas de Pagamento
+    private Set<MonthlyFeeDate> paymentDates; // Datas de Pagamento
 
     @JsonInclude(JsonInclude.Include.CUSTOM)
     @ManyToOne
@@ -64,6 +66,23 @@ public class MonthlyFee { // Mensalidade
         updatedAt = LocalDateTime.now();
     }
 
+    public void update(MonthlyFee monthlyFee) {
+        if (monthlyFee.getFeeValue() != null) setFeeValue(monthlyFee.getFeeValue());
+        if (monthlyFee.getTotalAmount() != null) setTotalAmount(monthlyFee.getTotalAmount());
+        if (monthlyFee.getTotalMonthsPaid() != null) setTotalMonthsPaid(monthlyFee.getTotalMonthsPaid());
+        if (monthlyFee.getPaymentDates() != null) {
+            this.paymentDates.forEach(MonthlyFeeDate::delete);
+            setPaymentDates(monthlyFee.getPaymentDates());
+        }
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
+
+        this.paymentDates.forEach(MonthlyFeeDate::delete);
+    }
+
     @Override
     public String toString() {
         return "MonthlyFee{" +
@@ -77,10 +96,16 @@ public class MonthlyFee { // Mensalidade
                 '}';
     }
 
-    public void delete() {
-        this.deleted = true;
-        this.deletedAt = LocalDateTime.now();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MonthlyFee that = (MonthlyFee) o;
+        return Objects.equals(id, that.id) && Objects.equals(feeValue, that.feeValue) && Objects.equals(totalAmount, that.totalAmount) && Objects.equals(totalMonthsPaid, that.totalMonthsPaid) && Objects.equals(deleted, that.deleted) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(deletedAt, that.deletedAt);
+    }
 
-        this.paymentDates.forEach(MonthlyFeeDate::delete);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, feeValue, totalAmount, totalMonthsPaid, deleted, createdAt, updatedAt, deletedAt);
     }
 }
