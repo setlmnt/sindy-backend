@@ -16,6 +16,8 @@ public interface AddressMapper {
 
     AddressPostDto toPostDto(Address address);
 
+    AddressPostDto toPostDto(AddressPutDto addressPutDto);
+
     @Mapping(target = "id", ignore = true)
     Address postDtoToEntity(AddressPostDto addressPostDto);
 

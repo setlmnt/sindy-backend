@@ -8,7 +8,9 @@ import com.ifba.educampo.exception.BadRequestListException;
 import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
+import com.ifba.educampo.mapper.associate.AddressMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
+import com.ifba.educampo.mapper.associate.DependentsMapper;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.model.entity.associate.*;
 import com.ifba.educampo.repository.associate.AssociateRepository;
@@ -32,8 +34,10 @@ public class AssociateService { // Classe de serviço para o Associado
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;
     private final AddressService addressService;
-    private final WorkRecordService workRecordService;
+    private final AddressMapper addressMapper;
     private final DependentsService dependentsService;
+    private final DependentsMapper dependentsMapper;
+    private final WorkRecordService workRecordService;
     private final AffiliationService affiliationService;
     private final PlaceOfBirthService placeOfBirthService;
     private final LocalOfficeService localOfficeService;
@@ -192,18 +196,32 @@ public class AssociateService { // Classe de serviço para o Associado
         Associate updatedAssociate = associateMapper.putDtoToEntity(dto);
 
         if (dto.address() != null) {
-            Address updatedAddress = addressService.update(associate.getAddress().getId(), dto.address());
+            Address updatedAddress = null;
+
+            if (associate.getAddress() != null) {
+                updatedAddress = addressService.update(associate.getAddress().getId(), dto.address());
+            } else {
+                updatedAddress = addressService.save(addressMapper.toPostDto(dto.address()));
+            }
+
             updatedAssociate.setAddress(updatedAddress);
+        }
+
+        if (dto.dependents() != null) {
+            Dependents updatedDependents = null;
+
+            if (associate.getDependents() != null) {
+                updatedDependents = dependentsService.update(associate.getDependents().getId(), dto.dependents());
+            } else {
+                updatedDependents = dependentsService.save(dependentsMapper.toPostDto(dto.dependents()));
+            }
+
+            updatedAssociate.setDependents(updatedDependents);
         }
 
         if (dto.workRecord() != null) {
             WorkRecord updatedWorkRecord = workRecordService.update(associate.getWorkRecord().getId(), dto.workRecord());
             updatedAssociate.setWorkRecord(updatedWorkRecord);
-        }
-
-        if (dto.dependents() != null) {
-            Dependents updatedDependents = dependentsService.update(associate.getDependents().getId(), dto.dependents());
-            updatedAssociate.setDependents(updatedDependents);
         }
 
         if (dto.affiliation() != null) {

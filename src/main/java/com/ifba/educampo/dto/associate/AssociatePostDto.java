@@ -69,7 +69,6 @@ public record AssociatePostDto(
         @NotNull
         LocalDate associationAt, // Data de Associação
 
-        @Nullable
         Long localOfficeId,
 
         AddressPostDto address,

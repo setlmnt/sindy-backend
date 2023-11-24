@@ -16,6 +16,8 @@ public interface DependentsMapper {
 
     DependentsPostDto toPostDto(Dependents dependents);
 
+    DependentsPostDto toPostDto(DependentsPutDto dependentsPutDto);
+
     @Mapping(target = "id", ignore = true)
     Dependents postDtoToEntity(DependentsPostDto dependentsPostDto);
 
