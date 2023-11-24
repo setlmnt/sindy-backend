@@ -1,6 +1,8 @@
 package com.ifba.educampo.dto.associate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.dto.ImageResponseDto;
 import com.ifba.educampo.dto.associate.address.AddressResponseDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationResponseDto;
@@ -33,11 +35,18 @@ public record AssociateResponseDto(
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação
         Boolean deleted,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalOfficeResponseDto localOffice,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         AddressResponseDto address,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         DependentsResponseDto dependents,
         AffiliationResponseDto affiliation,
         PlaceOfBirthResponseDto placeOfBirth,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         ImageResponseDto associatePhoto,
         WorkRecordResponseDto workRecord
 ) {

@@ -79,12 +79,10 @@ public class Associate { // Associado
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt; // Data de Atualização
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "local_office_id")
     private LocalOffice localOffice; // Delegacia (Escritório Local)
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address; // Endereço
@@ -101,7 +99,6 @@ public class Associate { // Associado
     @JoinColumn(name = "place_of_birth_id", nullable = false)
     private PlaceOfBirth placeOfBirth; // Naturalidade
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image photo; // Foto do Associado

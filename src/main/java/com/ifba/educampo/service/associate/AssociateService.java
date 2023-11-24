@@ -70,13 +70,9 @@ public class AssociateService { // Classe de serviço para o Associado
 
         validateAssociateCreation(dto);
 
-        Associate associate = associateMapper.postDtoToEntity(dto);
-        if (dto.localOfficeId() != null) {
-            LocalOfficeResponseDto localOfficeResponseDto = localOfficeService.findLocalOffice(dto.localOfficeId());
-            associate.setLocalOffice(localOfficeMapper.responseDtoToEntity(localOfficeResponseDto));
-        }
+        Associate associate = saveAssociate(dto);
 
-        return associateMapper.toResponseDto(associateRepository.save(associate));
+        return associateMapper.toResponseDto(associate);
     }
 
     public void update(Long id, AssociatePutDto dto) {
@@ -100,6 +96,45 @@ public class AssociateService { // Classe de serviço para o Associado
         log.info("Deleting associate image with id {}", associateId);
         Associate associate = associateRepository.getReferenceById(associateId);
         associate.setPhoto(null);
+    }
+
+    private Associate saveAssociate(AssociatePostDto dto) {
+        Associate associate = associateMapper.postDtoToEntity(dto);
+
+        if (dto.address() != null) {
+            Address address = addressService.save(dto.address());
+            associate.setAddress(address);
+        }
+
+        if (dto.workRecord() != null) {
+            WorkRecord workRecord = workRecordService.save(dto.workRecord());
+            associate.setWorkRecord(workRecord);
+        }
+
+        if (dto.dependents() != null) {
+            Dependents dependents = dependentsService.save(dto.dependents());
+            associate.setDependents(dependents);
+        }
+
+        if (dto.affiliation() != null) {
+            Affiliation affiliation = affiliationService.save(dto.affiliation());
+            associate.setAffiliation(affiliation);
+        }
+
+        if (dto.placeOfBirth() != null) {
+            PlaceOfBirth placeOfBirth = placeOfBirthService.save(dto.placeOfBirth());
+            associate.setPlaceOfBirth(placeOfBirth);
+        }
+
+        associate = associateRepository.save(associate);
+
+        if (dto.localOfficeId() != null) {
+            LocalOfficeResponseDto localOfficeResponseDto = localOfficeService.findLocalOffice(dto.localOfficeId());
+            addLocalOfficeToAssociates(localOfficeResponseDto.id(), associate.getId());
+            associate.setLocalOffice(localOfficeMapper.responseDtoToEntityWithId(localOfficeResponseDto));
+        }
+
+        return associate;
     }
 
     private void validateAssociateUpdating(Long id, AssociatePutDto dto) {
