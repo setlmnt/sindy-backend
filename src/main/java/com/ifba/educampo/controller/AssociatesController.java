@@ -51,7 +51,7 @@ public class AssociatesController { // Classe de controle para o Associado
 
     @Operation(summary = "Find associate by id")
     @GetMapping(path = "/{id}")
-    public AssociateResponseDto findAssociateById(@PathVariable long id) {
+    public AssociateResponseDto findAssociateById(@PathVariable Long id) {
         return associateService.findById(id);
     }
 

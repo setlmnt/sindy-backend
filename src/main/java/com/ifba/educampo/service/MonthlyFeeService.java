@@ -78,7 +78,7 @@ public class MonthlyFeeService {
     public MonthlyFeeResponseDto save(MonthlyFeePostDto dto) {
         log.info("Saving monthly fee.");
 
-        AssociateResponseDto associateResponseDto = associateService.findAssociate(dto.associateId());
+        AssociateResponseDto associateResponseDto = associateService.findById(dto.associateId());
         MonthlyFee monthlyFee = prepareSaveMonthlyFee(dto, associateResponseDto);
 
         validateSaveMonthlyFee(monthlyFee, associateResponseDto);
