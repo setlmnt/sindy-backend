@@ -41,18 +41,18 @@ public class AssociatesController { // Classe de controle para o Associado
     @Operation(summary = "Find all associates")
     @GetMapping
     public Page<AssociateResponseDto> listAssociate(
-            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) Long unionCard,
             Pageable pageable
     ) {
-        // TODO: Melhorar a busca por query
-        if (query == null) return associateService.listAll(pageable);
-        return associateService.findAssociateByNameOrCpfOrUnionCard(query, pageable);
+        return associateService.findAll(name, cpf, unionCard, pageable);
     }
 
     @Operation(summary = "Find associate by id")
     @GetMapping(path = "/{id}")
     public AssociateResponseDto findAssociateById(@PathVariable long id) {
-        return associateService.findAssociate(id);
+        return associateService.findById(id);
     }
 
     @Operation(summary = "Find all associates photos")
@@ -130,7 +130,7 @@ public class AssociatesController { // Classe de controle para o Associado
             @PathVariable Long id,
             HttpServletResponse response
     ) {
-        AssociateResponseDto associateResponseDto = associateService.findAssociate(id);
+        AssociateResponseDto associateResponseDto = associateService.findById(id);
         Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
 
         if (associate == null) return null;

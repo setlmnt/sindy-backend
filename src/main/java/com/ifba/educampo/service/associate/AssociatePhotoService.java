@@ -2,7 +2,7 @@ package com.ifba.educampo.service.associate;
 
 import com.ifba.educampo.dto.ImageResponseDto;
 import com.ifba.educampo.exception.BadRequestException;
-import com.ifba.educampo.exception.EntityNotFoundException;
+import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.ImageMapper;
 import com.ifba.educampo.model.entity.Image;
 import com.ifba.educampo.repository.ImageRepository;
@@ -54,7 +54,7 @@ public class AssociatePhotoService { // Foto do associado
     public ImageResponseDto findByAssociateId(Long id) {
         log.info("Finding image by associate id {}", id);
         Image image = imageRepository.findByAssociateId(id)
-                .orElseThrow(() -> new EntityNotFoundException("Associate Image not found"));
+                .orElseThrow(() -> new NotFoundException("Associate Image not found"));
         return imageMapper.toResponseDto(image);
     }
 

@@ -12,6 +12,7 @@ import com.ifba.educampo.mapper.associate.AddressMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
 import com.ifba.educampo.model.entity.associate.*;
+import com.ifba.educampo.repository.associate.AssociateCustomRepository;
 import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.LocalOfficeService;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ import java.util.Objects;
 public class AssociateService { // Classe de serviço para o Associado
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;
+    private final AssociateCustomRepository associateCustomRepository;
     private final AddressService addressService;
     private final AddressMapper addressMapper;
     private final DependentsService dependentsService;
@@ -42,7 +44,18 @@ public class AssociateService { // Classe de serviço para o Associado
     private final LocalOfficeService localOfficeService;
     private final LocalOfficeMapper localOfficeMapper;
 
-    public AssociateResponseDto findAssociate(Long id) {
+    public Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable) {
+        log.info("Listing all associates");
+        Page<Associate> associates = associateCustomRepository.findAllFromNameAndCpfAndUnionCard(
+                name,
+                cpf,
+                unionCard,
+                pageable
+        );
+        return associates.map(associateMapper::toResponseDto);
+    }
+
+    public AssociateResponseDto findById(Long id) {
         log.info("Finding associate with ID: {}", id);
         Associate associate = associateRepository.findById(id)
                 .orElseThrow(() -> {
@@ -50,22 +63,6 @@ public class AssociateService { // Classe de serviço para o Associado
                     return new NotFoundException("Associate Not Found");
                 });
         return associateMapper.toResponseDto(associate);
-    }
-
-    public Page<AssociateResponseDto> findAssociateByNameOrCpfOrUnionCard(String query, Pageable pageable) {
-        log.info("Finding associate with query: {}", query);
-        Page<Associate> associates = associateRepository.findByNameOrCpfOrUnionCard(query, pageable)
-                .orElseThrow(() -> {
-                    log.error("Associate with query {} not found", query);
-                    return new NotFoundException("Associate Not Found");
-                });
-        return associates.map(associateMapper::toResponseDto);
-    }
-
-    public Page<AssociateResponseDto> listAll(Pageable pageable) {
-        log.info("Listing all associates");
-        Page<Associate> associates = associateRepository.findAll(pageable);
-        return associates.map(associateMapper::toResponseDto);
     }
 
     public AssociateResponseDto save(AssociatePostDto dto) {
