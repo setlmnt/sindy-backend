@@ -17,19 +17,18 @@ public class Dependents { // Dependentes
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String spouse; // Nome da Esposa
 
-    @Column(name = "minor_children", nullable = false)
+    @Column(name = "minor_children")
     private int minorChildren; // Filhos menores
 
-    @Column(name = "male_children", nullable = false)
+    @Column(name = "male_children")
     private int maleChildren; // Filhos homens
 
-    @Column(name = "female_children", nullable = false)
+    @Column(name = "female_children")
     private int femaleChildren; // Filhas mulheres
 
-    @Column(name = "other_dependents", nullable = false)
+    @Column(name = "other_dependents")
     private int otherDependents; // Outros dependentes
 
     @Column(nullable = false)

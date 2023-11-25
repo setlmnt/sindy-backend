@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Tag(name = "Monthly Fees", description = "Monthly Fees API")
 @RestController
 @RequestMapping("/api/v1/monthly-fees")
@@ -24,23 +26,23 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
     @Operation(summary = "Find all monthly fees")
     @GetMapping
     public Page<MonthlyFeeResponseDto> listMonthlyFees(
-            @RequestParam(required = false) Integer paymentMonth,
-            @RequestParam(required = false) Integer paymentYear,
+            @RequestParam(required = false) LocalDate initialDate,
+            @RequestParam(required = false) LocalDate finalDate,
             Pageable pageable
     ) {
-        return monthlyFeeService.listAll(paymentMonth, paymentYear, pageable);
+        return monthlyFeeService.findAll(initialDate, finalDate, pageable);
     }
 
     @Operation(summary = "Find all monthly fees by associate id")
     @GetMapping(path = "/associates/{associateId}")
     public Page<MonthlyFeeResponseDto> findMonthlyFeeByAssociateId(
-            @RequestParam(required = false) Integer paymentMonth,
-            @RequestParam(required = false) Integer paymentYear,
+            @RequestParam(required = false) LocalDate initialDate,
+            @RequestParam(required = false) LocalDate finalDate,
             @PathVariable Long associateId,
             Pageable pageable
     ) {
         return monthlyFeeService
-                .listAllByAssociateIdAndMonthAndYear(associateId, paymentMonth, paymentYear, pageable);
+                .findAllByAssociateIdAndMonthAndYear(associateId, initialDate, finalDate, pageable);
     }
 
     @Operation(summary = "Find monthly fee by id")
@@ -60,12 +62,11 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
 
     @Operation(summary = "Update monthly fee")
     @PutMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(
+    public MonthlyFeeResponseDto update(
             @RequestBody @Valid MonthlyFeePutDto dto,
             @PathVariable Long id
     ) {
-        monthlyFeeService.update(id, dto);
+        return monthlyFeeService.update(id, dto);
     }
 
     @Operation(summary = "Delete monthly fee")

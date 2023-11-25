@@ -1,7 +1,5 @@
 package com.ifba.educampo.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.model.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,9 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Data
@@ -26,17 +24,21 @@ public class MonthlyFee { // Mensalidade
     @Column(name = "fee_value", nullable = false)
     private BigDecimal feeValue; // Valor da Mensalidade
 
-    @Column(name = "total_amount", nullable = false)
-    private BigDecimal totalAmount; // Valor Total
+    @Column(name = "registration_value")
+    private BigDecimal registrationValue; // Taxa de Matrícula
+
+    @Column(name = "total_fee_value", nullable = false)
+    private BigDecimal totalFeeValue; // Valor Total
+
+    @Column(name = "initial_date", nullable = false)
+    private LocalDate initialDate; // Data de Início
+
+    @Column(name = "final_date", nullable = false)
+    private LocalDate finalDate; // Data de Término
 
     @Column(name = "total_months_paid", nullable = false)
-    private Integer totalMonthsPaid; // Quantidade de meses pagos
+    private Long totalMonthsPaid; // Quantidade de meses pagos
 
-    @JsonIgnoreProperties("monthlyFee")
-    @OneToMany(mappedBy = "monthlyFee", cascade = CascadeType.ALL)
-    private Set<MonthlyFeeDate> paymentDates; // Datas de Pagamento
-
-    @JsonInclude(JsonInclude.Include.CUSTOM)
     @ManyToOne
     @JoinColumn(name = "associate_id", nullable = false)
     private Associate associate; // Associado relacionado à mensalidade
@@ -54,7 +56,7 @@ public class MonthlyFee { // Mensalidade
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt; // Data de Atualização
+    private LocalDateTime deletedAt; // Data de Exclusão
 
     @PrePersist
     protected void onCreate() {
@@ -68,19 +70,28 @@ public class MonthlyFee { // Mensalidade
 
     public void update(MonthlyFee monthlyFee) {
         if (monthlyFee.getFeeValue() != null) setFeeValue(monthlyFee.getFeeValue());
-        if (monthlyFee.getTotalAmount() != null) setTotalAmount(monthlyFee.getTotalAmount());
-        if (monthlyFee.getTotalMonthsPaid() != null) setTotalMonthsPaid(monthlyFee.getTotalMonthsPaid());
-        if (monthlyFee.getPaymentDates() != null) {
-            this.paymentDates.forEach(MonthlyFeeDate::delete);
-            setPaymentDates(monthlyFee.getPaymentDates());
+        if (monthlyFee.getRegistrationValue() != null) setRegistrationValue(monthlyFee.getRegistrationValue());
+        if (monthlyFee.getFeeValue() != null || monthlyFee.getRegistrationValue() != null) {
+            setTotalFeeValue(getFeeValue().add(getRegistrationValue() == null ? BigDecimal.valueOf(0) : getRegistrationValue()));
+        }
+
+        if (monthlyFee.getFinalDate() != null) {
+            setFinalDate(monthlyFee.getFinalDate());
+            setTotalMonthsPaid(ChronoUnit.MONTHS.between(getInitialDate(), getFinalDate()));
         }
     }
 
     public void delete() {
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();
+    }
 
-        this.paymentDates.forEach(MonthlyFeeDate::delete);
+    public void setTotalFeeValue() {
+        this.totalFeeValue = getFeeValue().add(getRegistrationValue() == null ? BigDecimal.valueOf(0) : getRegistrationValue());
+    }
+
+    public void setTotalMonthsPaid() {
+        this.totalMonthsPaid = ChronoUnit.MONTHS.between(getInitialDate(), getFinalDate());
     }
 
     @Override
@@ -88,24 +99,15 @@ public class MonthlyFee { // Mensalidade
         return "MonthlyFee{" +
                 "id=" + id +
                 ", feeValue=" + feeValue +
-                ", totalAmount=" + totalAmount +
+                ", registrationValue=" + registrationValue +
+                ", totalFeeValue=" + totalFeeValue +
+                ", initialDate=" + initialDate +
+                ", finalDate=" + finalDate +
+                ", totalMonthsPaid=" + totalMonthsPaid +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", deletedAt=" + deletedAt +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MonthlyFee that = (MonthlyFee) o;
-        return Objects.equals(id, that.id) && Objects.equals(feeValue, that.feeValue) && Objects.equals(totalAmount, that.totalAmount) && Objects.equals(totalMonthsPaid, that.totalMonthsPaid) && Objects.equals(deleted, that.deleted) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(deletedAt, that.deletedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, feeValue, totalAmount, totalMonthsPaid, deleted, createdAt, updatedAt, deletedAt);
     }
 }

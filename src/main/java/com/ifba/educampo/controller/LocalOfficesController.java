@@ -4,8 +4,6 @@ import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
-import com.ifba.educampo.model.entity.LocalOffice;
-import com.ifba.educampo.model.entity.associate.Associate;
 import com.ifba.educampo.service.LocalOfficeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,12 +49,11 @@ public class LocalOfficesController { // Classe de controle para as Delegacias (
 
     @Operation(summary = "Update local office")
     @PutMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(
+    public LocalOfficeResponseDto update(
             @PathVariable Long id,
             @RequestBody @Valid LocalOfficePutDto dto
     ) {
-        localOfficeService.update(id, dto);
+        return localOfficeService.update(id, dto);
     }
 
     @Operation(summary = "Delete local office")

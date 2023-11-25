@@ -6,7 +6,6 @@ import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
 import com.ifba.educampo.model.enums.MaritalStatus;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;

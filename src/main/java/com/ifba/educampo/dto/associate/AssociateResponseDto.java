@@ -1,7 +1,6 @@
 package com.ifba.educampo.dto.associate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.dto.ImageResponseDto;
 import com.ifba.educampo.dto.associate.address.AddressResponseDto;
@@ -13,7 +12,6 @@ import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.model.enums.MaritalStatus;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record AssociateResponseDto(
         Long id,

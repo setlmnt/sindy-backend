@@ -6,7 +6,6 @@ import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
-import com.ifba.educampo.model.entity.Image;
 import com.ifba.educampo.model.entity.associate.Associate;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import com.ifba.educampo.service.PdfService;
@@ -71,12 +70,11 @@ public class AssociatesController { // Classe de controle para o Associado
 
     @Operation(summary = "Update associate")
     @PutMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(
+    public AssociateResponseDto update(
             @PathVariable Long id,
             @RequestBody @Valid AssociatePutDto dto
     ) {
-        associateService.update(id, dto);
+        return associateService.update(id, dto);
     }
 
     @Operation(summary = "Load associate photo")

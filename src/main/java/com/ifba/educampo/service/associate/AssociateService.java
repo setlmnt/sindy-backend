@@ -11,7 +11,6 @@ import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AddressMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
-import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.model.entity.associate.*;
 import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.LocalOfficeService;
@@ -79,7 +78,7 @@ public class AssociateService { // Classe de serviço para o Associado
         return associateMapper.toResponseDto(associate);
     }
 
-    public void update(Long id, AssociatePutDto dto) {
+    public AssociateResponseDto update(Long id, AssociatePutDto dto) {
         log.info("Replacing associate: {}", dto);
 
         validateAssociateUpdating(id, dto);
@@ -88,6 +87,7 @@ public class AssociateService { // Classe de serviço para o Associado
         Associate updatedAssociate = getUpdatedAssociate(dto, associate);
 
         associate.update(updatedAssociate);
+        return associateMapper.toResponseDto(associate);
     }
 
     public void delete(long id) {

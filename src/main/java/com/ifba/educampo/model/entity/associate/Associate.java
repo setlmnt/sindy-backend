@@ -1,6 +1,5 @@
 package com.ifba.educampo.model.entity.associate;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.model.entity.Image;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.model.enums.MaritalStatus;
@@ -87,7 +86,7 @@ public class Associate { // Associado
     @JoinColumn(name = "address_id")
     private Address address; // Endereço
 
-    @OneToOne( fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependents_id")
     private Dependents dependents; // Dependentes
 

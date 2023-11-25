@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
             String message,
             Integer status,
             List<ErrorType> errors,
-            @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
             LocalDateTime timestamp
     ) {
     }

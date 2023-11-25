@@ -1,24 +1,24 @@
 package com.ifba.educampo.dto.monthlyFee;
 
-import com.ifba.educampo.dto.monthlyFee.date.MonthlyFeeDateDto;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.time.LocalDate;
 
 public record MonthlyFeePostDto(
         @NotNull(message = "Monthly Fee Value is required")
         @Min(value = 0, message = "Monthly Fee Value must be greater than 0")
         BigDecimal feeValue, // Valor da Mensalidade
 
-        BigDecimal totalAmount, // Valor Pago
+        @Min(value = 0, message = "Registration Value must be greater than 0")
+        BigDecimal registrationValue, // Taxa de Matrícula
 
-        @NotEmpty(message = "Payment Dates are required")
-        @Valid
-        Set<MonthlyFeeDateDto> paymentDates, // Datas de Pagamento
+        @NotNull
+        LocalDate initialDate, // Data de Início
+
+        @NotNull
+        LocalDate finalDate, // Data de Término
 
         @NotNull(message = "Associate Id is required")
         Long associateId // Associado relacionado à mensalidade

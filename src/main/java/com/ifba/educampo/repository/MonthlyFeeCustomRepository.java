@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,16 +22,16 @@ public class MonthlyFeeCustomRepository {
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
 
-    public Page<MonthlyFee> findAllFromPaymentMonthAndYearAndDeletedFalse(
-            Integer month,
-            Integer year,
+    public Page<MonthlyFee> findAllFromInitialDateAndFinalDate(
+            LocalDate initialDate,
+            LocalDate finalDate,
             Pageable pageable
     ) {
         StringBuilder query = new StringBuilder(
-                "SELECT m FROM MonthlyFee m JOIN m.paymentDates pd WHERE m.deleted = false AND pd.deleted = false"
+                "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false"
         );
 
-        TypedQuery<MonthlyFee> typedQuery = filterQueryByYearAndMonth(query, year, month);
+        TypedQuery<MonthlyFee> typedQuery = filterQueryByInitialDateAndFinalDate(query, initialDate, finalDate);
 
         setPagination(pageable, typedQuery);
 
@@ -38,16 +39,16 @@ public class MonthlyFeeCustomRepository {
         return new PageImpl<>(resultList, pageable, resultList.size());
     }
 
-    public Page<MonthlyFee> findAllFromAssociateIdPaymentMonthAndYearAndDeletedFalse(
+    public Page<MonthlyFee> findAllFromAssociateIdAndInitialDateAndFinalDate(
             Long associateId,
-            Integer month,
-            Integer year,
+            LocalDate initialDate,
+            LocalDate finalDate,
             Pageable pageable
     ) {
         StringBuilder query = new StringBuilder(
-                "SELECT m FROM MonthlyFee m JOIN m.paymentDates pd WHERE m.deleted = false AND pd.deleted = false AND m.associate.id = :associateId");
+                "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false AND mf.associate.id = :associateId");
 
-        TypedQuery<MonthlyFee> typedQuery = filterQueryByYearAndMonth(query, year, month);
+        TypedQuery<MonthlyFee> typedQuery = filterQueryByInitialDateAndFinalDate(query, initialDate, finalDate);
 
         typedQuery.setParameter("associateId", associateId);
 
@@ -57,21 +58,25 @@ public class MonthlyFeeCustomRepository {
         return new PageImpl<>(resultList, pageable, resultList.size());
     }
 
-    private TypedQuery<MonthlyFee> filterQueryByYearAndMonth(StringBuilder query, Integer year, Integer month) {
-        if (month != null) {
-            query.append(" AND pd.month = :month");
+    private TypedQuery<MonthlyFee> filterQueryByInitialDateAndFinalDate(
+            StringBuilder query,
+            LocalDate initialDate,
+            LocalDate finalDate
+    ) {
+        if (initialDate != null) {
+            query.append(" AND mf.initialDate = :initialDate");
         }
-        if (year != null) {
-            query.append(" AND pd.year = :year");
+        if (finalDate != null) {
+            query.append(" AND mf.finalDate = :finalDate");
         }
 
         TypedQuery<MonthlyFee> typedQuery = em.createQuery(query.toString(), MonthlyFee.class);
 
-        if (month != null) {
-            typedQuery.setParameter("month", month);
+        if (initialDate != null) {
+            typedQuery.setParameter("initialDate", initialDate);
         }
-        if (year != null) {
-            typedQuery.setParameter("year", year);
+        if (finalDate != null) {
+            typedQuery.setParameter("finalDate", finalDate);
         }
 
         return typedQuery;

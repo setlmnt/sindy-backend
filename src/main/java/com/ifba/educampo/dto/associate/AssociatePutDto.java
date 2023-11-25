@@ -13,7 +13,6 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record AssociatePutDto(
         @Size(min = 3, message = "Associate name must be at least 3 characters long")
