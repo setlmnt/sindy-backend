@@ -1,5 +1,6 @@
 package com.ifba.educampo.controller;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/local-offices")
 @RequiredArgsConstructor
+@Log
 public class LocalOfficesController { // Classe de controle para as Delegacias (Escritório Local)
     private final LocalOfficeService localOfficeService;
 

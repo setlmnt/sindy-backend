@@ -1,5 +1,6 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class LocalOfficeService { // Delegacia (Escritorio Local)
     private final LocalOfficeMapper localOfficeMapper;
     private final AssociateMapper associateMapper;

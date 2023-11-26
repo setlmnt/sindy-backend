@@ -1,5 +1,6 @@
 package com.ifba.educampo.controller;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePostDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePutDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeeResponseDto;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/monthly-fees")
 @RequiredArgsConstructor
+@Log
 public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
 

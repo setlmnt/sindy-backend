@@ -1,5 +1,6 @@
 package com.ifba.educampo.repository.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.model.entity.associate.Associate;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+@Log
 public class AssociateCustomRepository {
     @PersistenceContext
     private EntityManager em;

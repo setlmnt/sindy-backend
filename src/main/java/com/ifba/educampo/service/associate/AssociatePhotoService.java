@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.ImageResponseDto;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.exception.NotFoundException;
@@ -34,6 +35,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class AssociatePhotoService { // Foto do associado
     private final ImageMapper imageMapper;
     private final ImageRepository imageRepository;
@@ -46,7 +48,7 @@ public class AssociatePhotoService { // Foto do associado
     @Value("${app.upload.url}")
     private String uploadUrl;
 
-    public Page<ImageResponseDto> listAll(Pageable pageable) {
+    public Page<ImageResponseDto> findAll(Pageable pageable) {
         log.info("Listing all images");
         return imageRepository.findAll(pageable).map(imageMapper::toResponseDto);
     }

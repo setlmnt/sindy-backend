@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.address.AddressPostDto;
 import com.ifba.educampo.dto.associate.address.AddressPutDto;
 import com.ifba.educampo.mapper.associate.AddressMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@Log
 public class AddressService { // Endereco
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;

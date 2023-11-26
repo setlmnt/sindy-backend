@@ -4,7 +4,7 @@
     <property name="LOG_PATTERN" value="[%thread] | %-5level | %d{yyyy-MM-dd HH:mm:ss} | %logger{36} - %msg%n"/>
 
     <!-- Define o padrão de nome de arquivo para os logs normais -->
-    <property name="APPLICATION_LOG_FILE" value="logs/application.log" />
+    <property name="APPLICATION_LOG_FILE" value="src/main/resources/logs/application.log"/>
 
     <!-- Define um appender para os logs normais -->
     <appender name="APPLICATION_FILE" class="ch.qos.logback.core.FileAppender">
@@ -25,13 +25,14 @@
     <!-- Appender para o console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%thread] | %highlight(%-5level) | %d{yyyy-MM-dd HH:mm:ss.SSS} | %cyan(%logger{36}) - %msg%n</pattern>
+            <pattern>[%thread] | %highlight(%-5level) | %d{yyyy-MM-dd HH:mm:ss.SSS} | %cyan(%logger{36}) - %msg%n
+            </pattern>
         </encoder>
     </appender>
 
     <!-- Defina o nível de log padrão para toda a aplicação -->
     <root level="INFO">
-        <appender-ref ref="APPLICATION_FILE" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="APPLICATION_FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

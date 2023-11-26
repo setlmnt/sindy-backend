@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
@@ -30,6 +31,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@Log
 public class AssociateService { // Classe de serviço para o Associado
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;

@@ -1,5 +1,6 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.annotation.Log;
 import com.lowagie.text.DocumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @Service
 @Slf4j
+@Log
 public class PdfService {
     private final TemplateEngine templateEngine;
 

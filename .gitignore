@@ -4,11 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ./target/
-./logs/
-./logs/application.log
-uploads/
-logs/
-src/main/resources/application.secrets.properties
 
 ### STS ###
 .apt_generated
@@ -37,3 +32,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets ###
+src/main/resources/application.secrets.properties
+
+### Upload ###
+src/main/resources/uploads/
+
+### Logs ###
+src/main/resources/logs/
+

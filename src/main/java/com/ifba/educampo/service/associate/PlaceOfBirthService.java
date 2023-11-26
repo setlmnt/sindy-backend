@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
 import com.ifba.educampo.mapper.associate.PlaceOfBirthMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class PlaceOfBirthService { // Naturalidade
     private final PlaceOfBirthMapper placeOfBirthMapper;
     private final PlaceOfBirthRepository placeOfBirthRepository;

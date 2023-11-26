@@ -1,5 +1,6 @@
 package com.ifba.educampo.controller;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.ImageResponseDto;
 import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
@@ -32,6 +33,7 @@ import org.thymeleaf.context.Context;
 @RestController
 @RequestMapping(value = "/api/v1/associates")
 @RequiredArgsConstructor
+@Log
 public class AssociatesController { // Classe de controle para o Associado
     private final AssociateService associateService;
     private final AssociatePhotoService associatePhotoService;
@@ -40,7 +42,7 @@ public class AssociatesController { // Classe de controle para o Associado
 
     @Operation(summary = "Find all associates")
     @GetMapping
-    public Page<AssociateResponseDto> listAssociate(
+    public Page<AssociateResponseDto> findAllAssociate(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String cpf,
             @RequestParam(required = false) Long unionCard,
@@ -57,8 +59,8 @@ public class AssociatesController { // Classe de controle para o Associado
 
     @Operation(summary = "Find all associates photos")
     @GetMapping(path = "/photos")
-    public Page<ImageResponseDto> listAssociatePhoto(Pageable pageable) {
-        return associatePhotoService.listAll(pageable);
+    public Page<ImageResponseDto> findAllAssociatePhoto(Pageable pageable) {
+        return associatePhotoService.findAll(pageable);
     }
 
     @Operation(summary = "Save associate")

@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class DependentsService { // Dependentes
     private final DependentsMapper dependentsMapper;
     private final DependentsRepository dependentsRepository;

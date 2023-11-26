@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.mapper.associate.AffiliationMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class AffiliationService { // Afiliacao
     private final AffiliationMapper affiliationMapper;
     private final AffiliationRepository affiliationRepository;

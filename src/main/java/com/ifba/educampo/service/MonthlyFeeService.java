@@ -1,5 +1,6 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePostDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePutDto;
@@ -33,6 +34,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
+@Log
 public class MonthlyFeeService {
     private static final String DATE_FORMAT = "yyyy-MM";
     private final MonthlyFeeMapper monthlyFeeMapper;

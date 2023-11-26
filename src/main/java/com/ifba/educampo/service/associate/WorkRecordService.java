@@ -1,5 +1,6 @@
 package com.ifba.educampo.service.associate;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
 import com.ifba.educampo.mapper.associate.WorkRecordMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Log
 public class WorkRecordService { // Carteira de trabalho
     private final WorkRecordMapper workRecordMapper;
     private final WorkRecordRepository workRecordRepository;

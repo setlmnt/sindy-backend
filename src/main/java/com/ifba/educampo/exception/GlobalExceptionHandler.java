@@ -1,6 +1,7 @@
 package com.ifba.educampo.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ifba.educampo.annotation.Log;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestControllerAdvice
 @Slf4j
+@Log
 public class GlobalExceptionHandler {
     private static List<ErrorType> getErrors(List<FieldError> fieldErrors) {
         return fieldErrors
