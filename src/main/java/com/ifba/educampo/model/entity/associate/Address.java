@@ -17,7 +17,6 @@ public class Address { // Endereço
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String street; // Rua
 
     @Column(nullable = false)
@@ -25,7 +24,6 @@ public class Address { // Endereço
 
     private String number; // Número
 
-    @Column(nullable = false)
     private String complement; // Complemento
 
     @Column(nullable = false)
