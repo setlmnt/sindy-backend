@@ -14,6 +14,7 @@ import com.ifba.educampo.service.PdfService;
 import com.ifba.educampo.service.associate.AssociatePhotoService;
 import com.ifba.educampo.service.associate.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.activation.MimetypesFileTypeMap;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,8 +34,9 @@ import org.thymeleaf.context.Context;
 @Tag(name = "Associates", description = "Associates API")
 @RestController
 @RequestMapping(value = "/api/v1/associates")
-@RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Log
+@RequiredArgsConstructor
 public class AssociatesController { // Classe de controle para o Associado
     private final AssociateService associateService;
     private final AssociatePhotoService associatePhotoService;

@@ -6,6 +6,7 @@ import com.ifba.educampo.dto.monthlyFee.MonthlyFeePutDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeeResponseDto;
 import com.ifba.educampo.service.MonthlyFeeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,8 +21,9 @@ import java.time.LocalDate;
 @Tag(name = "Monthly Fees", description = "Monthly Fees API")
 @RestController
 @RequestMapping("/api/v1/monthly-fees")
-@RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Log
+@RequiredArgsConstructor
 public class MonthlyFeesController { // Classe de controle para as Mensalidades
     private final MonthlyFeeService monthlyFeeService;
 

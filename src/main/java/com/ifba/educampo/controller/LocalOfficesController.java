@@ -7,6 +7,7 @@ import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.service.LocalOfficeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
 @Tag(name = "Local Offices", description = "Local Offices API")
 @RestController
 @RequestMapping("/api/v1/local-offices")
-@RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Log
+@RequiredArgsConstructor
 public class LocalOfficesController { // Classe de controle para as Delegacias (Escritório Local)
     private final LocalOfficeService localOfficeService;
 

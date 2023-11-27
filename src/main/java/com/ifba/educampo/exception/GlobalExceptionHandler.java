@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -62,18 +63,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
-        log.error("Entity not found", ex);
-        return new ExceptionResponse(
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                HttpStatus.NOT_FOUND.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
-        );
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -109,6 +98,42 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 List.of(new ErrorType("body", ex.getLocalizedMessage())),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
+        log.error("Entity not found", ex);
+        return new ExceptionResponse(
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                HttpStatus.NOT_FOUND.value(),
+                List.of(new ErrorType("body", ex.getMessage())),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse handleForbiddenException(UnauthorizedException ex) {
+        log.error("Unauthorized", ex);
+        return new ExceptionResponse(
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                HttpStatus.UNAUTHORIZED.value(),
+                List.of(new ErrorType("body", ex.getMessage())),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResponse handleAccessDeniedException(AccessDeniedException ex) {
+        log.error("Access Denied", ex);
+        return new ExceptionResponse(
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                HttpStatus.FORBIDDEN.value(),
+                List.of(new ErrorType("body", ex.getMessage())),
                 LocalDateTime.now()
         );
     }
