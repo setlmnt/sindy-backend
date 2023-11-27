@@ -39,6 +39,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResponse handleForbiddenException(ForbiddenException ex) {
+        log.error("Bad request", ex);
+        return new ExceptionResponse(
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                HttpStatus.FORBIDDEN.value(),
+                List.of(new ErrorType("body", ex.getMessage())),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler(BadRequestListException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequestListException(BadRequestListException ex) {

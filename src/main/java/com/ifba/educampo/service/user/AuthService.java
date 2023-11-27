@@ -7,13 +7,15 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.TokenDto;
 import com.ifba.educampo.dto.user.UserLoginDto;
+import com.ifba.educampo.exception.ForbiddenException;
 import com.ifba.educampo.exception.UnauthorizedException;
 import com.ifba.educampo.model.entity.user.User;
-import com.ifba.educampo.repository.UserRepository;
+import com.ifba.educampo.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -42,14 +44,18 @@ public class AuthService {
                 userLoginDTO.username(),
                 userLoginDTO.password()
         );
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-        if (!authentication.isAuthenticated()) {
-            throw new UnauthorizedException("Invalid credentials");
+        try {
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            if (!authentication.isAuthenticated()) {
+                throw new UnauthorizedException("Invalid credentials");
+            }
+
+            String tokenJwt = generateToken((User) authentication.getPrincipal());
+            return new TokenDto(tokenJwt);
+        } catch (BadCredentialsException e) {
+            throw new ForbiddenException("Invalid credentials");
         }
-
-        String tokenJwt = generateToken((User) authentication.getPrincipal());
-        return new TokenDto(tokenJwt);
     }
 
     public String verifyToken(String token) {

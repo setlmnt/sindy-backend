@@ -1,6 +1,6 @@
 package com.ifba.educampo.filter;
 
-import com.ifba.educampo.repository.UserRepository;
+import com.ifba.educampo.repository.user.UserRepository;
 import com.ifba.educampo.service.user.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

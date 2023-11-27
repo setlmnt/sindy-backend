@@ -4,11 +4,12 @@ import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.user.UserPutDto;
 import com.ifba.educampo.dto.user.UserRegisterDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
+import com.ifba.educampo.dto.user.UserUpdatePasswordDto;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.mapper.UserMapper;
 import com.ifba.educampo.model.entity.user.Role;
 import com.ifba.educampo.model.entity.user.User;
-import com.ifba.educampo.repository.UserRepository;
+import com.ifba.educampo.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,13 @@ public class UserService {
 
         user.update(userMapper.putDtoToEntity(userPutDto));
         return userMapper.toResponseDto(userRepository.save(user));
+    }
+
+    public void updatePassword(Long id, UserUpdatePasswordDto changePasswordDto) {
+        log.info("Updating password for user {}", id);
+        User user = userRepository.getReferenceById(id);
+
+        user.setPassword(passwordEncoder.encode(changePasswordDto.password()));
     }
 
     public void deleteByName(String name) {

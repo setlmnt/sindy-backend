@@ -1,4 +1,4 @@
-package com.ifba.educampo.repository;
+package com.ifba.educampo.repository.user;
 
 import com.ifba.educampo.model.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
