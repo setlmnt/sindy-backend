@@ -8,10 +8,7 @@ import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
@@ -42,11 +39,12 @@ public record AssociatePostDto(
         @NotBlank(message = "Workplace is required")
         String workplace, // Local de Trabalho
 
-        @NotNull(message = "Phone is required")
-        @NotBlank(message = "Phone is required")
         @Size(min = 12, max = 13, message = "Phone must be 12 or 13 characters long")
         @Pattern(regexp = "^(?:\\d{2} \\d{5}-\\d{4}|\\d{2} \\d{4}-\\d{4})$", message = "Phone must be in the format xx xxxx-xxxx or xx xxxxx-xxxx")
         String phone, // Telefone
+
+        @Email(message = "E-mail is invalid")
+        String email, // E-mail
 
         @NotNull(message = "Nationality is required")
         @NotBlank(message = "Nationality is required")

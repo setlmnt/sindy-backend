@@ -8,6 +8,7 @@ import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
@@ -28,6 +29,9 @@ public record AssociatePutDto(
         @Size(min = 12, max = 13, message = "Phone must be 12 or 13 characters long")
         @Pattern(regexp = "^(?:\\d{2} \\d{5}-\\d{4}|\\d{2} \\d{4}-\\d{4})$", message = "Phone must be in the format xx xxxx-xxxx or xx xxxxx-xxxx")
         String phone, // Telefone
+        @Email(message = "E-mail is invalid")
+        String email, // E-mail
+
         String nationality, // Nacionalidade
         LocalDate birthAt, // Data de Nascimento
         Boolean isLiterate, // Alfabetizado

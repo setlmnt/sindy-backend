@@ -8,7 +8,6 @@ public record AddressResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String street, // Rua
 
-        @JsonInclude(JsonInclude.Include.NON_NULL)
         String city, // Cidade
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,7 +16,6 @@ public record AddressResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String complement, // Complemento
 
-        @JsonInclude(JsonInclude.Include.NON_NULL)
         String neighborhood, // Bairro
 
         @JsonInclude(JsonInclude.Include.NON_NULL)

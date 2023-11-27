@@ -21,7 +21,10 @@ public record AssociateResponseDto(
         String rg, // RG
         String profession, // Profissão
         String workplace, // Local de Trabalho
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         String phone, // Telefone
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String email, // E-mail
         String nationality, // Nacionalidade
 
         @JsonFormat(pattern = "yyyy-MM-dd")

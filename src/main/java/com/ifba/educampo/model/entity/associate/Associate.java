@@ -39,8 +39,8 @@ public class Associate { // Associado
     @Column(nullable = false)
     private String workplace; // Local de Trabalho
 
-    @Column(nullable = false)
     private String phone; // Telefone
+    private String email; // E-mail
 
     @Column(nullable = false)
     private String nationality; // Nacionalidade
