@@ -8,24 +8,14 @@ import com.ifba.educampo.mapper.ImageMapper;
 import com.ifba.educampo.model.entity.Image;
 import com.ifba.educampo.repository.ImageRepository;
 import com.ifba.educampo.repository.associate.AssociateRepository;
+import com.ifba.educampo.service.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -39,6 +29,7 @@ import java.util.Optional;
 public class AssociatePhotoService { // Foto do associado
     private final ImageMapper imageMapper;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final AssociateService associateService;
     private final AssociateRepository associateRepository;
 
@@ -47,11 +38,6 @@ public class AssociatePhotoService { // Foto do associado
 
     @Value("${app.upload.url}")
     private String uploadUrl;
-
-    public Page<ImageResponseDto> findAll(Pageable pageable) {
-        log.info("Listing all images");
-        return imageRepository.findAll(pageable).map(imageMapper::toResponseDto);
-    }
 
     public ImageResponseDto findByAssociateId(Long id) {
         log.info("Finding image by associate id {}", id);
@@ -83,33 +69,10 @@ public class AssociatePhotoService { // Foto do associado
     public void delete(Long associateId) {
         log.info("Deleting associate photo with id {}", associateId);
         ImageResponseDto imageResponseDto = findByAssociateId(associateId);
-        Image image = imageRepository.getReferenceById(imageResponseDto.id());
-        image.delete();
-
         log.info("Deleting associate photo from associate");
         associateService.deleteImage(associateId);
-
         log.info("Deleting associate photo from directory");
-        deleteFile(imageResponseDto.archiveName());
-    }
-
-    public Resource load(String name) {
-        try {
-            log.info("Loading file {}", name);
-            Path filePath = Paths.get(uploadDir).resolve(name);
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            }
-
-            log.error("File not found: " + name);
-            throw new FileNotFoundException("File not found: " + name);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (MalformedURLException e) {
-            log.error("An error occurred while loading the file", e);
-            throw new RuntimeException("An error occurred while loading the file", e);
-        }
+        imageService.delete(imageResponseDto.id());
     }
 
     private ImageResponseDto upload(Long associateId, MultipartFile file) {
@@ -122,7 +85,7 @@ public class AssociatePhotoService { // Foto do associado
         log.info("Uploading associate photo from associate");
         // Upload da imagem
         String newFileName = generateNewFilename(associateId, file);
-        store(file, newFileName);
+        imageService.store(file, newFileName);
 
         log.info("Saving associate photo from directory");
         // Coloca os dados da imagem que foi feito o upload no objeto para retornar
@@ -139,28 +102,6 @@ public class AssociatePhotoService { // Foto do associado
         image.setSize(file.getSize());
         image.setUrl(uploadUrl + "/" + newFileName);
         return image;
-    }
-
-    private void store(MultipartFile file, String fileName) {
-        try {
-            log.info("Storing file {}", fileName);
-            Path targetPath = Paths.get(uploadDir).resolve(fileName);
-            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            log.error("An error occurred while storing the file", e);
-            throw new RuntimeException("An error occurred while storing the file", e);
-        }
-    }
-
-    private void deleteFile(String fileName) {
-        try {
-            log.info("Deleting file {}", fileName);
-            Path filePath = Paths.get(uploadDir).resolve(fileName);
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            log.error("An error occurred while storing the file", e);
-            throw new RuntimeException("An error occurred while deleting the file", e);
-        }
     }
 
     private String generateNewFilename(Long associateId, MultipartFile file) {

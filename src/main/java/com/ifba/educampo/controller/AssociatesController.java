@@ -9,6 +9,7 @@ import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.model.entity.associate.Associate;
 import com.ifba.educampo.model.enums.MaritalStatus;
+import com.ifba.educampo.service.ImageService;
 import com.ifba.educampo.service.PdfService;
 import com.ifba.educampo.service.associate.AssociatePhotoService;
 import com.ifba.educampo.service.associate.AssociateService;
@@ -39,6 +40,7 @@ public class AssociatesController { // Classe de controle para o Associado
     private final AssociatePhotoService associatePhotoService;
     private final AssociateMapper associateMapper;
     private final PdfService pdfService;
+    private final ImageService imageService;
 
     @Operation(summary = "Find all associates")
     @GetMapping
@@ -55,12 +57,6 @@ public class AssociatesController { // Classe de controle para o Associado
     @GetMapping(path = "/{id}")
     public AssociateResponseDto findAssociateById(@PathVariable Long id) {
         return associateService.findById(id);
-    }
-
-    @Operation(summary = "Find all associates photos")
-    @GetMapping(path = "/photos")
-    public Page<ImageResponseDto> findAllAssociatePhoto(Pageable pageable) {
-        return associatePhotoService.findAll(pageable);
     }
 
     @Operation(summary = "Save associate")
@@ -82,7 +78,7 @@ public class AssociatesController { // Classe de controle para o Associado
     @Operation(summary = "Load associate photo")
     @GetMapping(path = "/photos/{photoName}")
     public ResponseEntity<?> loadPhoto(@PathVariable String photoName) {
-        Resource resource = associatePhotoService.load(photoName);
+        Resource resource = imageService.load(photoName);
 
         if (resource == null) throw new NotFoundException("Photo not found");
 
@@ -107,7 +103,7 @@ public class AssociatesController { // Classe de controle para o Associado
     @PostMapping(path = "/{associateId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ImageResponseDto uploadPhoto(
-            @PathVariable long associateId,
+            @PathVariable Long associateId,
             @RequestParam("file") MultipartFile file
     ) {
         return associatePhotoService.save(associateId, file);
