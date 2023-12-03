@@ -1,9 +1,9 @@
-package com.ifba.educampo.mapper.associate;
+package com.ifba.educampo.mapper;
 
-import com.ifba.educampo.dto.associate.address.AddressPostDto;
-import com.ifba.educampo.dto.associate.address.AddressPutDto;
-import com.ifba.educampo.dto.associate.address.AddressResponseDto;
-import com.ifba.educampo.model.entity.associate.Address;
+import com.ifba.educampo.dto.address.AddressPostDto;
+import com.ifba.educampo.dto.address.AddressPutDto;
+import com.ifba.educampo.dto.address.AddressResponseDto;
+import com.ifba.educampo.model.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,11 +1,11 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service;
 
 import com.ifba.educampo.annotation.Log;
-import com.ifba.educampo.dto.associate.address.AddressPostDto;
-import com.ifba.educampo.dto.associate.address.AddressPutDto;
-import com.ifba.educampo.mapper.associate.AddressMapper;
-import com.ifba.educampo.model.entity.associate.Address;
-import com.ifba.educampo.repository.associate.AddressRepository;
+import com.ifba.educampo.dto.address.AddressPostDto;
+import com.ifba.educampo.dto.address.AddressPutDto;
+import com.ifba.educampo.mapper.AddressMapper;
+import com.ifba.educampo.model.entity.Address;
+import com.ifba.educampo.repository.AddressRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

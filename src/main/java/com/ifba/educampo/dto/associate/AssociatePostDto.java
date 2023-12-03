@@ -1,6 +1,6 @@
 package com.ifba.educampo.dto.associate;
 
-import com.ifba.educampo.dto.associate.address.AddressPostDto;
+import com.ifba.educampo.dto.address.AddressPostDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -50,7 +51,8 @@ public record AssociatePostDto(
         @NotBlank(message = "Nationality is required")
         String nationality, // Nacionalidade
 
-        @NotNull
+        @NotNull(message = "Birth at is required")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate birthAt, // Data de Nascimento
 
         @NotNull
@@ -63,7 +65,8 @@ public record AssociatePostDto(
         @Enumerated(EnumType.STRING)
         MaritalStatus maritalStatus, // Estado Civil
 
-        @NotNull
+        @NotNull(message = "Association at is required")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação
 
         Long localOfficeId,

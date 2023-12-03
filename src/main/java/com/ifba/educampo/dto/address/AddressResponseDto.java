@@ -1,4 +1,4 @@
-package com.ifba.educampo.dto.associate.address;
+package com.ifba.educampo.dto.address;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

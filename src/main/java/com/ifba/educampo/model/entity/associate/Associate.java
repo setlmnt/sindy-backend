@@ -1,5 +1,6 @@
 package com.ifba.educampo.model.entity.associate;
 
+import com.ifba.educampo.model.entity.Address;
 import com.ifba.educampo.model.entity.Image;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.model.enums.MaritalStatus;

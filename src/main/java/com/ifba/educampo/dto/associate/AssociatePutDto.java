@@ -1,6 +1,6 @@
 package com.ifba.educampo.dto.associate;
 
-import com.ifba.educampo.dto.associate.address.AddressPutDto;
+import com.ifba.educampo.dto.address.AddressPutDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -33,12 +34,16 @@ public record AssociatePutDto(
         String email, // E-mail
 
         String nationality, // Nacionalidade
+
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate birthAt, // Data de Nascimento
         Boolean isLiterate, // Alfabetizado
         Boolean isVoter, // Eleitor
 
         @Enumerated(EnumType.STRING)
         MaritalStatus maritalStatus, // Estado Civil
+
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação
         Long localOfficeId,
 

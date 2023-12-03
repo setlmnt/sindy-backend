@@ -3,7 +3,7 @@ package com.ifba.educampo.dto.associate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.dto.ImageResponseDto;
-import com.ifba.educampo.dto.associate.address.AddressResponseDto;
+import com.ifba.educampo.dto.address.AddressResponseDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationResponseDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsResponseDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthResponseDto;

@@ -1,4 +1,4 @@
-package com.ifba.educampo.dto.associate.address;
+package com.ifba.educampo.dto.address;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
