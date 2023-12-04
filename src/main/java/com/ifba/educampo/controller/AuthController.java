@@ -9,6 +9,7 @@ import com.ifba.educampo.service.user.AuthService;
 import com.ifba.educampo.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,10 @@ public class AuthController {
     }
 
     @Operation(summary = "Register user")
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirements({
+            @SecurityRequirement(name = "bearerAuth"),
+            @SecurityRequirement(name = "cookieAuth")
+    })
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(
@@ -44,7 +48,10 @@ public class AuthController {
     }
 
     @Operation(summary = "Validate token")
-    @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirements({
+            @SecurityRequirement(name = "bearerAuth"),
+            @SecurityRequirement(name = "cookieAuth")
+    })
     @PostMapping("/validate")
     public void validate(
             @RequestBody @Valid TokenDto tokenDTO

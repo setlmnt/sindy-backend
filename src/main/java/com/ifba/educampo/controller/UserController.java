@@ -8,6 +8,7 @@ import com.ifba.educampo.service.user.OtpService;
 import com.ifba.educampo.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,10 @@ import java.security.Principal;
 @Tag(name = "Users", description = "Users API")
 @RestController
 @RequestMapping("/api/v1/users")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirements({
+        @SecurityRequirement(name = "bearerAuth"),
+        @SecurityRequirement(name = "cookieAuth")
+})
 @Log
 @RequiredArgsConstructor
 public class UserController {

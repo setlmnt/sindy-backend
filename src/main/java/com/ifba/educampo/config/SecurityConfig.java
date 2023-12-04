@@ -1,6 +1,5 @@
 package com.ifba.educampo.config;
 
-import com.ifba.educampo.filter.SecurityFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

@@ -15,6 +15,7 @@ import com.ifba.educampo.service.associate.AssociatePhotoService;
 import com.ifba.educampo.service.associate.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.activation.MimetypesFileTypeMap;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +35,10 @@ import org.thymeleaf.context.Context;
 @Tag(name = "Associates", description = "Associates API")
 @RestController
 @RequestMapping(value = "/api/v1/associates")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirements({
+        @SecurityRequirement(name = "bearerAuth"),
+        @SecurityRequirement(name = "cookieAuth")
+})
 @Log
 @RequiredArgsConstructor
 public class AssociatesController { // Classe de controle para o Associado

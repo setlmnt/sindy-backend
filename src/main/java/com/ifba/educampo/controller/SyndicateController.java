@@ -7,6 +7,7 @@ import com.ifba.educampo.dto.syndicate.SyndicateResponseDto;
 import com.ifba.educampo.service.SyndicateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Syndicate", description = "Syndicate API")
 @RestController
 @RequestMapping(value = "/api/v1/syndicate")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirements({
+        @SecurityRequirement(name = "bearerAuth"),
+        @SecurityRequirement(name = "cookieAuth")
+})
 @Log
 @RequiredArgsConstructor
 public class SyndicateController {

@@ -1,9 +1,11 @@
-package com.ifba.educampo.filter;
+package com.ifba.educampo.config;
 
 import com.ifba.educampo.repository.user.UserRepository;
 import com.ifba.educampo.service.user.AuthService;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
+    private final String COOKIE_NAME = "token";
+    private final String BEARER = "Bearer ";
+
     private final AuthService authService;
     private final UserRepository userRepository;
 
@@ -47,10 +52,33 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private String getToken(HttpServletRequest request) {
+        String token = getTokenByHeader(request);
+        if (token != null) return token;
+
+        return getTokenByCookie(request);
+    }
+
+    private String getTokenByHeader(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
         if (token != null) {
-            return token.replace("Bearer ", "").trim();
+            return token.replace(BEARER, "").trim();
+        }
+
+        return null;
+    }
+
+    private String getTokenByCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(COOKIE_NAME)) {
+                return cookie.getValue();
+            }
         }
 
         return null;
