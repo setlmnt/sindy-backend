@@ -100,7 +100,7 @@ public class AssociateService { // Classe de serviço para o Associado
     public void deleteImage(Long associateId) {
         log.info("Deleting associate image with id {}", associateId);
         Associate associate = associateRepository.getReferenceById(associateId);
-        associate.setPhoto(null);
+        associate.setProfilePicture(null);
     }
 
     private Associate saveAssociate(AssociatePostDto dto) {

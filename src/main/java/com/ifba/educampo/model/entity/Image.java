@@ -1,6 +1,7 @@
 package com.ifba.educampo.model.entity;
 
 
+import com.ifba.educampo.model.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,6 +48,10 @@ public class Image { // Image
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt; // Data de Atualização
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "associate_id")
+    private Associate associate; // Associado
 
     @PrePersist
     protected void onCreate() {

@@ -46,7 +46,6 @@ public class AssociatesController { // Classe de controle para o Associado
     private final AssociatePhotoService associatePhotoService;
     private final AssociateMapper associateMapper;
     private final PdfService pdfService;
-    private final ImageService imageService;
 
     @Operation(summary = "Find all associates")
     @GetMapping
@@ -81,32 +80,14 @@ public class AssociatesController { // Classe de controle para o Associado
         return associateService.update(id, dto);
     }
 
-    @Operation(summary = "Load associate photo")
-    @GetMapping(path = "/photos/{photoName}")
-    public ResponseEntity<?> loadPhoto(@PathVariable String photoName) {
-        Resource resource = imageService.load(photoName);
-
-        if (resource == null) throw new NotFoundException("Photo not found");
-
-        // Pegar o tipo de conteúdo do arquivo
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-        String contentType = mimeTypesMap.getContentType(resource.getFilename());
-
-        // Adicionar o tipo de conteúdo do arquivo no cabeçalho da resposta
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.parseMediaType(contentType).toString());
-
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-    }
-
     @Operation(summary = "Find associate photo by associate id")
-    @GetMapping(path = "/{associateId}/photos")
+    @GetMapping(path = "/{associateId}/profile-picture")
     public ImageResponseDto findPhoto(@PathVariable Long associateId) {
         return associatePhotoService.findByAssociateId(associateId);
     }
 
     @Operation(summary = "Upload associate photo")
-    @PostMapping(path = "/{associateId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{associateId}/profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ImageResponseDto uploadPhoto(
             @PathVariable Long associateId,
@@ -123,7 +104,7 @@ public class AssociatesController { // Classe de controle para o Associado
     }
 
     @Operation(summary = "Delete associate photo")
-    @DeleteMapping(path = "/{associateId}/photos")
+    @DeleteMapping(path = "/{associateId}/profile-picture")
     public void deletePhoto(@PathVariable Long associateId) {
         associatePhotoService.delete(associateId);
     }

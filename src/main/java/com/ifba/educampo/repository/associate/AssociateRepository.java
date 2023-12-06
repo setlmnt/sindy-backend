@@ -27,7 +27,7 @@ public interface AssociateRepository extends JpaRepository<Associate, Long> { //
 
     @Modifying
     @Query(
-            "UPDATE Associate a SET a.photo = (SELECT i FROM Image i WHERE i.id = :imageId) WHERE a.id = :id"
+            "UPDATE Associate a SET a.profilePicture = (SELECT i FROM Image i WHERE i.id = :imageId) WHERE a.id = :id"
     )
         // Query para salvar a foto do Associado pelo id do Associado
     void savePhoto(@Param("id") Long id, @Param("imageId") Long imageId);

@@ -34,7 +34,7 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final ImageRepository imageRepository;
 
-    @Value("${app.upload.dir}")
+    @Value("${app.upload.image.dir}")
     private String uploadDir;
 
     @PostConstruct

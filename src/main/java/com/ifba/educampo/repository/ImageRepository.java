@@ -9,14 +9,14 @@ import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Long> { // Interface de repositório para a foto do associado
     @Query(
-            "SELECT i FROM Image i WHERE i.id = (SELECT a.photo.id FROM Associate a WHERE a.id = :associateId AND a.deleted = false)"
+            "SELECT i FROM Image i WHERE i.id = (SELECT a.profilePicture.id FROM Associate a WHERE a.id = :associateId AND a.deleted = false)"
     )
         // Query para buscar a foto do Associado pelo id do Associado
-    Optional<Image> findByAssociateId(Long associateId); // Query para buscar a foto do Associado pelo id do Associado
+    Optional<Image> findProfilePictureByAssociateId(Long associateId); // Query para buscar a foto do Associado pelo id do Associado
 
     @Modifying
     @Query(
-            "DELETE FROM Image i WHERE i.id = (SELECT a.photo.id FROM Associate a WHERE a.id = :associateId)"
+            "DELETE FROM Image i WHERE i.id = (SELECT a.profilePicture.id FROM Associate a WHERE a.id = :associateId)"
     )
-    void deleteAssociatePhotoByAssociateId(Long associateId); // Query para deletar a foto do Associado pelo id do Associado
+    void deleteProfilePictureByAssociateId(Long associateId); // Query para deletar a foto do Associado pelo id do Associado
 }

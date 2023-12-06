@@ -33,15 +33,12 @@ public class AssociatePhotoService { // Foto do associado
     private final AssociateService associateService;
     private final AssociateRepository associateRepository;
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
-
-    @Value("${app.upload.url}")
+    @Value("${app.image.url}")
     private String uploadUrl;
 
     public ImageResponseDto findByAssociateId(Long id) {
         log.info("Finding image by associate id {}", id);
-        Image image = imageRepository.findByAssociateId(id)
+        Image image = imageRepository.findProfilePictureByAssociateId(id)
                 .orElseThrow(() -> new NotFoundException("Associate Image not found"));
         return imageMapper.toResponseDto(image);
     }
@@ -49,7 +46,7 @@ public class AssociatePhotoService { // Foto do associado
     public ImageResponseDto save(Long associateId, MultipartFile file) {
         log.info("Saving associate photo with {}", associateId);
         // Se tiver, deleta a imagem antiga do produto
-        Optional<Image> image = imageRepository.findByAssociateId(associateId);
+        Optional<Image> image = imageRepository.findProfilePictureByAssociateId(associateId);
         if (image.isPresent()) {
             log.info("Deleting old associate photo");
             delete(associateId);

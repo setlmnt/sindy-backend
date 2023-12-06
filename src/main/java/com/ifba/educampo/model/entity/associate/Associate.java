@@ -101,7 +101,7 @@ public class Associate { // Associado
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    private Image photo; // Foto do Associado
+    private Image profilePicture; // Foto do Associado
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_record_id", nullable = false)
@@ -136,7 +136,7 @@ public class Associate { // Associado
         if (associate.getDependents() != null) setDependents(associate.getDependents());
         if (associate.getAffiliation() != null) setAffiliation(associate.getAffiliation());
         if (associate.getPlaceOfBirth() != null) setPlaceOfBirth(associate.getPlaceOfBirth());
-        if (associate.getPhoto() != null) setPhoto(associate.getPhoto());
+        if (associate.getProfilePicture() != null) setProfilePicture(associate.getProfilePicture());
         if (associate.getWorkRecord() != null) setWorkRecord(associate.getWorkRecord());
     }
 
