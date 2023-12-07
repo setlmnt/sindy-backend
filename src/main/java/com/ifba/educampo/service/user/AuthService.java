@@ -40,12 +40,12 @@ public class AuthService {
 
     public TokenDto login(UserLoginDto userLoginDTO) {
         log.info("Authenticating user {}", userLoginDTO.username());
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userLoginDTO.username(),
-                userLoginDTO.password()
-        );
-
         try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userLoginDTO.username(),
+                    userLoginDTO.password()
+            );
+
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             if (!authentication.isAuthenticated()) {
                 throw new UnauthorizedException("Invalid credentials");

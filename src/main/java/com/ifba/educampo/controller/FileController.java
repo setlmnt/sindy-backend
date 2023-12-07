@@ -1,8 +1,7 @@
 package com.ifba.educampo.controller;
 
 import com.ifba.educampo.annotation.Log;
-import com.ifba.educampo.exception.NotFoundException;
-import com.ifba.educampo.service.ImageService;
+import com.ifba.educampo.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -19,30 +18,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Images", description = "Images API")
+@Tag(name = "Files", description = "Files API")
 @RestController
-@RequestMapping(value = "/api/v1/images")
+@RequestMapping(value = "/api/v1/files")
 @SecurityRequirements({
         @SecurityRequirement(name = "bearerAuth"),
         @SecurityRequirement(name = "cookieAuth")
 })
 @Log
 @RequiredArgsConstructor
-public class ImageController {
-    private final ImageService imageService;
+public class FileController {
+    private final FileService fileService;
 
-    @Operation(summary = "Load associate photo")
+    @Operation(summary = "Load file by name")
     @GetMapping(path = "/{name}")
-    public ResponseEntity<?> loadPhoto(@PathVariable String name) {
-        Resource resource = imageService.load(name);
+    public ResponseEntity<?> loadFile(@PathVariable String name) {
+        Resource resource = fileService.load(name);
 
-        if (resource == null) throw new NotFoundException("Image not found");
-
-        // Pegar o tipo de conteúdo do arquivo
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         String contentType = mimeTypesMap.getContentType(resource.getFilename());
 
-        // Adicionar o tipo de conteúdo do arquivo no cabeçalho da resposta
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.parseMediaType(contentType).toString());
 

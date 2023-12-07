@@ -1,7 +1,7 @@
 package com.ifba.educampo.model.entity.associate;
 
 import com.ifba.educampo.model.entity.Address;
-import com.ifba.educampo.model.entity.Image;
+import com.ifba.educampo.model.entity.File;
 import com.ifba.educampo.model.entity.LocalOffice;
 import com.ifba.educampo.model.enums.MaritalStatus;
 import jakarta.persistence.*;
@@ -100,8 +100,8 @@ public class Associate { // Associado
     private PlaceOfBirth placeOfBirth; // Naturalidade
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_id")
-    private Image profilePicture; // Foto do Associado
+    @JoinColumn(name = "file_id")
+    private File profilePicture; // Foto do Associado
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_record_id", nullable = false)

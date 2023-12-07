@@ -1,6 +1,6 @@
 package com.ifba.educampo.dto;
 
-public record ImageResponseDto(
+public record FileResponseDto(
         Long id,
         String archiveName, // Nome do Arquivo
         String originalName, // Nome Original

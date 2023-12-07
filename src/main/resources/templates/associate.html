@@ -72,7 +72,7 @@
             height: 130px;
             background-color: #eee;
             margin-right: 20px;
-            background-image: url('${associate.image.archiveName}');
+            background-image: url('${associate.file.archiveName}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -95,7 +95,7 @@
 <body>
 <div class="associado">
         <div class="header">
-            <div class="profile-photo" th:if="${associate.image != null}"></div>
+            <div class="profile-photo" th:if="${associate.file != null}"></div>
             <h1>Sindicato Dos Trabalhadores, Trabalhadoras Rurais, Agricultores E Agricultoras Familiares Do Município De Brumado-Bahia</h1>
         </div>
         <div class="section">

@@ -1,6 +1,5 @@
 package com.ifba.educampo.dto.syndicate;
 
-import com.ifba.educampo.dto.address.AddressPostDto;
 import com.ifba.educampo.dto.address.AddressPutDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

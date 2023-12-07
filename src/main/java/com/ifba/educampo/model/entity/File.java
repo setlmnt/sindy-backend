@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "images")
-public class Image { // Image
+@Table(name = "files")
+public class File { // files
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -70,7 +70,7 @@ public class Image { // Image
 
     @Override
     public String toString() {
-        return "Image{" +
+        return "File{" +
                 "id=" + id +
                 ", archiveName='" + archiveName + '\'' +
                 ", originalName='" + originalName + '\'' +

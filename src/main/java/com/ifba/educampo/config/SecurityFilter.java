@@ -2,7 +2,6 @@ package com.ifba.educampo.config;
 
 import com.ifba.educampo.repository.user.UserRepository;
 import com.ifba.educampo.service.user.AuthService;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
