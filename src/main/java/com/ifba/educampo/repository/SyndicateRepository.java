@@ -1,6 +1,6 @@
 package com.ifba.educampo.repository;
 
-import com.ifba.educampo.model.entity.Syndicate;
+import com.ifba.educampo.entity.Syndicate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

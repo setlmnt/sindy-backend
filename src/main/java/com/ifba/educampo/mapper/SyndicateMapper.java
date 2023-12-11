@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper;
 import com.ifba.educampo.dto.syndicate.SyndicatePostDto;
 import com.ifba.educampo.dto.syndicate.SyndicatePutDto;
 import com.ifba.educampo.dto.syndicate.SyndicateResponseDto;
-import com.ifba.educampo.model.entity.Syndicate;
+import com.ifba.educampo.entity.Syndicate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

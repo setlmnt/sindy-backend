@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper.associate;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordResponseDto;
-import com.ifba.educampo.model.entity.associate.WorkRecord;
+import com.ifba.educampo.entity.associate.WorkRecord;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

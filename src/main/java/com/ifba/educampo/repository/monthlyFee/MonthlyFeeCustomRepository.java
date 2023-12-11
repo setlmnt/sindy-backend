@@ -1,6 +1,6 @@
 package com.ifba.educampo.repository.monthlyFee;
 
-import com.ifba.educampo.model.entity.MonthlyFee;
+import com.ifba.educampo.entity.MonthlyFee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

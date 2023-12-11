@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper.associate;
 import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsResponseDto;
-import com.ifba.educampo.model.entity.associate.Dependents;
+import com.ifba.educampo.entity.associate.Dependents;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

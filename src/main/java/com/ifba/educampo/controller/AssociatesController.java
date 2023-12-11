@@ -5,9 +5,10 @@ import com.ifba.educampo.dto.FileResponseDto;
 import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
+import com.ifba.educampo.entity.associate.Associate;
+import com.ifba.educampo.enums.MaritalStatusEnum;
+import com.ifba.educampo.enums.PeriodEnum;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
-import com.ifba.educampo.model.entity.associate.Associate;
-import com.ifba.educampo.model.enums.MaritalStatus;
 import com.ifba.educampo.service.PdfService;
 import com.ifba.educampo.service.associate.AssociatePhotoService;
 import com.ifba.educampo.service.associate.AssociateService;
@@ -63,6 +64,15 @@ public class AssociatesController { // Classe de controle para o Associado
     @GetMapping(path = "/{id}")
     public AssociateResponseDto findAssociateById(@PathVariable Long id) {
         return associateService.findById(id);
+    }
+
+    @Operation(summary = "Find all birthday associates")
+    @GetMapping(path = "/birthdays")
+    public Page<AssociateResponseDto> findAllBirthdayAssociates(
+            Pageable pageable,
+            @RequestParam(required = false, defaultValue = "DAY") PeriodEnum period
+    ) {
+        return associateService.findAllBirthdayAssociates(pageable, period);
     }
 
     @Operation(summary = "Save associate")
@@ -165,10 +175,10 @@ public class AssociatesController { // Classe de controle para o Associado
 
         Context context = new Context();
         context.setVariable("associate", associate);
-        context.setVariable("divorced", MaritalStatus.DIVORCED);
-        context.setVariable("never_married", MaritalStatus.NEVER_MARRIED);
-        context.setVariable("married", MaritalStatus.MARRIED);
-        context.setVariable("widowed", MaritalStatus.WIDOWED);
+        context.setVariable("divorced", MaritalStatusEnum.DIVORCED);
+        context.setVariable("never_married", MaritalStatusEnum.NEVER_MARRIED);
+        context.setVariable("married", MaritalStatusEnum.MARRIED);
+        context.setVariable("widowed", MaritalStatusEnum.WIDOWED);
 
         return pdfService.generatePdfByTemplate("associate", context);
     }

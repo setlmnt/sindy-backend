@@ -3,9 +3,9 @@ package com.ifba.educampo.service;
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.email.EmailDto;
 import com.ifba.educampo.dto.email.EmailResponseDto;
+import com.ifba.educampo.entity.Email;
+import com.ifba.educampo.enums.StatusEmailEnum;
 import com.ifba.educampo.mapper.EmailMapper;
-import com.ifba.educampo.model.entity.Email;
-import com.ifba.educampo.model.enums.StatusEmail;
 import com.ifba.educampo.repository.email.EmailRepository;
 import com.ifba.educampo.repository.email.EmailRepositoryCustom;
 import jakarta.transaction.Transactional;
@@ -32,7 +32,7 @@ public class EmailService {
             String owner,
             String emailTo,
             String emailFrom,
-            StatusEmail status,
+            StatusEmailEnum status,
             Pageable pageable
     ) {
         return emailRepositoryCustom
@@ -49,9 +49,9 @@ public class EmailService {
             SimpleMailMessage message = getEmailMessage(email);
             emailSender.send(message);
 
-            email.setStatus(StatusEmail.SENT);
+            email.setStatus(StatusEmailEnum.SENT);
         } catch (Exception e) {
-            email.setStatus(StatusEmail.ERROR);
+            email.setStatus(StatusEmailEnum.ERROR);
         }
 
         return emailMapper.toResponseDto(emailRepository.save(email));

@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity.associate;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,26 +11,25 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "addresses")
-public class Address { // Endereço
+@Table(name = "dependents")
+public class Dependents { // Dependentes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String street; // Rua
+    private String spouse; // Nome da Esposa
 
-    @Column(nullable = false)
-    private String city; // Cidade
+    @Column(name = "minor_children")
+    private int minorChildren; // Filhos menores
 
-    private String number; // Número
+    @Column(name = "male_children")
+    private int maleChildren; // Filhos homens
 
-    private String complement; // Complemento
+    @Column(name = "female_children")
+    private int femaleChildren; // Filhas mulheres
 
-    @Column(nullable = false)
-    private String neighborhood; // Bairro
-
-    @Column(name = "zip_code", nullable = false)
-    private String zipCode; // CEP
+    @Column(name = "other_dependents")
+    private int otherDependents; // Outros dependentes
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -57,13 +56,12 @@ public class Address { // Endereço
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(Address address) {
-        if (address.getStreet() != null) setStreet(address.getStreet());
-        if (address.getCity() != null) setCity(address.getCity());
-        if (address.getNumber() != null) setNumber(address.getNumber());
-        if (address.getComplement() != null) setComplement(address.getComplement());
-        if (address.getNeighborhood() != null) setNeighborhood(address.getNeighborhood());
-        if (address.getZipCode() != null) setZipCode(address.getZipCode());
+    public void update(Dependents dependents) {
+        if (dependents.getSpouse() != null) setSpouse(dependents.getSpouse());
+        if (dependents.getMinorChildren() != 0) setMinorChildren(dependents.getMinorChildren());
+        if (dependents.getMaleChildren() != 0) setMaleChildren(dependents.getMaleChildren());
+        if (dependents.getFemaleChildren() != 0) setFemaleChildren(dependents.getFemaleChildren());
+        if (dependents.getOtherDependents() != 0) setOtherDependents(dependents.getOtherDependents());
     }
 
     public void delete() {
@@ -73,14 +71,13 @@ public class Address { // Endereço
 
     @Override
     public String toString() {
-        return "Address{" +
+        return "Dependents{" +
                 "id=" + id +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", number=" + number +
-                ", complement='" + complement + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", zipCode='" + zipCode + '\'' +
+                ", spouse='" + spouse + '\'' +
+                ", minorChildren=" + minorChildren +
+                ", maleChildren=" + maleChildren +
+                ", femaleChildren=" + femaleChildren +
+                ", otherDependents=" + otherDependents +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

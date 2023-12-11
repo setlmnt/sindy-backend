@@ -5,7 +5,7 @@ import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
-import com.ifba.educampo.model.enums.MaritalStatus;
+import com.ifba.educampo.enums.MaritalStatusEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -63,7 +63,7 @@ public record AssociatePostDto(
 
         @NotNull
         @Enumerated(EnumType.STRING)
-        MaritalStatus maritalStatus, // Estado Civil
+        MaritalStatusEnum maritalStatusEnum, // Estado Civil
 
         @NotNull(message = "Association at is required")
         @DateTimeFormat(pattern = "yyyy-MM-dd")

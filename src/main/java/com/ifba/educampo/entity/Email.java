@@ -1,6 +1,6 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity;
 
-import com.ifba.educampo.model.enums.StatusEmail;
+import com.ifba.educampo.enums.StatusEmailEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class Email {
     private String text;
 
     @Column(nullable = false)
-    private StatusEmail status;
+    private StatusEmailEnum status;
 
     @Column(nullable = false)
     private Boolean deleted = false;

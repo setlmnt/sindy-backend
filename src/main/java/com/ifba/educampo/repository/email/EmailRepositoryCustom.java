@@ -1,7 +1,7 @@
 package com.ifba.educampo.repository.email;
 
-import com.ifba.educampo.model.entity.Email;
-import com.ifba.educampo.model.enums.StatusEmail;
+import com.ifba.educampo.entity.Email;
+import com.ifba.educampo.enums.StatusEmailEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -21,7 +21,7 @@ public class EmailRepositoryCustom {
             String owner,
             String emailTo,
             String emailFrom,
-            StatusEmail status,
+            StatusEmailEnum status,
             Pageable pageable
     ) {
         TypedQuery<Email> typedQuery = getFindAllQuery(owner, emailTo, emailFrom, status);
@@ -39,7 +39,7 @@ public class EmailRepositoryCustom {
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
 
-    private void setQueryParameter(String owner, String emailTo, String emailFrom, StatusEmail status, TypedQuery<Email> typedQuery) {
+    private void setQueryParameter(String owner, String emailTo, String emailFrom, StatusEmailEnum status, TypedQuery<Email> typedQuery) {
         if (owner != null) {
             typedQuery.setParameter("owner", owner);
         }
@@ -57,7 +57,7 @@ public class EmailRepositoryCustom {
         }
     }
 
-    private TypedQuery<Email> getFindAllQuery(String owner, String emailTo, String emailFrom, StatusEmail status) {
+    private TypedQuery<Email> getFindAllQuery(String owner, String emailTo, String emailFrom, StatusEmailEnum status) {
         StringBuilder query = new StringBuilder("SELECT e FROM Email e WHERE e.deleted = false");
 
         if (owner != null) {

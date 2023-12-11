@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

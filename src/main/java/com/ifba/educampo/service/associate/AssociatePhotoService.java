@@ -2,12 +2,12 @@ package com.ifba.educampo.service.associate;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.FileResponseDto;
+import com.ifba.educampo.entity.File;
+import com.ifba.educampo.entity.associate.Associate;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.FileMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
-import com.ifba.educampo.model.entity.File;
-import com.ifba.educampo.model.entity.associate.Associate;
 import com.ifba.educampo.repository.FileRepository;
 import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.FileService;

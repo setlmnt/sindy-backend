@@ -1,6 +1,6 @@
 package com.ifba.educampo.repository.user;
 
-import com.ifba.educampo.model.entity.user.Otp;
+import com.ifba.educampo.entity.user.Otp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

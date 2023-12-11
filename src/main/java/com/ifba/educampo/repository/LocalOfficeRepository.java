@@ -1,7 +1,7 @@
 package com.ifba.educampo.repository;
 
-import com.ifba.educampo.model.entity.LocalOffice;
-import com.ifba.educampo.model.entity.associate.Associate;
+import com.ifba.educampo.entity.LocalOffice;
+import com.ifba.educampo.entity.associate.Associate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

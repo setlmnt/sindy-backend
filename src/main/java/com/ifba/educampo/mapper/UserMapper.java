@@ -4,7 +4,7 @@ import com.ifba.educampo.dto.user.UserLoginDto;
 import com.ifba.educampo.dto.user.UserPutDto;
 import com.ifba.educampo.dto.user.UserRegisterDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
-import com.ifba.educampo.model.entity.user.User;
+import com.ifba.educampo.entity.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

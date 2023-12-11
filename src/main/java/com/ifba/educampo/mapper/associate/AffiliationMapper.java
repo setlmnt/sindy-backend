@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper.associate;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationResponseDto;
-import com.ifba.educampo.model.entity.associate.Affiliation;
+import com.ifba.educampo.entity.associate.Affiliation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,7 +1,5 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity;
 
-
-import com.ifba.educampo.model.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,26 +11,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "files")
-public class File { // files
+@Table(name = "local_offices")
+public class LocalOffice { // Delegacias (Escritório Local)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "archive_name", nullable = false)
-    private String archiveName; // Nome do Arquivo
-
-    @Column(name = "original_name", nullable = false)
-    private String originalName; // Nome Original
-
-    @Column(name = "content_type", nullable = false)
-    private String contentType; // Tipo de Conteúdo
-
     @Column(nullable = false)
-    private Long size; // Tamanho
-
-    @Column(nullable = false)
-    private String url; // URL
+    private String name; // Nome
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -49,10 +35,6 @@ public class File { // files
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt; // Data de Atualização
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "associate_id")
-    private Associate associate; // Associado
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -63,6 +45,10 @@ public class File { // files
         updatedAt = LocalDateTime.now();
     }
 
+    public void update(LocalOffice localOffice) {
+        if (localOffice.getName() != null) setName(localOffice.getName());
+    }
+
     public void delete() {
         deleted = true;
         deletedAt = LocalDateTime.now();
@@ -70,13 +56,9 @@ public class File { // files
 
     @Override
     public String toString() {
-        return "File{" +
+        return "LocalOffice{" +
                 "id=" + id +
-                ", archiveName='" + archiveName + '\'' +
-                ", originalName='" + originalName + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", size=" + size +
-                ", url='" + url + '\'' +
+                ", name='" + name + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

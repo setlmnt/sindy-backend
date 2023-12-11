@@ -1,9 +1,9 @@
-package com.ifba.educampo.model.entity.associate;
+package com.ifba.educampo.entity.associate;
 
-import com.ifba.educampo.model.entity.Address;
-import com.ifba.educampo.model.entity.File;
-import com.ifba.educampo.model.entity.LocalOffice;
-import com.ifba.educampo.model.enums.MaritalStatus;
+import com.ifba.educampo.entity.Address;
+import com.ifba.educampo.entity.File;
+import com.ifba.educampo.entity.LocalOffice;
+import com.ifba.educampo.enums.MaritalStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -58,7 +58,7 @@ public class Associate { // Associado
 
     @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private MaritalStatus maritalStatus; // Estado Civil
+    private MaritalStatusEnum maritalStatusEnum; // Estado Civil
 
     @Temporal(TemporalType.DATE)
     @Column(name = "association_at", nullable = false)
@@ -129,7 +129,7 @@ public class Associate { // Associado
         if (associate.getBirthAt() != null) setBirthAt(associate.getBirthAt());
         if (associate.getIsLiterate() != null) setIsLiterate(associate.getIsLiterate());
         if (associate.getIsVoter() != null) setIsVoter(associate.getIsVoter());
-        if (associate.getMaritalStatus() != null) setMaritalStatus(associate.getMaritalStatus());
+        if (associate.getMaritalStatusEnum() != null) setMaritalStatusEnum(associate.getMaritalStatusEnum());
         if (associate.getAssociationAt() != null) setAssociationAt(associate.getAssociationAt());
         if (associate.getLocalOffice() != null) setLocalOffice(associate.getLocalOffice());
         if (associate.getAddress() != null) setAddress(associate.getAddress());
@@ -160,7 +160,7 @@ public class Associate { // Associado
                 ", birthAt=" + birthAt +
                 ", isLiterate=" + isLiterate +
                 ", isVoter=" + isVoter +
-                ", maritalStatus=" + maritalStatus +
+                ", maritalStatus=" + maritalStatusEnum +
                 ", deleted=" + deleted +
                 ", associationAt=" + associationAt +
                 ", createdAt=" + createdAt +

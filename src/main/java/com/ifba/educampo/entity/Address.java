@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.entity.associate;
+package com.ifba.educampo.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,17 +11,26 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "work_records")
-public class WorkRecord { // Carteira de Trabalho
+@Table(name = "addresses")
+public class Address { // Endereço
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long number; // Número
+    private String street; // Rua
 
     @Column(nullable = false)
-    private String series; // Série
+    private String city; // Cidade
+
+    private String number; // Número
+
+    private String complement; // Complemento
+
+    @Column(nullable = false)
+    private String neighborhood; // Bairro
+
+    @Column(name = "zip_code", nullable = false)
+    private String zipCode; // CEP
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -48,9 +57,13 @@ public class WorkRecord { // Carteira de Trabalho
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(WorkRecord workRecord) {
-        if (workRecord.getNumber() != null) setNumber(workRecord.getNumber());
-        if (workRecord.getSeries() != null) setSeries(workRecord.getSeries());
+    public void update(Address address) {
+        if (address.getStreet() != null) setStreet(address.getStreet());
+        if (address.getCity() != null) setCity(address.getCity());
+        if (address.getNumber() != null) setNumber(address.getNumber());
+        if (address.getComplement() != null) setComplement(address.getComplement());
+        if (address.getNeighborhood() != null) setNeighborhood(address.getNeighborhood());
+        if (address.getZipCode() != null) setZipCode(address.getZipCode());
     }
 
     public void delete() {
@@ -60,10 +73,14 @@ public class WorkRecord { // Carteira de Trabalho
 
     @Override
     public String toString() {
-        return "WorkRecord{" +
+        return "Address{" +
                 "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
                 ", number=" + number +
-                ", series='" + series + '\'' +
+                ", complement='" + complement + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", zipCode='" + zipCode + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

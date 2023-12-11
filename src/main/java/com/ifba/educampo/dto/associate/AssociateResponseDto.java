@@ -9,7 +9,7 @@ import com.ifba.educampo.dto.associate.dependents.DependentsResponseDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthResponseDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
-import com.ifba.educampo.model.enums.MaritalStatus;
+import com.ifba.educampo.enums.MaritalStatusEnum;
 
 import java.time.LocalDate;
 
@@ -31,7 +31,7 @@ public record AssociateResponseDto(
         LocalDate birthAt, // Data de Nascimento
         Boolean isLiterate, // Alfabetizado
         Boolean isVoter, // Eleitor
-        MaritalStatus maritalStatus, // Estado Civil
+        MaritalStatusEnum maritalStatusEnum, // Estado Civil
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação

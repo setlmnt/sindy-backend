@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper.monthlyFee;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePostDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeePutDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeeResponseDto;
-import com.ifba.educampo.model.entity.MonthlyFee;
+import com.ifba.educampo.entity.MonthlyFee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

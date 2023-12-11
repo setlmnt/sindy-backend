@@ -1,7 +1,7 @@
 package com.ifba.educampo.mapper;
 
 import com.ifba.educampo.dto.FileResponseDto;
-import com.ifba.educampo.model.entity.File;
+import com.ifba.educampo.entity.File;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

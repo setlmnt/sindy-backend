@@ -1,5 +1,4 @@
-package com.ifba.educampo.model.entity.associate;
-
+package com.ifba.educampo.entity.associate;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,17 +11,17 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "places_of_birth")
-public class PlaceOfBirth { // Local de Nascimento
+@Table(name = "work_records")
+public class WorkRecord { // Carteira de Trabalho
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String city; // Cidade
+    private Long number; // Número
 
     @Column(nullable = false)
-    private String state; // Estado
+    private String series; // Série
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -49,9 +48,9 @@ public class PlaceOfBirth { // Local de Nascimento
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(PlaceOfBirth placeOfBirth) {
-        if (placeOfBirth.getCity() != null) setCity(placeOfBirth.getCity());
-        if (placeOfBirth.getState() != null) setState(placeOfBirth.getState());
+    public void update(WorkRecord workRecord) {
+        if (workRecord.getNumber() != null) setNumber(workRecord.getNumber());
+        if (workRecord.getSeries() != null) setSeries(workRecord.getSeries());
     }
 
     public void delete() {
@@ -61,10 +60,10 @@ public class PlaceOfBirth { // Local de Nascimento
 
     @Override
     public String toString() {
-        return "PlaceOfBirth{" +
+        return "WorkRecord{" +
                 "id=" + id +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
+                ", number=" + number +
+                ", series='" + series + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

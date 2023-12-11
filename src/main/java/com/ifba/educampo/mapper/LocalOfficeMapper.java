@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper;
 import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
-import com.ifba.educampo.model.entity.LocalOffice;
+import com.ifba.educampo.entity.LocalOffice;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

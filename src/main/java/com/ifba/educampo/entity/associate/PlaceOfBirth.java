@@ -1,4 +1,5 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity.associate;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,14 +12,17 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "local_offices")
-public class LocalOffice { // Delegacias (Escritório Local)
+@Table(name = "places_of_birth")
+public class PlaceOfBirth { // Local de Nascimento
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name; // Nome
+    private String city; // Cidade
+
+    @Column(nullable = false)
+    private String state; // Estado
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -45,8 +49,9 @@ public class LocalOffice { // Delegacias (Escritório Local)
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(LocalOffice localOffice) {
-        if (localOffice.getName() != null) setName(localOffice.getName());
+    public void update(PlaceOfBirth placeOfBirth) {
+        if (placeOfBirth.getCity() != null) setCity(placeOfBirth.getCity());
+        if (placeOfBirth.getState() != null) setState(placeOfBirth.getState());
     }
 
     public void delete() {
@@ -56,9 +61,10 @@ public class LocalOffice { // Delegacias (Escritório Local)
 
     @Override
     public String toString() {
-        return "LocalOffice{" +
+        return "PlaceOfBirth{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

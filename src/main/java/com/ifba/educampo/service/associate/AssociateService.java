@@ -5,6 +5,9 @@ import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
+import com.ifba.educampo.entity.Address;
+import com.ifba.educampo.entity.associate.*;
+import com.ifba.educampo.enums.PeriodEnum;
 import com.ifba.educampo.exception.BadRequestListException;
 import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
@@ -12,8 +15,6 @@ import com.ifba.educampo.mapper.AddressMapper;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
-import com.ifba.educampo.model.entity.Address;
-import com.ifba.educampo.model.entity.associate.*;
 import com.ifba.educampo.repository.associate.AssociateCustomRepository;
 import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.AddressService;
@@ -101,6 +102,12 @@ public class AssociateService { // Classe de serviço para o Associado
         log.info("Deleting associate image with id {}", associateId);
         Associate associate = associateRepository.getReferenceById(associateId);
         associate.setProfilePicture(null);
+    }
+
+    public Page<AssociateResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
+        log.info("Listing all birthday associates");
+        Page<Associate> associates = associateCustomRepository.findAllBirthdayAssociates(pageable, period);
+        return associates.map(associateMapper::toResponseDto);
     }
 
     private Associate saveAssociate(AssociatePostDto dto) {

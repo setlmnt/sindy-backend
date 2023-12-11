@@ -5,7 +5,7 @@ import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
-import com.ifba.educampo.model.enums.MaritalStatus;
+import com.ifba.educampo.enums.MaritalStatusEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -41,7 +41,7 @@ public record AssociatePutDto(
         Boolean isVoter, // Eleitor
 
         @Enumerated(EnumType.STRING)
-        MaritalStatus maritalStatus, // Estado Civil
+        MaritalStatusEnum maritalStatusEnum, // Estado Civil
 
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação

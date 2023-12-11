@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.entity.user;
+package com.ifba.educampo.entity.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

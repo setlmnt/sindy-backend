@@ -1,7 +1,7 @@
 package com.ifba.educampo.repository.monthlyFee;
 
-import com.ifba.educampo.model.entity.MonthlyFee;
-import com.ifba.educampo.model.entity.associate.Associate;
+import com.ifba.educampo.entity.MonthlyFee;
+import com.ifba.educampo.entity.associate.Associate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

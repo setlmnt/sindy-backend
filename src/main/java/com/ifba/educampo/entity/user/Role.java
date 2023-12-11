@@ -1,4 +1,4 @@
-package com.ifba.educampo.model.entity.user;
+package com.ifba.educampo.entity.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

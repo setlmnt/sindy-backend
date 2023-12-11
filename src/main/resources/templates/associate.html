@@ -157,10 +157,10 @@
 
             <div class="info">
                 <strong>Estado Civil:</strong>
-                <span th:if="${associate.maritalStatus.equals(divorced)}">Divorciado (a)</span>
-                <span th:if="${associate.maritalStatus.equals(married)}">Casado (a)</span>
-                <span th:if="${associate.maritalStatus.equals(never_married)}">Solteiro (a)</span>
-                <span th:if="${associate.maritalStatus.equals(widowed)}">Viúvo( a)</span>
+                <span th:if="${associate.maritalStatusEnum.equals(divorced)}">Divorciado (a)</span>
+                <span th:if="${associate.maritalStatusEnum.equals(married)}">Casado (a)</span>
+                <span th:if="${associate.maritalStatusEnum.equals(never_married)}">Solteiro (a)</span>
+                <span th:if="${associate.maritalStatusEnum.equals(widowed)}">Viúvo( a)</span>
             </div>
 
             <div class="info">

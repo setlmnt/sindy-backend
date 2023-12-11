@@ -1,6 +1,6 @@
-package com.ifba.educampo.model.entity;
+package com.ifba.educampo.entity;
 
-import com.ifba.educampo.model.entity.associate.Associate;
+import com.ifba.educampo.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

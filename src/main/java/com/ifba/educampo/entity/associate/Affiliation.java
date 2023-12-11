@@ -1,4 +1,5 @@
-package com.ifba.educampo.model.entity.associate;
+package com.ifba.educampo.entity.associate;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,25 +12,17 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "dependents")
-public class Dependents { // Dependentes
+@Table(name = "affiliations")
+public class Affiliation { // Afiliação
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String spouse; // Nome da Esposa
+    @Column(name = "father_name", nullable = false)
+    private String fatherName; // Nome do Pai
 
-    @Column(name = "minor_children")
-    private int minorChildren; // Filhos menores
-
-    @Column(name = "male_children")
-    private int maleChildren; // Filhos homens
-
-    @Column(name = "female_children")
-    private int femaleChildren; // Filhas mulheres
-
-    @Column(name = "other_dependents")
-    private int otherDependents; // Outros dependentes
+    @Column(name = "mother_name", nullable = false)
+    private String motherName; // Nome da Mãe
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -56,12 +49,9 @@ public class Dependents { // Dependentes
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(Dependents dependents) {
-        if (dependents.getSpouse() != null) setSpouse(dependents.getSpouse());
-        if (dependents.getMinorChildren() != 0) setMinorChildren(dependents.getMinorChildren());
-        if (dependents.getMaleChildren() != 0) setMaleChildren(dependents.getMaleChildren());
-        if (dependents.getFemaleChildren() != 0) setFemaleChildren(dependents.getFemaleChildren());
-        if (dependents.getOtherDependents() != 0) setOtherDependents(dependents.getOtherDependents());
+    public void update(Affiliation affiliation) {
+        if (affiliation.getFatherName() != null) setFatherName(affiliation.getFatherName());
+        if (affiliation.getMotherName() != null) setMotherName(affiliation.getMotherName());
     }
 
     public void delete() {
@@ -71,13 +61,10 @@ public class Dependents { // Dependentes
 
     @Override
     public String toString() {
-        return "Dependents{" +
+        return "Affiliation{" +
                 "id=" + id +
-                ", spouse='" + spouse + '\'' +
-                ", minorChildren=" + minorChildren +
-                ", maleChildren=" + maleChildren +
-                ", femaleChildren=" + femaleChildren +
-                ", otherDependents=" + otherDependents +
+                ", fatherName='" + fatherName + '\'' +
+                ", motherName='" + motherName + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

@@ -11,7 +11,7 @@
 	<artifactId>educampo</artifactId>
 	<version>1.0.0</version>
 	<name>Sindy</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Sindy</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

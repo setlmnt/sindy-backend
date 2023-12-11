@@ -1,6 +1,6 @@
-package com.ifba.educampo.model.enums;
+package com.ifba.educampo.enums;
 
-public enum MaritalStatus { // Estado Civil
+public enum MaritalStatusEnum { // Estado Civil
     NEVER_MARRIED, // Solteiro
     MARRIED, // Casado
     WIDOWED, // Viúvo

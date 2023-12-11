@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper.associate;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthResponseDto;
-import com.ifba.educampo.model.entity.associate.PlaceOfBirth;
+import com.ifba.educampo.entity.associate.PlaceOfBirth;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

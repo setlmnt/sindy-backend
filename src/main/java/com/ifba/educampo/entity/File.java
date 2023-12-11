@@ -1,6 +1,7 @@
-package com.ifba.educampo.model.entity.associate;
+package com.ifba.educampo.entity;
 
 
+import com.ifba.educampo.entity.associate.Associate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,17 +13,26 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "affiliations")
-public class Affiliation { // Afiliação
+@Table(name = "files")
+public class File { // files
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "father_name", nullable = false)
-    private String fatherName; // Nome do Pai
+    @Column(name = "archive_name", nullable = false)
+    private String archiveName; // Nome do Arquivo
 
-    @Column(name = "mother_name", nullable = false)
-    private String motherName; // Nome da Mãe
+    @Column(name = "original_name", nullable = false)
+    private String originalName; // Nome Original
+
+    @Column(name = "content_type", nullable = false)
+    private String contentType; // Tipo de Conteúdo
+
+    @Column(nullable = false)
+    private Long size; // Tamanho
+
+    @Column(nullable = false)
+    private String url; // URL
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -39,6 +49,10 @@ public class Affiliation { // Afiliação
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt; // Data de Atualização
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "associate_id")
+    private Associate associate; // Associado
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -49,11 +63,6 @@ public class Affiliation { // Afiliação
         updatedAt = LocalDateTime.now();
     }
 
-    public void update(Affiliation affiliation) {
-        if (affiliation.getFatherName() != null) setFatherName(affiliation.getFatherName());
-        if (affiliation.getMotherName() != null) setMotherName(affiliation.getMotherName());
-    }
-
     public void delete() {
         deleted = true;
         deletedAt = LocalDateTime.now();
@@ -61,10 +70,13 @@ public class Affiliation { // Afiliação
 
     @Override
     public String toString() {
-        return "Affiliation{" +
+        return "File{" +
                 "id=" + id +
-                ", fatherName='" + fatherName + '\'' +
-                ", motherName='" + motherName + '\'' +
+                ", archiveName='" + archiveName + '\'' +
+                ", originalName='" + originalName + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", size=" + size +
+                ", url='" + url + '\'' +
                 ", deleted=" + deleted +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

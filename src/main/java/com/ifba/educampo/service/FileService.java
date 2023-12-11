@@ -2,8 +2,8 @@ package com.ifba.educampo.service;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.FileResponseDto;
+import com.ifba.educampo.entity.File;
 import com.ifba.educampo.mapper.FileMapper;
-import com.ifba.educampo.model.entity.File;
 import com.ifba.educampo.repository.FileRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;

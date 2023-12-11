@@ -3,7 +3,7 @@ package com.ifba.educampo.mapper;
 import com.ifba.educampo.dto.address.AddressPostDto;
 import com.ifba.educampo.dto.address.AddressPutDto;
 import com.ifba.educampo.dto.address.AddressResponseDto;
-import com.ifba.educampo.model.entity.Address;
+import com.ifba.educampo.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
