@@ -36,7 +36,7 @@ import java.util.Optional;
 @Slf4j
 @Log
 public class MonthlyFeeService {
-    private static final String DATE_FORMAT = "yyyy-MM";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private final MonthlyFeeMapper monthlyFeeMapper;
     private final MonthlyFeeCustomRepository monthlyFeeCustomRepository;
     private final MonthlyFeeRepository monthlyFeeRepository;
@@ -85,7 +85,13 @@ public class MonthlyFeeService {
 
         validateSaveMonthlyFee(monthlyFee, associateResponseDto);
 
-        return monthlyFeeMapper.toResponseDto(monthlyFeeRepository.save(monthlyFee));
+        monthlyFee = monthlyFeeRepository.save(monthlyFee);
+
+        if (monthlyFee.getFinalDate().isAfter(LocalDate.now())) {
+            associateService.updatePaidStatus(associateResponseDto.id(), true);
+        }
+
+        return monthlyFeeMapper.toResponseDto(monthlyFee);
     }
 
     public MonthlyFeeResponseDto update(Long id, MonthlyFeePutDto dto) {
@@ -98,6 +104,11 @@ public class MonthlyFeeService {
         validateUpdateMonthlyFee(updatedMonthlyFee, monthlyFee, associate);
 
         monthlyFee.update(updatedMonthlyFee);
+
+        if (monthlyFee.getFinalDate().isAfter(LocalDate.now())) {
+            associateService.updatePaidStatus(associate.getId(), true);
+        }
+
         return monthlyFeeMapper.toResponseDto(monthlyFee);
     }
 

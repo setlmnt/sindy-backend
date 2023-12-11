@@ -64,6 +64,9 @@ public class Associate { // Associado
     @Column(name = "association_at", nullable = false)
     private LocalDate associationAt; // Data de Associação
 
+    @Column(name = "is_paid", nullable = false)
+    private Boolean isPaid = false; // Pagamento
+
     @Column(nullable = false)
     private Boolean deleted = false;
 

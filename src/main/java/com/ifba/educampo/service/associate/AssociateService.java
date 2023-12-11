@@ -110,6 +110,12 @@ public class AssociateService { // Classe de serviço para o Associado
         return associates.map(associateMapper::toResponseDto);
     }
 
+    public void updatePaidStatus(Long id, boolean status) {
+        log.info("Updating paid status of associate with ID: {}", id);
+        Associate associate = associateRepository.getReferenceById(id);
+        associate.setIsPaid(status);
+    }
+
     private Associate saveAssociate(AssociatePostDto dto) {
         Associate associate = associateMapper.postDtoToEntity(dto);
 

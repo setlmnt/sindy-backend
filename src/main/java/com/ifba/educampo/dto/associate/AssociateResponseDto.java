@@ -31,6 +31,7 @@ public record AssociateResponseDto(
         LocalDate birthAt, // Data de Nascimento
         Boolean isLiterate, // Alfabetizado
         Boolean isVoter, // Eleitor
+        Boolean isPaid, // Pagou a Mensalidade
         MaritalStatusEnum maritalStatusEnum, // Estado Civil
 
         @JsonFormat(pattern = "yyyy-MM-dd")
