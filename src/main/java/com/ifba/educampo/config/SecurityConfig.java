@@ -35,7 +35,9 @@ public class SecurityConfig {
             "/docs/**",
             // -- Actuator
             "/actuator",
-            "/actuator/**"
+            "/actuator/**",
+            "/error",
+            "/api/v1/files/**"
     };
 
     @Bean
