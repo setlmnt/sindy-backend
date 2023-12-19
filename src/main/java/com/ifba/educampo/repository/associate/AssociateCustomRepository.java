@@ -17,11 +17,18 @@ import java.util.List;
 @Repository
 @Log
 public class AssociateCustomRepository {
+    private static final String SELECT_ALL_ASSOCIATES = "SELECT a FROM Associate a LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation " +
+            "LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth " +
+            "LEFT JOIN FETCH a.workRecord LEFT JOIN FETCH a.profilePicture WHERE a.deleted = false ";
+    private static final String SELECT_ASSOCIATES_BIRTHDAY = "SELECT a FROM Associate a LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation " +
+            "LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth " +
+            "LEFT JOIN FETCH a.workRecord LEFT JOIN FETCH a.profilePicture WHERE a.deleted = false " +
+            "AND MONTH(a.birthAt) = MONTH(CURRENT_DATE) ";
 
     @PersistenceContext
     private EntityManager em;
 
-    private static void setPagination(Pageable pageable, TypedQuery<Associate> typedQuery) {
+    private static void setPagination(Pageable pageable, TypedQuery<?> typedQuery) {
         typedQuery.setMaxResults(pageable.getPageSize());
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
@@ -32,34 +39,28 @@ public class AssociateCustomRepository {
             Long unionCard,
             Pageable pageable
     ) {
-        StringBuilder query = new StringBuilder(
-                "SELECT a FROM Associate a LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation " +
-                        "LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth " +
-                        "LEFT JOIN FETCH a.workRecord LEFT JOIN FETCH a.profilePicture WHERE a.deleted = false "
-        );
+        StringBuilder query = new StringBuilder(SELECT_ALL_ASSOCIATES);
 
         TypedQuery<Associate> typedQuery = filterQueryByNameAndCpfAndUnionCard(query, pageable, name, cpf, unionCard);
+        int totalElements = typedQuery.getResultList().size();
 
         setPagination(pageable, typedQuery);
 
         List<Associate> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, resultList.size());
+
+        return new PageImpl<>(resultList, pageable, totalElements);
     }
 
     public Page<Associate> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
-        StringBuilder query = new StringBuilder(
-                "SELECT a FROM Associate a LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation " +
-                        "LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth " +
-                        "LEFT JOIN FETCH a.workRecord LEFT JOIN FETCH a.profilePicture WHERE a.deleted = false " +
-                        "AND MONTH(a.birthAt) = MONTH(CURRENT_DATE) "
-        );
+        StringBuilder query = new StringBuilder(SELECT_ASSOCIATES_BIRTHDAY);
 
         TypedQuery<Associate> typedQuery = filterQueryByBirthdayAssociates(query, pageable, period);
+        int totalElements = typedQuery.getResultList().size();
 
         setPagination(pageable, typedQuery);
 
         List<Associate> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, resultList.size());
+        return new PageImpl<>(resultList, pageable, totalElements);
     }
 
     private TypedQuery<Associate> filterQueryByBirthdayAssociates(StringBuilder query, Pageable pageable, PeriodEnum period) {

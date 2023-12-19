@@ -1,5 +1,6 @@
 package com.ifba.educampo.repository.email;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.entity.Email;
 import com.ifba.educampo.enums.StatusEmailEnum;
 import jakarta.persistence.EntityManager;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+@Log
 public class EmailRepositoryCustom {
+    private static final String SELECT_ALL_EMAILS = "SELECT e FROM Email e WHERE e.deleted = false";
     @PersistenceContext
     private EntityManager em;
 
@@ -25,13 +28,14 @@ public class EmailRepositoryCustom {
             Pageable pageable
     ) {
         TypedQuery<Email> typedQuery = getFindAllQuery(owner, emailTo, emailFrom, status);
+        int totalElements = typedQuery.getResultList().size();
 
         setQueryParameter(owner, emailTo, emailFrom, status, typedQuery);
 
         setPagination(pageable, typedQuery);
 
         List<Email> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, resultList.size());
+        return new PageImpl<>(resultList, pageable, totalElements);
     }
 
     private void setPagination(Pageable pageable, TypedQuery<Email> typedQuery) {
@@ -58,7 +62,7 @@ public class EmailRepositoryCustom {
     }
 
     private TypedQuery<Email> getFindAllQuery(String owner, String emailTo, String emailFrom, StatusEmailEnum status) {
-        StringBuilder query = new StringBuilder("SELECT e FROM Email e WHERE e.deleted = false");
+        StringBuilder query = new StringBuilder(SELECT_ALL_EMAILS);
 
         if (owner != null) {
             query.append(" AND e.owner LIKE CONCAT('%', :owner, '%')");

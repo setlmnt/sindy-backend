@@ -1,5 +1,6 @@
 package com.ifba.educampo.repository.monthlyFee;
 
+import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.entity.MonthlyFee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,7 +14,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
+@Log
 public class MonthlyFeeCustomRepository {
+    private static final String SELECT_ALL_MONTHLY_FEE = "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false";
+    private static final String SELECT_MONTHLY_FEE_BY_ASSOCIATE_ID = "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false AND mf.associate.id = :associateId";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -27,16 +32,15 @@ public class MonthlyFeeCustomRepository {
             LocalDate finalDate,
             Pageable pageable
     ) {
-        StringBuilder query = new StringBuilder(
-                "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false"
-        );
+        StringBuilder query = new StringBuilder(SELECT_ALL_MONTHLY_FEE);
 
         TypedQuery<MonthlyFee> typedQuery = filterQueryByInitialDateAndFinalDate(query, initialDate, finalDate);
+        int totalElements = typedQuery.getResultList().size();
 
         setPagination(pageable, typedQuery);
 
         List<MonthlyFee> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, resultList.size());
+        return new PageImpl<>(resultList, pageable, totalElements);
     }
 
     public Page<MonthlyFee> findAllFromAssociateIdAndInitialDateAndFinalDate(
@@ -45,17 +49,17 @@ public class MonthlyFeeCustomRepository {
             LocalDate finalDate,
             Pageable pageable
     ) {
-        StringBuilder query = new StringBuilder(
-                "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false AND mf.associate.id = :associateId");
+        StringBuilder query = new StringBuilder(SELECT_MONTHLY_FEE_BY_ASSOCIATE_ID);
 
         TypedQuery<MonthlyFee> typedQuery = filterQueryByInitialDateAndFinalDate(query, initialDate, finalDate);
-
         typedQuery.setParameter("associateId", associateId);
+
+        int totalElements = typedQuery.getResultList().size();
 
         setPagination(pageable, typedQuery);
 
         List<MonthlyFee> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, resultList.size());
+        return new PageImpl<>(resultList, pageable, totalElements);
     }
 
     private TypedQuery<MonthlyFee> filterQueryByInitialDateAndFinalDate(
