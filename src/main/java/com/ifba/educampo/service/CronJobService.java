@@ -18,7 +18,7 @@ import java.util.List;
 public class CronJobService {
     private final AssociateRepository associateRepository;
 
-    @Scheduled(cron = "1 0 ? * *") // Every day at 00:01
+    @Scheduled(cron = "1 0 0 * * *") // Every day at 12:00:01 AM
     public void setAssociateIsPaidToFalseWhenMonthlyFeeAsAlreadyExpired() {
         List<Long> associatesWithExpiredMonthlyFee = associateRepository.findAllAssociatesWithExpiredMonthlyFee();
         if (associatesWithExpiredMonthlyFee.isEmpty()) return;
