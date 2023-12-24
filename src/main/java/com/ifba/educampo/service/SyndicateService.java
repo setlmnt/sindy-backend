@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,8 +38,8 @@ public class SyndicateService {
     }
 
     public SyndicateResponseDto save(SyndicatePostDto dto) {
-        SyndicateResponseDto syndicateResponseDto = find();
-        if (syndicateResponseDto != null) {
+        Optional<Syndicate> syndicateExits = syndicateRepository.find();
+        if (syndicateExits.isPresent()) {
             log.error("Syndicate already exists");
             throw new BadRequestException("Syndicate already exists");
         }
