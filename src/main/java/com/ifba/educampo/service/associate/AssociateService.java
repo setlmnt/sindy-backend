@@ -37,7 +37,10 @@ import java.util.*;
 @Slf4j
 @Transactional
 @Log
-public class AssociateService { // Classe de serviço para o Associado
+public class AssociateService {
+    public static final String ASSOCIATE_REPORT = "associate_report";
+    public static final String SYNDICATE_REPORT = "syndicate_report";
+    public static final String MEMBERSHIP_CARD_REPORT = "membership_card_report";
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;
     private final AssociateCustomRepository associateCustomRepository;
@@ -267,13 +270,32 @@ public class AssociateService { // Classe de serviço para o Associado
         AssociateResponseDto associateResponseDto = findById(id);
         Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
 
-        JasperReport syndicateReport = reportService.compileReport("syndicate_report");
+        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("associateId", id);
         parameters.put("syndicateReport", syndicateReport);
 
-        byte[] report = reportService.generateReport("associate_report", parameters);
+        byte[] report = reportService.generateReport(ASSOCIATE_REPORT, parameters);
+
+        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + fileName.replace(" ", "_")
+        );
+
+        return report;
+    }
+
+    public byte[] exportAssociateMembershipCardToPdf(Long id, HttpServletResponse response) {
+        AssociateResponseDto associateResponseDto = findById(id);
+        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("associateId", id);
+
+        byte[] report = reportService.generateReport(MEMBERSHIP_CARD_REPORT, parameters);
 
         String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);

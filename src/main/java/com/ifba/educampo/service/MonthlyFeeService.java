@@ -38,6 +38,9 @@ import java.util.Map;
 @Log
 public class MonthlyFeeService {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String SYNDICATE_REPORT = "syndicate_report";
+    public static final String MONTHLY_FEE_REPORT = "monthly_fee_report";
+    public static final String MONTHLY_FEE_SUFIX = "mensalidade";
     private final MonthlyFeeMapper monthlyFeeMapper;
     private final MonthlyFeeCustomRepository monthlyFeeCustomRepository;
     private final MonthlyFeeRepository monthlyFeeRepository;
@@ -122,15 +125,15 @@ public class MonthlyFeeService {
     public byte[] exportToPdf(Long id, HttpServletResponse response) {
         MonthlyFeeResponseDto monthlyFee = findById(id);
 
-        JasperReport syndicateReport = reportService.compileReport("syndicate_report");
+        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("monthlyFeeId", id);
         parameters.put("syndicateReport", syndicateReport);
 
-        byte[] report = reportService.generateReport("monthly_fee_report", parameters);
+        byte[] report = reportService.generateReport(MONTHLY_FEE_REPORT, parameters);
 
-        String fileName = monthlyFee.associate().name() + "-mensalidade.pdf";
+        String fileName = monthlyFee.associate().name() + "-" + MONTHLY_FEE_SUFIX + ".pdf";
         response.setContentType("application/pdf");
         response.setHeader(
                 "Content-Disposition",

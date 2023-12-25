@@ -157,4 +157,13 @@ public class AssociatesController { // Classe de controle para o Associado
     ) {
         return associateService.exportAssociateToPdf(id, response);
     }
+
+    @Operation(summary = "Export associate membership card to pdf")
+    @GetMapping(path = "/{id}/membership-card/export/pdf", produces = "application/pdf")
+    public byte[] exportAssociateMembershipCardToPdf(
+            @PathVariable Long id,
+            HttpServletResponse response
+    ) {
+        return associateService.exportAssociateMembershipCardToPdf(id, response);
+    }
 }
