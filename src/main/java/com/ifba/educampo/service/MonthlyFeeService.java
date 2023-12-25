@@ -19,16 +19,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JasperReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class MonthlyFeeService {
     private final MonthlyFeeRepository monthlyFeeRepository;
     private final AssociateService associateService;
     private final AssociateMapper associateMapper;
-    private final PdfService pdfService;
+    private final ReportService reportService;
 
     private void addError(List<ErrorType> errors, String message, String field) {
         errors.add(new ErrorType(message, field));
@@ -55,7 +56,7 @@ public class MonthlyFeeService {
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }
 
-    public MonthlyFeeResponseDto findMonthlyFee(Long id) {
+    public MonthlyFeeResponseDto findById(Long id) {
         MonthlyFee monthlyFee = monthlyFeeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Monthly fee with ID {} not found.", id);
@@ -119,20 +120,24 @@ public class MonthlyFeeService {
     }
 
     public byte[] exportToPdf(Long id, HttpServletResponse response) {
-        Optional<MonthlyFee> monthlyFee = monthlyFeeRepository.findById(id);
+        MonthlyFeeResponseDto monthlyFee = findById(id);
 
-        if (monthlyFee.isEmpty()) return null;
+        JasperReport syndicateReport = reportService.compileReport("syndicate_report");
 
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("monthlyFeeId", id);
+        parameters.put("syndicateReport", syndicateReport);
+
+        byte[] report = reportService.generateReport("monthly_fee_report", parameters);
+
+        String fileName = monthlyFee.associate().name() + "-mensalidade.pdf";
         response.setContentType("application/pdf");
         response.setHeader(
                 "Content-Disposition",
-                "attachment; filename=" + monthlyFee.get().getAssociate().getName() + "-mensalidade.pdf"
+                "attachment; filename=" + fileName.replace(" ", "_")
         );
 
-        Context context = new Context();
-        context.setVariable("monthlyFee", monthlyFee);
-
-        return pdfService.generatePdfByTemplate("monthly-fee", context);
+        return report;
     }
 
     private void validateUpdateMonthlyFee(MonthlyFee updatedMonthlyFee, MonthlyFee monthlyFee, Associate associate) {

@@ -75,6 +75,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InternalServerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse handleInternalServerException(InternalServerException ex) {
+        log.error("Internal Server", ex);
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                List.of(new ErrorType("body", ex.getMessage())),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {

@@ -19,16 +19,18 @@ import com.ifba.educampo.repository.associate.AssociateCustomRepository;
 import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.AddressService;
 import com.ifba.educampo.service.LocalOfficeService;
+import com.ifba.educampo.service.ReportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JasperReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +50,7 @@ public class AssociateService { // Classe de serviço para o Associado
     private final PlaceOfBirthService placeOfBirthService;
     private final LocalOfficeService localOfficeService;
     private final LocalOfficeMapper localOfficeMapper;
+    private final ReportService reportService;
 
     public Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable) {
         log.info("Listing all associates");
@@ -258,5 +261,27 @@ public class AssociateService { // Classe de serviço para o Associado
     private void addLocalOfficeToAssociates(Long localOfficeId, Long associateId) {
         log.info("Adding local office to associates");
         associateRepository.addLocalOfficeToAssociates(localOfficeId, associateId);
+    }
+
+    public byte[] exportAssociateToPdf(Long id, HttpServletResponse response) {
+        AssociateResponseDto associateResponseDto = findById(id);
+        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
+
+        JasperReport syndicateReport = reportService.compileReport("syndicate_report");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("associateId", id);
+        parameters.put("syndicateReport", syndicateReport);
+
+        byte[] report = reportService.generateReport("associate_report", parameters);
+
+        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + fileName.replace(" ", "_")
+        );
+
+        return report;
     }
 }

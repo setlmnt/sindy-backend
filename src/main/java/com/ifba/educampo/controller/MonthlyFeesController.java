@@ -58,7 +58,7 @@ public class MonthlyFeesController { // Classe de controle para as Mensalidades
     public MonthlyFeeResponseDto findMonthlyFeeById(
             @PathVariable Long id
     ) {
-        return monthlyFeeService.findMonthlyFee(id);
+        return monthlyFeeService.findById(id);
     }
 
     @Operation(summary = "Save monthly fee")

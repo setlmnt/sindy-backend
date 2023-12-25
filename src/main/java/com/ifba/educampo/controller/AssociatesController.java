@@ -5,11 +5,7 @@ import com.ifba.educampo.dto.FileResponseDto;
 import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
-import com.ifba.educampo.entity.associate.Associate;
-import com.ifba.educampo.enums.MaritalStatusEnum;
 import com.ifba.educampo.enums.PeriodEnum;
-import com.ifba.educampo.mapper.associate.AssociateMapper;
-import com.ifba.educampo.service.PdfService;
 import com.ifba.educampo.service.associate.AssociatePhotoService;
 import com.ifba.educampo.service.associate.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.context.Context;
 
 @Tag(name = "Associates", description = "Associates API")
 @RestController
@@ -40,8 +35,6 @@ import org.thymeleaf.context.Context;
 public class AssociatesController { // Classe de controle para o Associado
     private final AssociateService associateService;
     private final AssociatePhotoService associatePhotoService;
-    private final AssociateMapper associateMapper;
-    private final PdfService pdfService;
 
     @Value("${app.upload.images.dir}")
     private String uploadProfilePictureDir;
@@ -162,24 +155,6 @@ public class AssociatesController { // Classe de controle para o Associado
             @PathVariable Long id,
             HttpServletResponse response
     ) {
-        AssociateResponseDto associateResponseDto = associateService.findById(id);
-        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
-
-        if (associate == null) return null;
-
-        response.setContentType("application/pdf");
-        response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=" + associate.getName() + "-" + associate.getUnionCard() + ".pdf"
-        );
-
-        Context context = new Context();
-        context.setVariable("associate", associate);
-        context.setVariable("divorced", MaritalStatusEnum.DIVORCED);
-        context.setVariable("never_married", MaritalStatusEnum.NEVER_MARRIED);
-        context.setVariable("married", MaritalStatusEnum.MARRIED);
-        context.setVariable("widowed", MaritalStatusEnum.WIDOWED);
-
-        return pdfService.generatePdfByTemplate("associate", context);
+        return associateService.exportAssociateToPdf(id, response);
     }
 }
