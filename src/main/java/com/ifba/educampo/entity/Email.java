@@ -34,7 +34,7 @@ public class Email {
     private String text;
 
     @Column(nullable = false)
-    private StatusEmailEnum status;
+    private StatusEmailEnum status = StatusEmailEnum.PENDING;
 
     @Column(nullable = false)
     private Boolean deleted = false;

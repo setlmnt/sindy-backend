@@ -37,10 +37,10 @@ import java.util.Map;
 @Slf4j
 @Log
 public class MonthlyFeeService {
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String SYNDICATE_REPORT = "syndicate_report";
     public static final String MONTHLY_FEE_REPORT = "monthly_fee_report";
     public static final String MONTHLY_FEE_SUFIX = "mensalidade";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private final MonthlyFeeMapper monthlyFeeMapper;
     private final MonthlyFeeCustomRepository monthlyFeeCustomRepository;
     private final MonthlyFeeRepository monthlyFeeRepository;

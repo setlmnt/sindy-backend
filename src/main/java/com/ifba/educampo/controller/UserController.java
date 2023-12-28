@@ -64,7 +64,7 @@ public class UserController {
     ) {
         UserResponseDto userResponseDto = userService.findByName(principal.getName());
         String otpCode = otpService.create(userResponseDto);
-        otpService.sendOtpToEmail(userResponseDto, otpCode);
+        otpService.sendOtpToEmailAsync(userResponseDto, otpCode);
     }
 
     @Operation(summary = "Change password")

@@ -12,6 +12,7 @@ import com.ifba.educampo.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +68,24 @@ public class OtpService {
         String message = getMessage(otp);
 
         emailService.send(
+                new EmailDto(
+                        userResponseDto.username(),
+                        environment.getProperty("spring.mail.username"),
+                        userResponseDto.email(),
+                        subject,
+                        message
+                )
+        );
+    }
+
+    @Async
+    public void sendOtpToEmailAsync(UserResponseDto userResponseDto, String otp) {
+        log.info("Sending OTP: {} to {}", otp, userResponseDto.email());
+
+        String subject = getSubject();
+        String message = getMessage(otp);
+
+        emailService.sendAsync(
                 new EmailDto(
                         userResponseDto.username(),
                         environment.getProperty("spring.mail.username"),
