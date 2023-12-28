@@ -15,7 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service
 @Transactional
@@ -40,21 +44,33 @@ public class EmailService {
                 .map(emailMapper::toResponseDto);
     }
 
-    public EmailResponseDto send(EmailDto emailDto) {
-        log.info("Sending email to {}", emailDto.emailTo());
+    public Email save(EmailDto emailDto) {
+        log.info("Saving email {}", emailDto);
 
         Email email = emailMapper.dtoToEntity(emailDto);
+        return emailRepository.save(email);
+    }
+
+    public void send(EmailDto emailDto) {
+        log.info("Sending email to {}", emailDto.emailTo());
+
+        Email email = save(emailDto);
 
         try {
             SimpleMailMessage message = getEmailMessage(email);
             emailSender.send(message);
 
             email.setStatus(StatusEmailEnum.SENT);
+            log.info("Email successfully sent to {}", emailDto.emailTo());
         } catch (Exception e) {
             email.setStatus(StatusEmailEnum.ERROR);
+            log.error("Error sending email to {}", emailDto.emailTo());
         }
+    }
 
-        return emailMapper.toResponseDto(emailRepository.save(email));
+    @Async
+    public void sendAsync(EmailDto emailDto) {
+        send(emailDto);
     }
 
     private SimpleMailMessage getEmailMessage(Email email) {
