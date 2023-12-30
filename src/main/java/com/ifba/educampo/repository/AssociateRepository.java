@@ -1,4 +1,4 @@
-package com.ifba.educampo.repository.associate;
+package com.ifba.educampo.repository;
 
 import com.ifba.educampo.entity.associate.Associate;
 import org.springframework.data.domain.Page;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface AssociateRepository extends JpaRepository<Associate, Long> { // Interface de repositório para o Associado
+public interface AssociateRepository extends JpaRepository<Associate, Long>, CustomAssociateRepository {
     Page<Associate> findAll(Pageable pageable); // Query para listar todos os Associados
 
     Associate findByCpf(String cpf); // Query para buscar o Associado pelo cpf
@@ -23,7 +23,6 @@ public interface AssociateRepository extends JpaRepository<Associate, Long> { //
     @Query(
             "UPDATE Associate a SET a.profilePicture = (SELECT i FROM File i WHERE i.id = :imageId) WHERE a.id = :id"
     )
-        // Query para salvar a foto do Associado pelo id do Associado
     void savePhoto(@Param("id") Long id, @Param("imageId") Long imageId);
 
     @Modifying

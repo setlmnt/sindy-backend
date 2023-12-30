@@ -1,7 +1,7 @@
 package com.ifba.educampo.service;
 
 import com.ifba.educampo.annotation.Log;
-import com.ifba.educampo.repository.associate.AssociateRepository;
+import com.ifba.educampo.repository.AssociateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

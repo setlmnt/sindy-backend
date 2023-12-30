@@ -6,8 +6,7 @@ import com.ifba.educampo.dto.email.EmailResponseDto;
 import com.ifba.educampo.entity.Email;
 import com.ifba.educampo.enums.StatusEmailEnum;
 import com.ifba.educampo.mapper.EmailMapper;
-import com.ifba.educampo.repository.email.EmailRepository;
-import com.ifba.educampo.repository.email.EmailRepositoryCustom;
+import com.ifba.educampo.repository.EmailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +17,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,7 +24,6 @@ import java.util.concurrent.Future;
 @Log
 public class EmailService {
     private final EmailRepository emailRepository;
-    private final EmailRepositoryCustom emailRepositoryCustom;
     private final EmailMapper emailMapper;
     private final JavaMailSender emailSender;
 
@@ -39,7 +34,7 @@ public class EmailService {
             StatusEmailEnum status,
             Pageable pageable
     ) {
-        return emailRepositoryCustom
+        return emailRepository
                 .findAllWithFilterAndDeletedFalse(owner, emailTo, emailFrom, status, pageable)
                 .map(emailMapper::toResponseDto);
     }

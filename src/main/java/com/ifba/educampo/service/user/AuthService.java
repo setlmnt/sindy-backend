@@ -10,7 +10,6 @@ import com.ifba.educampo.dto.user.UserLoginDto;
 import com.ifba.educampo.entity.user.User;
 import com.ifba.educampo.exception.ForbiddenException;
 import com.ifba.educampo.exception.UnauthorizedException;
-import com.ifba.educampo.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,6 @@ import java.time.ZoneOffset;
 @Log
 public class AuthService {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
 
     @Value("${api.security.token.jwt.secret}")
     private String secret;

@@ -7,7 +7,7 @@ import com.ifba.educampo.dto.user.UserResponseDto;
 import com.ifba.educampo.entity.user.Otp;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.mapper.OtpMapper;
-import com.ifba.educampo.repository.user.OtpRepository;
+import com.ifba.educampo.repository.OtpRepository;
 import com.ifba.educampo.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,23 +61,6 @@ public class OtpService {
         otp.delete();
     }
 
-    public void sendOtpToEmail(UserResponseDto userResponseDto, String otp) {
-        log.info("Sending OTP: {} to {}", otp, userResponseDto.email());
-
-        String subject = getSubject();
-        String message = getMessage(otp);
-
-        emailService.send(
-                new EmailDto(
-                        userResponseDto.username(),
-                        environment.getProperty("spring.mail.username"),
-                        userResponseDto.email(),
-                        subject,
-                        message
-                )
-        );
-    }
-
     @Async
     public void sendOtpToEmailAsync(UserResponseDto userResponseDto, String otp) {
         log.info("Sending OTP: {} to {}", otp, userResponseDto.email());
@@ -96,6 +79,7 @@ public class OtpService {
         );
     }
 
+    // TODO: Enviar template de email em vez de mensagem hardcoded
     private String getSubject() {
         return "Mude sua senha!";
     }

@@ -5,12 +5,10 @@ import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
 import com.ifba.educampo.entity.associate.PlaceOfBirth;
 import com.ifba.educampo.mapper.associate.PlaceOfBirthMapper;
-import com.ifba.educampo.repository.associate.PlaceOfBirthRepository;
+import com.ifba.educampo.repository.PlaceOfBirthRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class PlaceOfBirthService { // Naturalidade
+public class PlaceOfBirthService {
     private final PlaceOfBirthMapper placeOfBirthMapper;
     private final PlaceOfBirthRepository placeOfBirthRepository;
-
-    public Page<PlaceOfBirth> listAll(Pageable pageable) {
-        log.info("Listing all places of birth.");
-        return placeOfBirthRepository.findAll(pageable);
-    }
 
     public PlaceOfBirth save(PlaceOfBirthPostDto dto) {
         log.info("Saving place of birth.");

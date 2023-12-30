@@ -5,12 +5,10 @@ import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
 import com.ifba.educampo.entity.associate.WorkRecord;
 import com.ifba.educampo.mapper.associate.WorkRecordMapper;
-import com.ifba.educampo.repository.associate.WorkRecordRepository;
+import com.ifba.educampo.repository.WorkRecordRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class WorkRecordService { // Carteira de trabalho
+public class WorkRecordService {
     private final WorkRecordMapper workRecordMapper;
     private final WorkRecordRepository workRecordRepository;
-
-    public Page<WorkRecord> listAll(Pageable pageable) {
-        log.info("Listing all work records.");
-        return workRecordRepository.findAll(pageable);
-    }
 
     public WorkRecord save(WorkRecordPostDto dto) {
         log.info("Saving work record.");

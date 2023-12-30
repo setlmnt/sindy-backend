@@ -1,8 +1,9 @@
-package com.ifba.educampo.repository.email;
+package com.ifba.educampo.repository.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.entity.Email;
 import com.ifba.educampo.enums.StatusEmailEnum;
+import com.ifba.educampo.repository.CustomEmailRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Repository
 @Log
-public class EmailRepositoryCustom {
+public class CustomEmailRepositoryImpl implements CustomEmailRepository {
     private static final String SELECT_ALL_EMAILS = "SELECT e FROM Email e WHERE e.deleted = false";
     @PersistenceContext
     private EntityManager em;

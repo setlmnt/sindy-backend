@@ -5,12 +5,10 @@ import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
 import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.entity.associate.Dependents;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
-import com.ifba.educampo.repository.associate.DependentsRepository;
+import com.ifba.educampo.repository.DependentsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class DependentsService { // Dependentes
+public class DependentsService {
     private final DependentsMapper dependentsMapper;
     private final DependentsRepository dependentsRepository;
-
-    public Page<Dependents> listAll(Pageable pageable) {
-        log.info("Listing all dependents.");
-        return dependentsRepository.findAll(pageable);
-    }
 
     public Dependents save(DependentsPostDto dto) {
         log.info("Saving dependent.");

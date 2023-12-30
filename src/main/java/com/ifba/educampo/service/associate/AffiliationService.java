@@ -5,12 +5,10 @@ import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.entity.associate.Affiliation;
 import com.ifba.educampo.mapper.associate.AffiliationMapper;
-import com.ifba.educampo.repository.associate.AffiliationRepository;
+import com.ifba.educampo.repository.AffiliationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class AffiliationService { // Afiliacao
+public class AffiliationService {
     private final AffiliationMapper affiliationMapper;
     private final AffiliationRepository affiliationRepository;
-
-    public Page<Affiliation> listAll(Pageable pageable) {
-        log.info("Listing all affiliations");
-        return affiliationRepository.findAll(pageable);
-    }
 
     public Affiliation save(AffiliationPostDto dto) {
         log.info("Saving affiliation.");

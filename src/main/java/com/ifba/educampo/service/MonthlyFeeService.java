@@ -12,8 +12,7 @@ import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.monthlyFee.MonthlyFeeMapper;
-import com.ifba.educampo.repository.monthlyFee.MonthlyFeeCustomRepository;
-import com.ifba.educampo.repository.monthlyFee.MonthlyFeeRepository;
+import com.ifba.educampo.repository.MonthlyFeeRepository;
 import com.ifba.educampo.service.associate.AssociateService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -42,7 +41,6 @@ public class MonthlyFeeService {
     public static final String MONTHLY_FEE_SUFIX = "mensalidade";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private final MonthlyFeeMapper monthlyFeeMapper;
-    private final MonthlyFeeCustomRepository monthlyFeeCustomRepository;
     private final MonthlyFeeRepository monthlyFeeRepository;
     private final AssociateService associateService;
     private final AssociateMapper associateMapper;
@@ -54,7 +52,7 @@ public class MonthlyFeeService {
 
     public Page<MonthlyFeeResponseDto> findAll(LocalDate initialDate, LocalDate finalDate, Pageable pageable) {
         log.info("Listing all monthly fees.");
-        Page<MonthlyFee> monthlyFees = monthlyFeeCustomRepository
+        Page<MonthlyFee> monthlyFees = monthlyFeeRepository
                 .findAllFromInitialDateAndFinalDate(initialDate, finalDate, pageable);
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }
@@ -76,7 +74,7 @@ public class MonthlyFeeService {
             Pageable pageable
     ) {
         log.info("Finding monthly fee by associate ID {}.", associateId);
-        Page<MonthlyFee> monthlyFees = monthlyFeeCustomRepository
+        Page<MonthlyFee> monthlyFees = monthlyFeeRepository
                 .findAllFromAssociateIdAndInitialDateAndFinalDate(associateId, initialDate, finalDate, pageable);
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }

@@ -1,4 +1,4 @@
-package com.ifba.educampo.repository.monthlyFee;
+package com.ifba.educampo.repository;
 
 import com.ifba.educampo.entity.MonthlyFee;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 @Repository
-public interface MonthlyFeeRepository extends JpaRepository<MonthlyFee, Long> { // Interface de repositório para a mensalidade
+public interface MonthlyFeeRepository extends JpaRepository<MonthlyFee, Long>, CustomMonthlyFeeRepository {
     @Query(
             "SELECT mf FROM MonthlyFee mf where mf.associate.id = :id AND mf.deleted = false ORDER BY mf.createdAt DESC LIMIT 1"
     )

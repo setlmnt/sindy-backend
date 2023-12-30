@@ -9,7 +9,7 @@ import com.ifba.educampo.entity.user.Role;
 import com.ifba.educampo.entity.user.User;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.mapper.UserMapper;
-import com.ifba.educampo.repository.user.UserRepository;
+import com.ifba.educampo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

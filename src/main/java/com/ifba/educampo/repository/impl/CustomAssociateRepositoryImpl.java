@@ -1,8 +1,9 @@
-package com.ifba.educampo.repository.associate;
+package com.ifba.educampo.repository.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.entity.associate.Associate;
 import com.ifba.educampo.enums.PeriodEnum;
+import com.ifba.educampo.repository.CustomAssociateRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Repository
 @Log
-public class AssociateCustomRepository {
+public class CustomAssociateRepositoryImpl implements CustomAssociateRepository {
     private static final String SELECT_ALL_ASSOCIATES = "SELECT a FROM Associate a LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation " +
             "LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth " +
             "LEFT JOIN FETCH a.workRecord LEFT JOIN FETCH a.profilePicture WHERE a.deleted = false ";

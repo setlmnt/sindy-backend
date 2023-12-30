@@ -15,8 +15,7 @@ import com.ifba.educampo.mapper.AddressMapper;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
-import com.ifba.educampo.repository.associate.AssociateCustomRepository;
-import com.ifba.educampo.repository.associate.AssociateRepository;
+import com.ifba.educampo.repository.AssociateRepository;
 import com.ifba.educampo.service.AddressService;
 import com.ifba.educampo.service.LocalOfficeService;
 import com.ifba.educampo.service.ReportService;
@@ -43,7 +42,6 @@ public class AssociateService {
     public static final String MEMBERSHIP_CARD_REPORT = "membership_card_report";
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;
-    private final AssociateCustomRepository associateCustomRepository;
     private final AddressService addressService;
     private final AddressMapper addressMapper;
     private final DependentsService dependentsService;
@@ -57,7 +55,7 @@ public class AssociateService {
 
     public Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable) {
         log.info("Listing all associates");
-        Page<Associate> associates = associateCustomRepository.findAllFromNameAndCpfAndUnionCard(
+        Page<Associate> associates = associateRepository.findAllFromNameAndCpfAndUnionCard(
                 name,
                 cpf,
                 unionCard,
@@ -112,7 +110,7 @@ public class AssociateService {
 
     public Page<AssociateResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
         log.info("Listing all birthday associates");
-        Page<Associate> associates = associateCustomRepository.findAllBirthdayAssociates(pageable, period);
+        Page<Associate> associates = associateRepository.findAllBirthdayAssociates(pageable, period);
         return associates.map(associateMapper::toResponseDto);
     }
 

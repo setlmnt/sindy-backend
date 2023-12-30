@@ -1,7 +1,8 @@
-package com.ifba.educampo.repository.monthlyFee;
+package com.ifba.educampo.repository.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.entity.MonthlyFee;
+import com.ifba.educampo.repository.CustomMonthlyFeeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Repository
 @Log
-public class MonthlyFeeCustomRepository {
+public class CustomMonthlyFeeRepositoryImpl implements CustomMonthlyFeeRepository {
     private static final String SELECT_ALL_MONTHLY_FEE = "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false";
     private static final String SELECT_MONTHLY_FEE_BY_ASSOCIATE_ID = "SELECT mf FROM MonthlyFee mf WHERE mf.deleted = false AND mf.associate.id = :associateId";
 

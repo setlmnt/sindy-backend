@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class LocalOfficeService { // Delegacia (Escritorio Local)
+public class LocalOfficeService {
     private final LocalOfficeMapper localOfficeMapper;
     private final AssociateMapper associateMapper;
     private final LocalOfficeRepository localOfficeRepository;

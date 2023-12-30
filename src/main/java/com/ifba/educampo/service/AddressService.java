@@ -9,8 +9,6 @@ import com.ifba.educampo.repository.AddressRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +16,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Transactional
 @Log
-public class AddressService { // Endereco
+public class AddressService {
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
-
-    public Page<Address> listAll(Pageable pageable) {
-        log.info("Listing all addresses.");
-        return addressRepository.findAll(pageable);
-    }
 
     public Address save(AddressPostDto dto) {
         log.info("Saving address.");

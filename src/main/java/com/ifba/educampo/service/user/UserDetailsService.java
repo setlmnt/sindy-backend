@@ -1,7 +1,7 @@
 package com.ifba.educampo.service.user;
 
 import com.ifba.educampo.annotation.Log;
-import com.ifba.educampo.repository.user.UserRepository;
+import com.ifba.educampo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

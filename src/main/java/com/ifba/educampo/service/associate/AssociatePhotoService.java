@@ -7,9 +7,8 @@ import com.ifba.educampo.entity.associate.Associate;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.FileMapper;
-import com.ifba.educampo.mapper.associate.AssociateMapper;
+import com.ifba.educampo.repository.AssociateRepository;
 import com.ifba.educampo.repository.FileRepository;
-import com.ifba.educampo.repository.associate.AssociateRepository;
 import com.ifba.educampo.service.FileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,12 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 @Log
-public class AssociatePhotoService { // Foto do associado
+public class AssociatePhotoService {
     private final FileMapper fileMapper;
     private final FileRepository fileRepository;
     private final FileService fileService;
     private final AssociateService associateService;
     private final AssociateRepository associateRepository;
-    private final AssociateMapper associateMapper;
 
     @Value("${app.file.url}")
     private String uploadUrl;
