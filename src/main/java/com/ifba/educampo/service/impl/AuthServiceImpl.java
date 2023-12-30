@@ -8,8 +8,8 @@ import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.TokenDto;
 import com.ifba.educampo.dto.user.UserLoginDto;
 import com.ifba.educampo.entity.user.User;
-import com.ifba.educampo.exception.ForbiddenException;
-import com.ifba.educampo.exception.UnauthorizedException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,13 +47,13 @@ public class AuthServiceImpl implements AuthService {
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             if (!authentication.isAuthenticated()) {
-                throw new UnauthorizedException("Invalid credentials");
+                throw new ApiException(ErrorsEnum.INVALID_CREDENTIALS);
             }
 
             String tokenJwt = generateToken((User) authentication.getPrincipal());
             return new TokenDto(tokenJwt);
         } catch (BadCredentialsException e) {
-            throw new ForbiddenException("Invalid credentials");
+            throw new ApiException(ErrorsEnum.INVALID_CREDENTIALS);
         }
     }
 
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            throw new UnauthorizedException("Invalid token");
+            throw new ApiException(ErrorsEnum.INVALID_TOKEN);
         }
     }
 

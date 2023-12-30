@@ -1,10 +1,12 @@
 package com.ifba.educampo.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ifba.educampo.annotation.Log;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
@@ -27,28 +29,15 @@ public class GlobalExceptionHandler {
                 .toList();
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleBadRequestException(BadRequestException ex) {
-        log.error("Bad request", ex);
-        return new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                HttpStatus.BAD_REQUEST.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionResponse handleForbiddenException(ForbiddenException ex) {
-        log.error("Bad request", ex);
-        return new ExceptionResponse(
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                HttpStatus.FORBIDDEN.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
-        );
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ExceptionResponse> handleApiException(ApiException ex) {
+        log.error("Api exception", ex);
+        return new ResponseEntity<>(new ExceptionResponse(
+                ex.getErrorsEnum().getMessage(),
+                ex.getErrorsEnum().getStatus().value(),
+                LocalDateTime.now(),
+                null
+        ), ex.getErrorsEnum().getStatus());
     }
 
     @ExceptionHandler(BadRequestListException.class)
@@ -58,32 +47,8 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 HttpStatus.BAD_REQUEST.value(),
-                ex.getErrors(),
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleNotFoundException(NotFoundException ex) {
-        log.error("Not Found", ex);
-        return new ExceptionResponse(
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                HttpStatus.NOT_FOUND.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(InternalServerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse handleInternalServerException(InternalServerException ex) {
-        log.error("Internal Server", ex);
-        return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                ex.getErrors()
         );
     }
 
@@ -97,8 +62,8 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 HttpStatus.BAD_REQUEST.value(),
-                errors,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                errors
         );
     }
 
@@ -107,10 +72,10 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         log.error("Http message not readable", ex);
         return new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
                 HttpStatus.BAD_REQUEST.value(),
-                List.of(new ErrorType("body", ex.getLocalizedMessage())),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
     }
 
@@ -119,10 +84,10 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleException(Exception ex) {
         log.error("Internal server error", ex);
         return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                List.of(new ErrorType("body", ex.getLocalizedMessage())),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
     }
 
@@ -131,22 +96,10 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
         log.error("Entity not found", ex);
         return new ExceptionResponse(
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
                 HttpStatus.NOT_FOUND.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ExceptionResponse handleForbiddenException(UnauthorizedException ex) {
-        log.error("Unauthorized", ex);
-        return new ExceptionResponse(
-                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                HttpStatus.UNAUTHORIZED.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
     }
 
@@ -155,19 +108,20 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleAccessDeniedException(AccessDeniedException ex) {
         log.error("Access Denied", ex);
         return new ExceptionResponse(
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                ex.getMessage(),
                 HttpStatus.FORBIDDEN.value(),
-                List.of(new ErrorType("body", ex.getMessage())),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public record ExceptionResponse(
             String message,
             Integer status,
-            List<ErrorType> errors,
             @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-            LocalDateTime timestamp
+            LocalDateTime timestamp,
+            List<ErrorType> errors
     ) {
     }
 }

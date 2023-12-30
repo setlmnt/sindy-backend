@@ -5,7 +5,7 @@ import com.ifba.educampo.dto.user.UserPutDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
 import com.ifba.educampo.dto.user.UserUpdatePasswordDto;
 import com.ifba.educampo.service.OtpService;
-import com.ifba.educampo.service.impl.UserService;
+import com.ifba.educampo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;

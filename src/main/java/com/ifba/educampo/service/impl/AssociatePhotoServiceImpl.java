@@ -4,8 +4,8 @@ import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.FileResponseDto;
 import com.ifba.educampo.entity.File;
 import com.ifba.educampo.entity.associate.Associate;
-import com.ifba.educampo.exception.BadRequestException;
-import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.FileMapper;
 import com.ifba.educampo.repository.AssociateRepository;
 import com.ifba.educampo.repository.FileRepository;
@@ -43,7 +43,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto findByAssociateId(Long id) {
         log.info("Finding image by associate id {}", id);
         File file = fileRepository.findProfilePictureByAssociateId(id)
-                .orElseThrow(() -> new NotFoundException("Associate Image not found"));
+                .orElseThrow(() -> new ApiException(ErrorsEnum.ASSOCIATE_IMAGE_NOT_FOUND));
         return fileMapper.toResponseDto(file);
     }
 
@@ -59,7 +59,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
 
         log.info("Uploading associate photo");
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            throw new BadRequestException("File must be an image");
+            throw new ApiException(ErrorsEnum.FILE_MUST_BE_IMAGE);
         }
         FileResponseDto associateImage = upload(associateId, file, uploadDir);
         log.info("Associate photo uploaded");
@@ -88,11 +88,11 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto saveDocument(Long associateId, MultipartFile file, String uploadDir) {
         log.info("Saving document with associate id {}", associateId);
         if (!Objects.requireNonNull(file.getContentType()).startsWith("application/") && !Objects.requireNonNull(file.getContentType()).startsWith("text/")) {
-            throw new BadRequestException("File must be a document");
+            throw new ApiException(ErrorsEnum.FILE_MUST_BE_DOCUMENT);
         }
 
         Associate associate = associateRepository.findById(associateId)
-                .orElseThrow(() -> new NotFoundException("Associate not found"));
+                .orElseThrow(() -> new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND));
 
         FileResponseDto fileResponseDto = upload(associateId, file, uploadDir);
         File image = fileMapper.responseDtoToEntity(fileResponseDto);
@@ -133,7 +133,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto findDocumentByAssociateIdAndDocumentId(Long associateId, Long documentId) {
         log.info("Finding document by associate id {} and document id {}", associateId, documentId);
         File file = fileRepository.findByIdAndDeletedFalse(documentId)
-                .orElseThrow(() -> new NotFoundException("Document not found"));
+                .orElseThrow(() -> new ApiException(ErrorsEnum.DOCUMENT_NOT_FOUND));
         return fileMapper.toResponseDto(file);
     }
 

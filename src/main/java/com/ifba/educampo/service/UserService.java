@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.impl;
+package com.ifba.educampo.service;
 
 import com.ifba.educampo.dto.user.UserPutDto;
 import com.ifba.educampo.dto.user.UserRegisterDto;

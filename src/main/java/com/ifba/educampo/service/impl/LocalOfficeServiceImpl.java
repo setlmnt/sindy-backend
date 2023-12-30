@@ -7,7 +7,8 @@ import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.entity.LocalOffice;
 import com.ifba.educampo.entity.associate.Associate;
-import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.repository.LocalOfficeRepository;
@@ -34,7 +35,7 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         Page<Associate> associates = localOfficeRepository.listAllAssociates(id, pageable)
                 .orElseThrow(() -> {
                     log.error("Associates from local office with ID {} not found.", id);
-                    return new NotFoundException("Associates Not Found");
+                    return new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND);
                 });
         return associates.map(associateMapper::toResponseDto);
     }
@@ -44,7 +45,7 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         LocalOffice localOffice = localOfficeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Local office with ID {} not found.", id);
-                    return new NotFoundException("Local Office Not Found");
+                    return new ApiException(ErrorsEnum.LOCAL_OFFICE_NOT_FOUND);
                 });
         return localOfficeMapper.toResponseDto(localOffice);
     }
