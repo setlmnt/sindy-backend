@@ -1,7 +1,7 @@
 package com.ifba.educampo.service.impl;
 
-import com.ifba.educampo.exception.InternalServerException;
-import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class ReportServiceImpl implements ReportService {
             return JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e) {
             log.error("Error generating report. " + e.getMessage());
-            throw new InternalServerException("Error generating report");
+            throw new ApiException(ErrorsEnum.ERROR_WHILE_GENERATING_REPORT);
         }
     }
 
@@ -38,14 +38,14 @@ public class ReportServiceImpl implements ReportService {
         Path path = Paths.get("src/main/resources/templates", reportTemplate + ".jrxml");
 
         if (!path.toFile().exists()) {
-            throw new NotFoundException("Report not found");
+            throw new ApiException(ErrorsEnum.REPORT_NOT_FOUND);
         }
 
         try {
             return JasperCompileManager.compileReport(path.toString());
         } catch (Exception e) {
             log.error("Error generating report. " + e.getMessage());
-            throw new InternalServerException("Error generating report");
+            throw new ApiException(ErrorsEnum.ERROR_WHILE_GENERATING_REPORT);
         }
     }
 

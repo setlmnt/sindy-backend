@@ -5,7 +5,8 @@ import com.ifba.educampo.dto.email.EmailDto;
 import com.ifba.educampo.dto.user.OtpDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
 import com.ifba.educampo.entity.user.Otp;
-import com.ifba.educampo.exception.BadRequestException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.OtpMapper;
 import com.ifba.educampo.repository.OtpRepository;
 import com.ifba.educampo.service.EmailService;
@@ -52,11 +53,11 @@ public class OtpServiceImpl implements OtpService {
         Otp otp = otpRepository.findByCodeAndUsername(code, username);
 
         if (otp == null) {
-            throw new BadRequestException("Invalid OTP");
+            throw new ApiException(ErrorsEnum.INVALID_OTP);
         }
 
         if (otp.isExpired()) {
-            throw new BadRequestException("OTP expired");
+            throw new ApiException(ErrorsEnum.OTP_EXPIRED);
         }
 
         otp.delete();

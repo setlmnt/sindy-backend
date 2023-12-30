@@ -6,8 +6,8 @@ import com.ifba.educampo.dto.syndicate.SyndicatePutDto;
 import com.ifba.educampo.dto.syndicate.SyndicateResponseDto;
 import com.ifba.educampo.entity.Address;
 import com.ifba.educampo.entity.Syndicate;
-import com.ifba.educampo.exception.BadRequestException;
-import com.ifba.educampo.exception.NotFoundException;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.SyndicateMapper;
 import com.ifba.educampo.repository.SyndicateRepository;
 import com.ifba.educampo.service.AddressService;
@@ -34,7 +34,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         return syndicateMapper.toResponseDto(syndicateRepository.find()
                 .orElseThrow(() -> {
                     log.error("Syndicate not found");
-                    return new NotFoundException("Syndicate not found");
+                    return new ApiException(ErrorsEnum.SYNDICATE_NOT_FOUND);
                 })
         );
     }
@@ -43,7 +43,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         Optional<Syndicate> syndicateExits = syndicateRepository.find();
         if (syndicateExits.isPresent()) {
             log.error("Syndicate already exists");
-            throw new BadRequestException("Syndicate already exists");
+            throw new ApiException(ErrorsEnum.SYNDICATE_ALREADY_EXISTS);
         }
 
         log.info("Saving syndicate: {}", dto);

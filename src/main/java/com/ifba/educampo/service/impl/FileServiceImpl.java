@@ -3,6 +3,8 @@ package com.ifba.educampo.service.impl;
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.FileResponseDto;
 import com.ifba.educampo.entity.File;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.FileMapper;
 import com.ifba.educampo.repository.FileRepository;
 import com.ifba.educampo.service.FileService;
@@ -82,7 +84,7 @@ public class FileServiceImpl implements FileService {
                 }
             } catch (IOException e) {
                 log.error("An error occurred while loading the file", e);
-                throw new RuntimeException("An error occurred while loading the file", e);
+                throw new ApiException(ErrorsEnum.ERROR_WHILE_LOADING_FILE);
             }
 
             log.error("File not found: " + name);
@@ -99,7 +101,7 @@ public class FileServiceImpl implements FileService {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("An error occurred while storing the file", e);
-            throw new RuntimeException("An error occurred while storing the file", e);
+            throw new ApiException(ErrorsEnum.ERROR_WHILE_STORING_FILE);
         }
     }
 
@@ -109,8 +111,8 @@ public class FileServiceImpl implements FileService {
             Path filePath = Paths.get(uploadDir).resolve(fileName);
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            log.error("An error occurred while storing the file", e);
-            throw new RuntimeException("An error occurred while deleting the file", e);
+            log.error("An error occurred while deleting the file", e);
+            throw new ApiException(ErrorsEnum.ERROR_WHILE_DELETE_FILE);
         }
     }
 
@@ -122,7 +124,7 @@ public class FileServiceImpl implements FileService {
                 Files.createDirectories(path);
             } catch (IOException e) {
                 log.error("An error occurred while creating the upload directory", e);
-                throw new RuntimeException("An error occurred while creating the upload directory", e);
+                throw new ApiException(ErrorsEnum.ERROR_WHILE_CREATING_DIRECTORY);
             }
         }
     }

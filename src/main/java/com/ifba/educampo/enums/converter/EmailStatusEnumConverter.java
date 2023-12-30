@@ -1,7 +1,6 @@
 package com.ifba.educampo.enums.converter;
 
 import com.ifba.educampo.enums.EmailStatusEnum;
-import com.ifba.educampo.enums.MaritalStatusEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.apache.commons.lang3.StringUtils;

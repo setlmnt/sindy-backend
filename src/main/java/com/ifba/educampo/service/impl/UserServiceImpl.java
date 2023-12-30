@@ -6,10 +6,12 @@ import com.ifba.educampo.dto.user.UserRegisterDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
 import com.ifba.educampo.dto.user.UserUpdatePasswordDto;
 import com.ifba.educampo.entity.user.User;
+import com.ifba.educampo.enums.ErrorsEnum;
 import com.ifba.educampo.enums.RoleEnum;
-import com.ifba.educampo.exception.BadRequestException;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.mapper.UserMapper;
 import com.ifba.educampo.repository.UserRepository;
+import com.ifba.educampo.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(userRegisterDto.username());
 
         if (user != null) {
-            throw new BadRequestException("Invalid username");
+            throw new ApiException(ErrorsEnum.INVALID_USERNAME);
         }
 
         user = userMapper.registerDtoToEntity(userRegisterDto);

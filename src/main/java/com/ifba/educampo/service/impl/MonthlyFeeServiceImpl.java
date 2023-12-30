@@ -7,9 +7,10 @@ import com.ifba.educampo.dto.monthlyFee.MonthlyFeePutDto;
 import com.ifba.educampo.dto.monthlyFee.MonthlyFeeResponseDto;
 import com.ifba.educampo.entity.MonthlyFee;
 import com.ifba.educampo.entity.associate.Associate;
+import com.ifba.educampo.enums.ErrorsEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.exception.BadRequestListException;
 import com.ifba.educampo.exception.ErrorType;
-import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.monthlyFee.MonthlyFeeMapper;
 import com.ifba.educampo.repository.MonthlyFeeRepository;
@@ -58,7 +59,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         MonthlyFee monthlyFee = monthlyFeeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Monthly fee with ID {} not found.", id);
-                    return new NotFoundException("Monthly Fee Not Found");
+                    return new ApiException(ErrorsEnum.MONTHLY_FEE_NOT_FOUND);
                 });
 
         return monthlyFeeMapper.toResponseDto(monthlyFee);

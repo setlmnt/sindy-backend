@@ -7,10 +7,11 @@ import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.entity.Address;
 import com.ifba.educampo.entity.associate.*;
+import com.ifba.educampo.enums.ErrorsEnum;
 import com.ifba.educampo.enums.PeriodEnum;
+import com.ifba.educampo.exception.ApiException;
 import com.ifba.educampo.exception.BadRequestListException;
 import com.ifba.educampo.exception.ErrorType;
-import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.AddressMapper;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
@@ -68,7 +69,7 @@ public class AssociateServiceImpl implements AssociateService {
         Associate associate = associateRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Associate with ID {} not found", id);
-                    return new NotFoundException("Associate Not Found");
+                    return new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND);
                 });
         return associateMapper.toResponseDto(associate);
     }
