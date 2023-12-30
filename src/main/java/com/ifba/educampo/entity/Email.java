@@ -3,21 +3,18 @@ package com.ifba.educampo.entity;
 import com.ifba.educampo.enums.StatusEmailEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Entity
-@Table(name = "emails")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Email {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Table(name = "emails")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Email extends BaseEntity<Long> {
     @Column(nullable = false)
     private String owner;
 
@@ -36,24 +33,15 @@ public class Email {
     @Column(nullable = false)
     private StatusEmailEnum status = StatusEmailEnum.PENDING;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @PrePersist
-    private void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    public void delete() {
-        deleted = true;
-        deletedAt = LocalDateTime.now();
+    @Override
+    public String toString() {
+        return "Email{" +
+                "owner='" + owner + '\'' +
+                ", emailFrom='" + emailFrom + '\'' +
+                ", emailTo='" + emailTo + '\'' +
+                ", subject='" + subject + '\'' +
+                ", text='" + text + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

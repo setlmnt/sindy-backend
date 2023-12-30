@@ -2,22 +2,20 @@ package com.ifba.educampo.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "syndicate")
-public class Syndicate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Syndicate extends BaseEntity<Long> {
     @Column(nullable = false)
     private String name;
 
@@ -35,25 +33,7 @@ public class Syndicate {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    private Address address; // Endereço
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // Data de Criação
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // Data de Atualização
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    private Address address;
 
     public void update(Syndicate syndicate) {
         if (syndicate.getName() != null) {

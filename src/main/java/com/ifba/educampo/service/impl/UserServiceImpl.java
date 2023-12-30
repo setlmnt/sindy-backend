@@ -5,8 +5,8 @@ import com.ifba.educampo.dto.user.UserPutDto;
 import com.ifba.educampo.dto.user.UserRegisterDto;
 import com.ifba.educampo.dto.user.UserResponseDto;
 import com.ifba.educampo.dto.user.UserUpdatePasswordDto;
-import com.ifba.educampo.entity.user.Role;
 import com.ifba.educampo.entity.user.User;
+import com.ifba.educampo.enums.RoleEnum;
 import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.mapper.UserMapper;
 import com.ifba.educampo.repository.UserRepository;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
         user = userMapper.registerDtoToEntity(userRegisterDto);
         user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
-        user.setRole(Role.USER);
+        user.setRole(RoleEnum.USER);
 
         return userMapper.toResponseDto(userRepository.save(user));
     }

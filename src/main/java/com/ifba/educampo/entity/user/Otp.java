@@ -1,50 +1,29 @@
 package com.ifba.educampo.entity.user;
 
+import com.ifba.educampo.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "otps")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Otp {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Table(name = "otps")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Otp extends BaseEntity<Long> {
     @Column(nullable = false)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @PrePersist
-    private void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    public void delete() {
-        deleted = true;
-        deletedAt = LocalDateTime.now();
-    }
-
     public boolean isExpired() {
-        return createdAt.plusMinutes(30).isBefore(LocalDateTime.now());
+        return this.getCreatedAt().plusMinutes(30).isBefore(LocalDateTime.now());
     }
 }

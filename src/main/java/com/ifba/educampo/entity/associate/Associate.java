@@ -1,124 +1,98 @@
 package com.ifba.educampo.entity.associate;
 
 import com.ifba.educampo.entity.Address;
+import com.ifba.educampo.entity.BaseEntity;
 import com.ifba.educampo.entity.File;
 import com.ifba.educampo.entity.LocalOffice;
 import com.ifba.educampo.enums.MaritalStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "associates")
-public class Associate { // Associado
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Associate extends BaseEntity<Long> {
     @Column(nullable = false)
-    private String name; // Nome
+    private String name;
 
     @Column(name = "union_card", unique = true, nullable = false)
-    private Long unionCard; // Carteira Sindical
+    private Long unionCard;
 
     @Column(unique = true, nullable = false)
-    private String cpf; // CPF
+    private String cpf;
 
     @Column(unique = true, nullable = false)
-    private String rg; // RG
+    private String rg;
 
     @Column(nullable = false)
-    private String profession; // Profissão
+    private String profession;
 
     @Column(nullable = false)
-    private String workplace; // Local de Trabalho
+    private String workplace;
 
-    private String phone; // Telefone
-    private String email; // E-mail
+    private String phone;
+    private String email;
 
     @Column(nullable = false)
-    private String nationality; // Nacionalidade
+    private String nationality;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_at", nullable = false)
-    private LocalDate birthAt; // Data de Nascimento
+    private LocalDate birthAt;
 
     @Column(name = "is_literate", nullable = false)
-    private Boolean isLiterate; // Alfabetizado
+    private Boolean isLiterate;
 
     @Column(name = "is_voter", nullable = false)
-    private Boolean isVoter; // Eleitor
+    private Boolean isVoter;
 
     @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private MaritalStatusEnum maritalStatusEnum; // Estado Civil
+    private MaritalStatusEnum maritalStatusEnum;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "association_at", nullable = false)
-    private LocalDate associationAt; // Data de Associação
+    private LocalDate associationAt;
 
     @Column(name = "is_paid", nullable = false)
-    private Boolean isPaid = false; // Pagamento
-
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // Data de Criação
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // Data de Atualização
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt; // Data de Atualização
+    private Boolean isPaid = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "local_office_id")
-    private LocalOffice localOffice; // Delegacia (Escritório Local)
+    private LocalOffice localOffice;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    private Address address; // Endereço
+    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependents_id")
-    private Dependents dependents; // Dependentes
+    private Dependents dependents;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "affiliation_id", nullable = false)
-    private Affiliation affiliation; // Filiação
+    private Affiliation affiliation;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_of_birth_id", nullable = false)
-    private PlaceOfBirth placeOfBirth; // Naturalidade
+    private PlaceOfBirth placeOfBirth;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
-    private File profilePicture; // Foto do Associado
+    private File profilePicture;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_record_id", nullable = false)
-    private WorkRecord workRecord; // Carteira de Trabalho
-
-    @PrePersist
-    private void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    private WorkRecord workRecord;
 
     public void update(Associate associate) {
         if (associate.getName() != null) setName(associate.getName());
@@ -143,15 +117,9 @@ public class Associate { // Associado
         if (associate.getWorkRecord() != null) setWorkRecord(associate.getWorkRecord());
     }
 
-    public void delete() {
-        deleted = true;
-        deletedAt = LocalDateTime.now();
-    }
-
     @Override
     public String toString() {
         return "Associate{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", unionCard=" + unionCard +
                 ", cpf='" + cpf + '\'' +
@@ -164,11 +132,7 @@ public class Associate { // Associado
                 ", isLiterate=" + isLiterate +
                 ", isVoter=" + isVoter +
                 ", maritalStatus=" + maritalStatusEnum +
-                ", deleted=" + deleted +
                 ", associationAt=" + associationAt +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
                 '}';
     }
 }

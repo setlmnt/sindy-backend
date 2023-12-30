@@ -1,10 +1,10 @@
-package com.ifba.educampo.entity.user;
+package com.ifba.educampo.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Role {
+public enum RoleEnum {
     USER
 }

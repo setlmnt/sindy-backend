@@ -1,60 +1,33 @@
 package com.ifba.educampo.entity.associate;
 
+import com.ifba.educampo.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "dependents")
-public class Dependents { // Dependentes
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String spouse; // Nome da Esposa
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Dependents extends BaseEntity<Long> {
+    private String spouse;
 
     @Column(name = "minor_children")
-    private int minorChildren; // Filhos menores
+    private int minorChildren;
 
     @Column(name = "male_children")
-    private int maleChildren; // Filhos homens
+    private int maleChildren;
 
     @Column(name = "female_children")
-    private int femaleChildren; // Filhas mulheres
+    private int femaleChildren;
 
     @Column(name = "other_dependents")
-    private int otherDependents; // Outros dependentes
-
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // Data de Criação
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // Data de Atualização
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt; // Data de Atualização
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    private int otherDependents;
 
     public void update(Dependents dependents) {
         if (dependents.getSpouse() != null) setSpouse(dependents.getSpouse());
@@ -64,24 +37,14 @@ public class Dependents { // Dependentes
         if (dependents.getOtherDependents() != 0) setOtherDependents(dependents.getOtherDependents());
     }
 
-    public void delete() {
-        deleted = true;
-        deletedAt = LocalDateTime.now();
-    }
-
     @Override
     public String toString() {
         return "Dependents{" +
-                "id=" + id +
                 ", spouse='" + spouse + '\'' +
                 ", minorChildren=" + minorChildren +
                 ", maleChildren=" + maleChildren +
                 ", femaleChildren=" + femaleChildren +
                 ", otherDependents=" + otherDependents +
-                ", deleted=" + deleted +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
                 '}';
     }
 }
