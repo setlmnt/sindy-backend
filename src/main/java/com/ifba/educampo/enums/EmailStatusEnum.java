@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PeriodEnum {
-    DAY,
-    WEEK,
-    MONTH
+public enum EmailStatusEnum {
+    SENT("S"),
+    ERROR("E"),
+    PENDING("P");
+
+    private final String value;
 }

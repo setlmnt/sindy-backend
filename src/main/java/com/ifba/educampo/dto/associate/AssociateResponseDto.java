@@ -32,7 +32,7 @@ public record AssociateResponseDto(
         Boolean isLiterate, // Alfabetizado
         Boolean isVoter, // Eleitor
         Boolean isPaid, // Pagou a Mensalidade
-        MaritalStatusEnum maritalStatusEnum, // Estado Civil
+        MaritalStatusEnum maritalStatus, // Estado Civil
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação

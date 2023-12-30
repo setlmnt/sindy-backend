@@ -41,7 +41,7 @@ public record AssociatePutDto(
         Boolean isVoter, // Eleitor
 
         @Enumerated(EnumType.STRING)
-        MaritalStatusEnum maritalStatusEnum, // Estado Civil
+        MaritalStatusEnum maritalStatus, // Estado Civil
 
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate associationAt, // Data de Associação

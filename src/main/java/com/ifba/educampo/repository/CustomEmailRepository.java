@@ -1,7 +1,7 @@
 package com.ifba.educampo.repository;
 
 import com.ifba.educampo.entity.Email;
-import com.ifba.educampo.enums.StatusEmailEnum;
+import com.ifba.educampo.enums.EmailStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,7 +10,7 @@ public interface CustomEmailRepository {
             String owner,
             String emailTo,
             String emailFrom,
-            StatusEmailEnum status,
+            EmailStatusEnum status,
             Pageable pageable
     );
 }

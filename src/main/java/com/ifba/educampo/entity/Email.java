@@ -1,6 +1,6 @@
 package com.ifba.educampo.entity;
 
-import com.ifba.educampo.enums.StatusEmailEnum;
+import com.ifba.educampo.enums.EmailStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class Email extends BaseEntity<Long> {
     private String text;
 
     @Column(nullable = false)
-    private StatusEmailEnum status = StatusEmailEnum.PENDING;
+    private EmailStatusEnum status = EmailStatusEnum.PENDING;
 
     @Override
     public String toString() {

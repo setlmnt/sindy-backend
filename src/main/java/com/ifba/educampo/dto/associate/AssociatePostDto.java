@@ -63,7 +63,7 @@ public record AssociatePostDto(
 
         @NotNull
         @Enumerated(EnumType.STRING)
-        MaritalStatusEnum maritalStatusEnum, // Estado Civil
+        MaritalStatusEnum maritalStatus, // Estado Civil
 
         @NotNull(message = "Association at is required")
         @DateTimeFormat(pattern = "yyyy-MM-dd")

@@ -1,6 +1,6 @@
 package com.ifba.educampo.dto.email;
 
-import com.ifba.educampo.enums.StatusEmailEnum;
+import com.ifba.educampo.enums.EmailStatusEnum;
 
 public record EmailResponseDto(
         Long id,
@@ -9,6 +9,6 @@ public record EmailResponseDto(
         String emailTo,
         String subject,
         String text,
-        StatusEmailEnum status
+        EmailStatusEnum status
 ) {
 }

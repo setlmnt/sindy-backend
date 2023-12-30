@@ -1,8 +1,13 @@
 package com.ifba.educampo.enums;
 
-public enum MaritalStatusEnum { // Estado Civil
-    NEVER_MARRIED, // Solteiro
-    MARRIED, // Casado
-    WIDOWED, // Viúvo
-    DIVORCED, // Divorciado
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum MaritalStatusEnum {
+    NEVER_MARRIED,
+    MARRIED,
+    WIDOWED,
+    DIVORCED
 }

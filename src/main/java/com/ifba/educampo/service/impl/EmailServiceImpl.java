@@ -4,7 +4,7 @@ import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.email.EmailDto;
 import com.ifba.educampo.dto.email.EmailResponseDto;
 import com.ifba.educampo.entity.Email;
-import com.ifba.educampo.enums.StatusEmailEnum;
+import com.ifba.educampo.enums.EmailStatusEnum;
 import com.ifba.educampo.mapper.EmailMapper;
 import com.ifba.educampo.repository.EmailRepository;
 import com.ifba.educampo.service.EmailService;
@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
             String owner,
             String emailTo,
             String emailFrom,
-            StatusEmailEnum status,
+            EmailStatusEnum status,
             Pageable pageable
     ) {
         return emailRepository
@@ -56,10 +56,10 @@ public class EmailServiceImpl implements EmailService {
             SimpleMailMessage message = getEmailMessage(email);
             emailSender.send(message);
 
-            email.setStatus(StatusEmailEnum.SENT);
+            email.setStatus(EmailStatusEnum.SENT);
             log.info("Email successfully sent to {}", emailDto.emailTo());
         } catch (Exception e) {
-            email.setStatus(StatusEmailEnum.ERROR);
+            email.setStatus(EmailStatusEnum.ERROR);
             log.error("Error sending email to {}", emailDto.emailTo());
         }
     }

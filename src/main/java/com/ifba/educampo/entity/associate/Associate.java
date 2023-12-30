@@ -57,7 +57,7 @@ public class Associate extends BaseEntity<Long> {
 
     @Column(name = "marital_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private MaritalStatusEnum maritalStatusEnum;
+    private MaritalStatusEnum maritalStatus;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "association_at", nullable = false)
@@ -106,7 +106,7 @@ public class Associate extends BaseEntity<Long> {
         if (associate.getBirthAt() != null) setBirthAt(associate.getBirthAt());
         if (associate.getIsLiterate() != null) setIsLiterate(associate.getIsLiterate());
         if (associate.getIsVoter() != null) setIsVoter(associate.getIsVoter());
-        if (associate.getMaritalStatusEnum() != null) setMaritalStatusEnum(associate.getMaritalStatusEnum());
+        if (associate.getMaritalStatus() != null) setMaritalStatus(associate.getMaritalStatus());
         if (associate.getAssociationAt() != null) setAssociationAt(associate.getAssociationAt());
         if (associate.getLocalOffice() != null) setLocalOffice(associate.getLocalOffice());
         if (associate.getAddress() != null) setAddress(associate.getAddress());
@@ -131,7 +131,7 @@ public class Associate extends BaseEntity<Long> {
                 ", birthAt=" + birthAt +
                 ", isLiterate=" + isLiterate +
                 ", isVoter=" + isVoter +
-                ", maritalStatus=" + maritalStatusEnum +
+                ", maritalStatus=" + maritalStatus +
                 ", associationAt=" + associationAt +
                 '}';
     }
