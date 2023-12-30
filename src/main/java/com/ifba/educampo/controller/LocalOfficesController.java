@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 })
 @Log
 @RequiredArgsConstructor
-public class LocalOfficesController { // Classe de controle para as Delegacias (Escritório Local)
+public class LocalOfficesController {
     private final LocalOfficeService localOfficeService;
 
     @Operation(summary = "Find all local offices")

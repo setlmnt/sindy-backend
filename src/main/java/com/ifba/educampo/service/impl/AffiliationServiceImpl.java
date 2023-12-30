@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.affiliation.AffiliationPostDto;
@@ -6,6 +6,7 @@ import com.ifba.educampo.dto.associate.affiliation.AffiliationPutDto;
 import com.ifba.educampo.entity.associate.Affiliation;
 import com.ifba.educampo.mapper.associate.AffiliationMapper;
 import com.ifba.educampo.repository.AffiliationRepository;
+import com.ifba.educampo.service.AffiliationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class AffiliationService {
+public class AffiliationServiceImpl implements AffiliationService {
     private final AffiliationMapper affiliationMapper;
     private final AffiliationRepository affiliationRepository;
 

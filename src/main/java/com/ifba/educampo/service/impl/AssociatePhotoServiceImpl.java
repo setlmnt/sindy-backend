@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.FileResponseDto;
@@ -9,6 +9,7 @@ import com.ifba.educampo.exception.NotFoundException;
 import com.ifba.educampo.mapper.FileMapper;
 import com.ifba.educampo.repository.AssociateRepository;
 import com.ifba.educampo.repository.FileRepository;
+import com.ifba.educampo.service.AssociatePhotoService;
 import com.ifba.educampo.service.FileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,11 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 @Log
-public class AssociatePhotoService {
+public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     private final FileMapper fileMapper;
     private final FileRepository fileRepository;
     private final FileService fileService;
-    private final AssociateService associateService;
+    private final AssociateServiceImpl associateService;
     private final AssociateRepository associateRepository;
 
     @Value("${app.file.url}")

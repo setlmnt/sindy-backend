@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.workRecord.WorkRecordPostDto;
@@ -6,6 +6,7 @@ import com.ifba.educampo.dto.associate.workRecord.WorkRecordPutDto;
 import com.ifba.educampo.entity.associate.WorkRecord;
 import com.ifba.educampo.mapper.associate.WorkRecordMapper;
 import com.ifba.educampo.repository.WorkRecordRepository;
+import com.ifba.educampo.service.WorkRecordService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class WorkRecordService {
+public class WorkRecordServiceImpl implements WorkRecordService {
     private final WorkRecordMapper workRecordMapper;
     private final WorkRecordRepository workRecordRepository;
 

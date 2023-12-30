@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.user;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.user.UserPutDto;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Log
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;

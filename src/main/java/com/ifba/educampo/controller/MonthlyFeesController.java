@@ -28,7 +28,7 @@ import java.time.LocalDate;
 })
 @Log
 @RequiredArgsConstructor
-public class MonthlyFeesController { // Classe de controle para as Mensalidades
+public class MonthlyFeesController {
     private final MonthlyFeeService monthlyFeeService;
 
     @Operation(summary = "Find all monthly fees")

@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.AssociatePostDto;
@@ -16,9 +16,7 @@ import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
 import com.ifba.educampo.repository.AssociateRepository;
-import com.ifba.educampo.service.AddressService;
-import com.ifba.educampo.service.LocalOfficeService;
-import com.ifba.educampo.service.ReportService;
+import com.ifba.educampo.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +25,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -36,7 +35,7 @@ import java.util.*;
 @Slf4j
 @Transactional
 @Log
-public class AssociateService {
+public class AssociateServiceImpl implements AssociateService {
     public static final String ASSOCIATE_REPORT = "associate_report";
     public static final String SYNDICATE_REPORT = "syndicate_report";
     public static final String MEMBERSHIP_CARD_REPORT = "membership_card_report";
@@ -96,7 +95,7 @@ public class AssociateService {
         return associateMapper.toResponseDto(associate);
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         log.info("Deleting associate with ID: {}", id);
         Associate associate = associateRepository.getReferenceById(id);
         associate.delete();
@@ -118,6 +117,55 @@ public class AssociateService {
         log.info("Updating paid status of associate with ID: {}", id);
         Associate associate = associateRepository.getReferenceById(id);
         associate.setIsPaid(status);
+    }
+
+    public byte[] exportAssociateToPdf(Long id, HttpServletResponse response) {
+        AssociateResponseDto associateResponseDto = findById(id);
+        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
+
+        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("associateId", id);
+        parameters.put("syndicateReport", syndicateReport);
+
+        byte[] report = reportService.generateReport(ASSOCIATE_REPORT, parameters);
+
+        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + fileName.replace(" ", "_")
+        );
+
+        return report;
+    }
+
+    public byte[] exportAssociateMembershipCardToPdf(Long id, HttpServletResponse response) {
+        AssociateResponseDto associateResponseDto = findById(id);
+        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("associateId", id);
+
+        byte[] report = reportService.generateReport(MEMBERSHIP_CARD_REPORT, parameters);
+
+        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=" + fileName.replace(" ", "_")
+        );
+
+        return report;
+    }
+
+    @Scheduled(cron = "1 0 0 * * *") // Every day at 12:00:01 AM
+    public void setAssociateIsPaidToFalseWhenMonthlyFeeAsAlreadyExpired() {
+        List<Long> associatesWithExpiredMonthlyFee = associateRepository.findAllAssociatesWithExpiredMonthlyFee();
+        if (associatesWithExpiredMonthlyFee.isEmpty()) return;
+
+        associateRepository.updateAssociatesIsPaidByIds(associatesWithExpiredMonthlyFee, false);
     }
 
     private Associate saveAssociate(AssociatePostDto dto) {
@@ -262,46 +310,5 @@ public class AssociateService {
     private void addLocalOfficeToAssociates(Long localOfficeId, Long associateId) {
         log.info("Adding local office to associates");
         associateRepository.addLocalOfficeToAssociates(localOfficeId, associateId);
-    }
-
-    public byte[] exportAssociateToPdf(Long id, HttpServletResponse response) {
-        AssociateResponseDto associateResponseDto = findById(id);
-        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
-
-        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("associateId", id);
-        parameters.put("syndicateReport", syndicateReport);
-
-        byte[] report = reportService.generateReport(ASSOCIATE_REPORT, parameters);
-
-        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=" + fileName.replace(" ", "_")
-        );
-
-        return report;
-    }
-
-    public byte[] exportAssociateMembershipCardToPdf(Long id, HttpServletResponse response) {
-        AssociateResponseDto associateResponseDto = findById(id);
-        Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("associateId", id);
-
-        byte[] report = reportService.generateReport(MEMBERSHIP_CARD_REPORT, parameters);
-
-        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=" + fileName.replace(" ", "_")
-        );
-
-        return report;
     }
 }

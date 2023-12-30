@@ -6,8 +6,8 @@ import com.ifba.educampo.dto.associate.AssociatePostDto;
 import com.ifba.educampo.dto.associate.AssociatePutDto;
 import com.ifba.educampo.dto.associate.AssociateResponseDto;
 import com.ifba.educampo.enums.PeriodEnum;
-import com.ifba.educampo.service.associate.AssociatePhotoService;
-import com.ifba.educampo.service.associate.AssociateService;
+import com.ifba.educampo.service.AssociatePhotoService;
+import com.ifba.educampo.service.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 })
 @Log
 @RequiredArgsConstructor
-public class AssociatesController { // Classe de controle para o Associado
+public class AssociatesController {
     private final AssociateService associateService;
     private final AssociatePhotoService associatePhotoService;
 

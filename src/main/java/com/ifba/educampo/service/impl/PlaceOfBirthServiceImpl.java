@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPostDto;
@@ -6,6 +6,7 @@ import com.ifba.educampo.dto.associate.placeOfBirth.PlaceOfBirthPutDto;
 import com.ifba.educampo.entity.associate.PlaceOfBirth;
 import com.ifba.educampo.mapper.associate.PlaceOfBirthMapper;
 import com.ifba.educampo.repository.PlaceOfBirthRepository;
+import com.ifba.educampo.service.PlaceOfBirthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class PlaceOfBirthService {
+public class PlaceOfBirthServiceImpl implements PlaceOfBirthService {
     private final PlaceOfBirthMapper placeOfBirthMapper;
     private final PlaceOfBirthRepository placeOfBirthRepository;
 

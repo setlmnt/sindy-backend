@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.user;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.email.EmailDto;
@@ -9,6 +9,7 @@ import com.ifba.educampo.exception.BadRequestException;
 import com.ifba.educampo.mapper.OtpMapper;
 import com.ifba.educampo.repository.OtpRepository;
 import com.ifba.educampo.service.EmailService;
+import com.ifba.educampo.service.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -23,7 +24,7 @@ import java.text.DecimalFormat;
 @RequiredArgsConstructor
 @Slf4j
 @Log
-public class OtpService {
+public class OtpServiceImpl implements OtpService {
     private final OtpRepository otpRepository;
     private final OtpMapper otpMapper;
     private final EmailService emailService;

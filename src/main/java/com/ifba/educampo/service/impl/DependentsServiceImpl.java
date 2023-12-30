@@ -1,4 +1,4 @@
-package com.ifba.educampo.service.associate;
+package com.ifba.educampo.service.impl;
 
 import com.ifba.educampo.annotation.Log;
 import com.ifba.educampo.dto.associate.dependents.DependentsPostDto;
@@ -6,6 +6,7 @@ import com.ifba.educampo.dto.associate.dependents.DependentsPutDto;
 import com.ifba.educampo.entity.associate.Dependents;
 import com.ifba.educampo.mapper.associate.DependentsMapper;
 import com.ifba.educampo.repository.DependentsRepository;
+import com.ifba.educampo.service.DependentsService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 @Log
-public class DependentsService {
+public class DependentsServiceImpl implements DependentsService {
     private final DependentsMapper dependentsMapper;
     private final DependentsRepository dependentsRepository;
 
