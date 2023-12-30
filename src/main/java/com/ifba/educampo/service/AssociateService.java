@@ -1,145 +1,33 @@
 package com.ifba.educampo.service;
 
+import com.ifba.educampo.dto.associate.AssociatePostDto;
+import com.ifba.educampo.dto.associate.AssociatePutDto;
+import com.ifba.educampo.dto.associate.AssociateResponseDto;
+import com.ifba.educampo.enums.PeriodEnum;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import com.ifba.educampo.domain.Associate;
-import com.ifba.educampo.exception.BadRequestException;
-import com.ifba.educampo.repository.AssociateRepository;
-import com.ifba.educampo.requests.AssociatePostRequestBody;
-import com.ifba.educampo.requests.AssociatePutRequestBody;
+public interface AssociateService {
+    Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable);
 
-import java.lang.reflect.Field;
-import java.util.Map;
+    AssociateResponseDto findById(Long id);
 
-import lombok.RequiredArgsConstructor;
-import javax.transaction.Transactional;
+    AssociateResponseDto save(AssociatePostDto dto);
 
-@Service
-@RequiredArgsConstructor
-public class AssociateService { // Classe de serviço para o Associado
-	private final AssociateRepository associateRepository;
-	private final AddressService addressService;
-	private final WorkRecordService workRecordService;
-	private final DependentsService dependentsService;
-	private final AffiliationService affiliationService;
-	private final AssociatePhotoService associatePhotoService;
-	private final PlaceOfBirthService placeOfBirthService;
-	private final LocalOfficeService localOfficeService;
-	
-	public Associate findAssociate(Long id) {
-		return associateRepository.findById(id)
-				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
-	}
+    AssociateResponseDto update(Long id, AssociatePutDto dto);
 
-	public Page<Associate> findAssociateByNameOrCpfOrUnionCard(String query, Pageable pageable) {
-		return associateRepository.findByNameOrCpfOrUnionCard(query, pageable)
-				.orElseThrow(()-> new BadRequestException("Associate Not Found"));
-	}
-	
-	public Page<Associate> listAll(Pageable pageable) {
-        return associateRepository.findAll(pageable);
-    }
+    void delete(Long id);
 
-	@Transactional
-	public void delete(long id) {
-		associateRepository.delete(findAssociate(id));
-	}
-	
-	@Transactional
-	public Associate save(AssociatePostRequestBody associatePostRequestBody) {
-		return associateRepository.save(Associate.builder()
-						.name(associatePostRequestBody.getName())
-						.unionCard(associatePostRequestBody.getUnionCard())
-						.cpf(associatePostRequestBody.getCpf())
-						.rg(associatePostRequestBody.getRg())
-						.profession(associatePostRequestBody.getProfession())
-						.workplace(associatePostRequestBody.getWorkplace())
-						.phone(associatePostRequestBody.getPhone())
-						.nationality(associatePostRequestBody.getNationality())
-						.birthDate(associatePostRequestBody.getBirthDate())
-						.isLiterate(associatePostRequestBody.isLiterate())
-						.isVoter(associatePostRequestBody.isVoter())
-						.maritalStatus(associatePostRequestBody.getMaritalStatus())
-						.associationDate(associatePostRequestBody.getAssociationDate())
-						.address(
-								associatePostRequestBody.getAddress() != null ?
-										addressService.save(associatePostRequestBody.getAddress()) :
-										null
-						)
-						.dependents(dependentsService.save(associatePostRequestBody.getDependents()))
-						.affiliation(affiliationService.save(associatePostRequestBody.getAffiliation()))
-						.placeOfBirth(placeOfBirthService.save(associatePostRequestBody.getPlaceOfBirth()))
-						.associatePhoto(associatePhotoService.save(associatePostRequestBody.getAssociatePhoto()))
-						.workRecord(workRecordService.save(associatePostRequestBody.getWorkRecord()))
-						.localOffice(
-								associatePostRequestBody.getLocalOfficeId() != null ?
-								localOfficeService.findLocalOffice(associatePostRequestBody.getLocalOfficeId()) :
-								null
-						)
-						.build()
-				);
-	}
+    void deleteImage(Long associateId);
 
-	@Transactional
-	public void replace(AssociatePutRequestBody associatePutRequestBody) {
-		Associate savedAssociate = findAssociate(associatePutRequestBody.getId());
-		Associate associate = Associate.builder()
-										.id(savedAssociate.getId())
-										.name(associatePutRequestBody.getName())
-										.unionCard(associatePutRequestBody.getUnionCard())
-										.cpf(associatePutRequestBody.getCpf())
-										.rg(associatePutRequestBody.getRg())
-										.profession(associatePutRequestBody.getProfession())
-										.workplace(associatePutRequestBody.getWorkplace())
-										.phone(associatePutRequestBody.getPhone())
-										.nationality(associatePutRequestBody.getNationality())
-										.birthDate(associatePutRequestBody.getBirthDate())
-										.isLiterate(associatePutRequestBody.isLiterate())
-										.isVoter(associatePutRequestBody.isVoter())
-										.maritalStatus(associatePutRequestBody.getMaritalStatus())
-										.associationDate(associatePutRequestBody.getAssociationDate())
-										.address(addressService
-												.replace(associatePutRequestBody.getAddress(),
-														savedAssociate.getAddress().getId()))
-										.dependents(dependentsService
-												.replace(associatePutRequestBody.getDependents(),
-												savedAssociate.getDependents().getId()))
-										.affiliation(affiliationService
-												.replace(associatePutRequestBody.getAffiliation(),
-												savedAssociate.getAffiliation().getId()))
-										.placeOfBirth(placeOfBirthService
-												.replace(associatePutRequestBody.getPlaceOfBirth(),
-												savedAssociate.getPlaceOfBirth().getId()))
-										.associatePhoto(associatePhotoService
-												.replace(associatePutRequestBody.getAssociatePhoto(),
-												savedAssociate.getAssociatePhoto().getId()))
-										.workRecord(workRecordService
-												.replace(associatePutRequestBody.getWorkRecord(),
-												savedAssociate.getWorkRecord().getId()))
-										.localOffice(
-												associatePutRequestBody.getLocalOfficeId() != null ?
-												localOfficeService.findLocalOffice(associatePutRequestBody.getLocalOfficeId()) :
-												null
-										)
-										.build();
-		
-		associateRepository.save(associate);
-		
-	}
+    Page<AssociateResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period);
 
-	@Transactional
-	public void updateByFields(long id, Map<String, Object> fields) {
-		Associate savedAssociate = findAssociate(id);
-		
-		fields.forEach((key,value)->{
-			Field field = ReflectionUtils.findField(Associate.class, key);
-			field.setAccessible(true);
-			ReflectionUtils.setField(field, savedAssociate, value);
-		});
-		associateRepository.save(savedAssociate);
-	}
-	
+    void updatePaidStatus(Long id, boolean status);
+
+    byte[] exportAssociateToPdf(Long id, HttpServletResponse response);
+
+    byte[] exportAssociateMembershipCardToPdf(Long id, HttpServletResponse response);
+
+    void setAssociateIsPaidToFalseWhenMonthlyFeeAsAlreadyExpired();
 }

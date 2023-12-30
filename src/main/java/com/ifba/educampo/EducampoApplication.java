@@ -1,16 +1,19 @@
 package com.ifba.educampo;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+@EnableAsync
 @SpringBootApplication
-@EnableSwagger2
+@OpenAPIDefinition
+@Slf4j
 public class EducampoApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(EducampoApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        log.info("Starting application...");
+        SpringApplication.run(EducampoApplication.class, args);
+        log.info("Application started.");
+    }
 }

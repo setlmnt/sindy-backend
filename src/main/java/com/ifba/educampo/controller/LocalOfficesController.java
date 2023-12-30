@@ -1,61 +1,72 @@
 package com.ifba.educampo.controller;
 
-import com.ifba.educampo.domain.Associate;
-import com.ifba.educampo.domain.LocalOffice;
-import com.ifba.educampo.requests.LocalOfficePostRequestBody;
-import com.ifba.educampo.requests.LocalOfficePutRequestBody;
+import com.ifba.educampo.annotation.Log;
+import com.ifba.educampo.dto.associate.AssociateResponseDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficePostDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficePutDto;
+import com.ifba.educampo.dto.localOffice.LocalOfficeResponseDto;
 import com.ifba.educampo.service.LocalOfficeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
-
+@Tag(name = "Local Offices", description = "Local Offices API")
 @RestController
-@RequestMapping("/local-offices")
+@RequestMapping("/api/v1/local-offices")
+@SecurityRequirements({
+        @SecurityRequirement(name = "bearerAuth"),
+        @SecurityRequirement(name = "cookieAuth")
+})
+@Log
 @RequiredArgsConstructor
-public class LocalOfficesController { // Classe de controle para as Delegacias (Escritório Local)
+public class LocalOfficesController {
     private final LocalOfficeService localOfficeService;
 
+    @Operation(summary = "Find all local offices")
     @GetMapping
-    public ResponseEntity<Page<LocalOffice>> listLocalOffices(Pageable pageable){
-        return ResponseEntity.ok(localOfficeService.listAll(pageable));
+    public Page<LocalOfficeResponseDto> listLocalOffices(Pageable pageable) {
+        return localOfficeService.listAll(pageable);
     }
 
+    @Operation(summary = "Find local office by id")
     @GetMapping(path = "/{id}")
-    public ResponseEntity<LocalOffice> findLocalOfficeById(@PathVariable long id){
-        return ResponseEntity.ok(localOfficeService.findLocalOffice(id));
+    public LocalOfficeResponseDto findLocalOfficeById(@PathVariable Long id) {
+        return localOfficeService.findLocalOffice(id);
     }
 
+    @Operation(summary = "Find all associates by local office id")
     @GetMapping(path = "/{id}/associates")
-    public ResponseEntity<Page<Associate>> findAssociatesByLocalOfficeId(@PathVariable long id, Pageable pageable){
-        return ResponseEntity.ok(localOfficeService.listAllAssociates(id, pageable));
+    public Page<AssociateResponseDto> findAssociatesByLocalOfficeId(@PathVariable Long id, Pageable pageable) {
+        return (localOfficeService.listAllAssociates(id, pageable));
     }
 
+    @Operation(summary = "Save local office")
     @PostMapping
-    public ResponseEntity<LocalOffice> save(@RequestBody LocalOfficePostRequestBody localOfficePostRequestBody){
-        return ResponseEntity.ok(localOfficeService.save(localOfficePostRequestBody));
+    @ResponseStatus(HttpStatus.CREATED)
+    public LocalOfficeResponseDto save(@RequestBody @Valid LocalOfficePostDto dto) {
+        return localOfficeService.save(dto);
     }
 
+    @Operation(summary = "Update local office")
+    @PutMapping(path = "/{id}")
+    public LocalOfficeResponseDto update(
+            @PathVariable Long id,
+            @RequestBody @Valid LocalOfficePutDto dto
+    ) {
+        return localOfficeService.update(id, dto);
+    }
+
+    @Operation(summary = "Delete local office")
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         localOfficeService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody LocalOfficePutRequestBody localOfficePutRequestBody){
-        localOfficeService.replace(localOfficePutRequestBody);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<Void> updateFields(@PathVariable long id, Map<String, Object> fields){
-        localOfficeService.updateByFields(id, fields);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
