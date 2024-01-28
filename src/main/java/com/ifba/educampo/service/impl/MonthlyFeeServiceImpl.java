@@ -9,8 +9,7 @@ import com.ifba.educampo.entity.MonthlyFee;
 import com.ifba.educampo.entity.associate.Associate;
 import com.ifba.educampo.enums.ErrorsEnum;
 import com.ifba.educampo.exception.ApiException;
-import com.ifba.educampo.exception.BadRequestListException;
-import com.ifba.educampo.exception.ErrorType;
+import com.ifba.educampo.exception.ExceptionResponse;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
 import com.ifba.educampo.mapper.monthlyFee.MonthlyFeeMapper;
 import com.ifba.educampo.repository.MonthlyFeeRepository;
@@ -141,7 +140,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
 
     private void validateUpdateMonthlyFee(MonthlyFee updatedMonthlyFee, MonthlyFee monthlyFee, Associate associate) {
         if (updatedMonthlyFee.getFinalDate() != null && !updatedMonthlyFee.getFinalDate().isEqual(monthlyFee.getFinalDate())) {
-            List<ErrorType> errors = new ArrayList<>();
+            List<ExceptionResponse.Field> errors = new ArrayList<>();
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
             if (updatedMonthlyFee.getFinalDate().isBefore(monthlyFee.getInitialDate()) || updatedMonthlyFee.getFinalDate().isEqual(monthlyFee.getInitialDate())) {
@@ -166,7 +165,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
                 }
             }
 
-            if (!errors.isEmpty()) throw new BadRequestListException("Invalid Monthly Fee", errors);
+            if (!errors.isEmpty()) throw new ApiException(ErrorsEnum.INVALID_MONTHLY_FEE, errors);
         }
     }
 
@@ -180,7 +179,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
     }
 
     private void validateSaveMonthlyFee(MonthlyFee monthlyFee, AssociateResponseDto associateResponseDto) {
-        List<ErrorType> errors = new ArrayList<>();
+        List<ExceptionResponse.Field> errors = new ArrayList<>();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
         if (monthlyFee.getInitialDate().isAfter(monthlyFee.getFinalDate()) || monthlyFee.getInitialDate().isEqual(monthlyFee.getFinalDate())) {
@@ -245,7 +244,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
             }
         }
 
-        if (!errors.isEmpty()) throw new BadRequestListException("Invalid Monthly Fee", errors);
+        if (!errors.isEmpty()) throw new ApiException(ErrorsEnum.INVALID_MONTHLY_FEE, errors);
     }
 
     private MonthlyFee prepareSaveMonthlyFee(MonthlyFeePostDto dto, AssociateResponseDto associateResponseDto) {
@@ -260,7 +259,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         return monthlyFee;
     }
 
-    private void addError(List<ErrorType> errors, String message, String field) {
-        errors.add(new ErrorType(message, field));
+    private void addError(List<ExceptionResponse.Field> errors, String message, String field) {
+        errors.add(new ExceptionResponse.Field(message, field));
     }
 }

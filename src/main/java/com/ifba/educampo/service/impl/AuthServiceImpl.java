@@ -67,7 +67,8 @@ public class AuthServiceImpl implements AuthService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            throw new ApiException(ErrorsEnum.INVALID_TOKEN);
+            log.error("Error verifying token", exception);
+            return null;
         }
     }
 

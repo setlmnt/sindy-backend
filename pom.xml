@@ -129,6 +129,11 @@
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>6.21.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

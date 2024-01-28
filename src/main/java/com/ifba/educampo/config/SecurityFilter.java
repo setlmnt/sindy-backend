@@ -31,8 +31,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String username = authService.verifyToken(token);
-            UserDetails user = userRepository.findByUsernameAndDeletedFalse(username);
+            if (username == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                return;
+            }
 
+            UserDetails user = userRepository.findByUsernameAndDeletedFalse(username);
             if (user == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;
