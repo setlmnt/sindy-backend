@@ -10,7 +10,8 @@ import com.ifba.educampo.entity.associate.*;
 import com.ifba.educampo.enums.ErrorsEnum;
 import com.ifba.educampo.enums.PeriodEnum;
 import com.ifba.educampo.exception.ApiException;
-import com.ifba.educampo.exception.ExceptionResponse;
+import com.ifba.educampo.exception.BadRequestListException;
+import com.ifba.educampo.exception.ErrorType;
 import com.ifba.educampo.mapper.AddressMapper;
 import com.ifba.educampo.mapper.LocalOfficeMapper;
 import com.ifba.educampo.mapper.associate.AssociateMapper;
@@ -208,53 +209,53 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     private void validateAssociateUpdating(Long id, AssociatePutDto dto) {
-        List<ExceptionResponse.Field> errors = new ArrayList<>();
+        List<ErrorType> errorList = new ArrayList<>();
 
         // Valida se o cpf, matrícula e rg já existem e se não são do próprio associado
         Associate associateCpf = associateRepository.findByCpf(dto.cpf());
         if (associateCpf != null && !Objects.equals(associateCpf.getId(), id)) {
             log.error("CPF already exists in another associate");
-            addError(errors, "CPF already exists", "cpf");
+            errorList.add(new ErrorType("CPF already exists", "cpf"));
         }
 
         Associate associateUnionCard = associateRepository.findByUnionCard(dto.unionCard());
         if (associateUnionCard != null && !Objects.equals(associateUnionCard.getId(), id)) {
             log.error("Union Card already exists in another associate");
-            addError(errors, "Union Card already exists", "unionCard");
+            errorList.add(new ErrorType("Union Card already exists", "unionCard"));
         }
 
         Associate associateRg = associateRepository.findByRg(dto.rg());
         if (associateRg != null && !Objects.equals(associateRg.getId(), id)) {
             log.error("RG already exists in another associate");
-            addError(errors, "RG already exists", "rg");
+            errorList.add(new ErrorType("RG already exists", "rg"));
         }
 
-        if (!errors.isEmpty()) {
-            throw new ApiException(ErrorsEnum.INVALID_ASSOCIATE, errors);
+        if (!errorList.isEmpty()) {
+            throw new BadRequestListException("Invalid Associate", errorList);
         }
     }
 
     private void validateAssociateCreation(AssociatePostDto dto) {
-        List<ExceptionResponse.Field> errors = new ArrayList<>();
+        List<ErrorType> errorList = new ArrayList<>();
 
         // Valida se o cpf, matrícula e rg já existem
         if (associateRepository.findByCpf(dto.cpf()) != null) {
             log.error("CPF already exists in another associate");
-            addError(errors, "CPF already exists", "cpf");
+            errorList.add(new ErrorType("CPF already exists", "cpf"));
         }
 
         if (associateRepository.findByUnionCard(dto.unionCard()) != null) {
             log.error("Union Card already exists in another associate");
-            addError(errors, "Union Card already exists", "unionCard");
+            errorList.add(new ErrorType("Union Card already exists", "unionCard"));
         }
 
         if (associateRepository.findByRg(dto.rg()) != null) {
             log.error("RG already exists in another associate");
-            addError(errors, "RG already exists", "rg");
+            errorList.add(new ErrorType("RG already exists", "rg"));
         }
 
-        if (!errors.isEmpty()) {
-            throw new ApiException(ErrorsEnum.INVALID_ASSOCIATE, errors);
+        if (!errorList.isEmpty()) {
+            throw new BadRequestListException("Invalid Associate", errorList);
         }
     }
 
@@ -310,9 +311,5 @@ public class AssociateServiceImpl implements AssociateService {
     private void addLocalOfficeToAssociates(Long localOfficeId, Long associateId) {
         log.info("Adding local office to associates");
         associateRepository.addLocalOfficeToAssociates(localOfficeId, associateId);
-    }
-
-    private void addError(List<ExceptionResponse.Field> errors, String message, String field) {
-        errors.add(new ExceptionResponse.Field(message, field));
     }
 }

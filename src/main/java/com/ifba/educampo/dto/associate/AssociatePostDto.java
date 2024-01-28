@@ -15,24 +15,28 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 public record AssociatePostDto(
+        @NotNull(message = "Associate Name is required")
         @NotBlank(message = "Associate name is required")
         @Size(min = 3, message = "Associate name must be at least 3 characters long")
         String name, // Nome
 
         @NotNull(message = "Union card is required")
-        @Positive(message = "Union card must be positive")
         Long unionCard, // Carteira Sindical
 
+        @NotNull(message = "CPF is required")
         @NotBlank(message = "CPF is required")
         @CPF(message = "CPF is invalid")
         String cpf, // CPF
 
+        @NotNull(message = "RG is required")
         @NotBlank(message = "RG is required")
         String rg, // RG
 
+        @NotNull(message = "Profession is required")
         @NotBlank(message = "Profession is required")
         String profession, // Profissão
 
+        @NotNull(message = "Workplace is required")
         @NotBlank(message = "Workplace is required")
         String workplace, // Local de Trabalho
 
@@ -43,6 +47,7 @@ public record AssociatePostDto(
         @Email(message = "E-mail is invalid")
         String email, // E-mail
 
+        @NotNull(message = "Nationality is required")
         @NotBlank(message = "Nationality is required")
         String nationality, // Nacionalidade
 
