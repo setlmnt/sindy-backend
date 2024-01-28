@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,8 @@ import java.time.LocalDate;
 public record AssociatePutDto(
         @Size(min = 3, message = "Associate name must be at least 3 characters long")
         String name, // Nome
+
+        @Positive(message = "Union card must be positive")
         Long unionCard, // Carteira Sindical
 
         @CPF(message = "CPF is invalid")
