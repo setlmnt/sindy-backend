@@ -7,6 +7,7 @@ import com.ifba.educampo.repository.CustomAssociateRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,7 @@ public class CustomAssociateRepositoryImpl implements CustomAssociateRepository 
     @PersistenceContext
     private EntityManager em;
 
-    private static void setPagination(Pageable pageable, TypedQuery<?> typedQuery) {
+    private void setPagination(Pageable pageable, TypedQuery<?> typedQuery) {
         typedQuery.setMaxResults(pageable.getPageSize());
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
@@ -84,11 +85,11 @@ public class CustomAssociateRepositoryImpl implements CustomAssociateRepository 
             String cpf,
             Long unionCard
     ) {
-        if (name != null) {
+        if (!StringUtils.isEmpty(name)) {
             query.append(" AND LOWER(a.name) LIKE LOWER(:name)");
         }
 
-        if (cpf != null) {
+        if (!StringUtils.isEmpty(cpf)) {
             query.append(" AND LOWER(a.cpf) LIKE LOWER(:cpf)");
         }
 
@@ -100,11 +101,11 @@ public class CustomAssociateRepositoryImpl implements CustomAssociateRepository 
 
         TypedQuery<Associate> typedQuery = em.createQuery(query.toString(), Associate.class);
 
-        if (name != null) {
+        if (!StringUtils.isEmpty(name)) {
             typedQuery.setParameter("name", "%" + name + "%");
         }
 
-        if (cpf != null) {
+        if (!StringUtils.isEmpty(cpf)) {
             typedQuery.setParameter("cpf", cpf + "%");
         }
 

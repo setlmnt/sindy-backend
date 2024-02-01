@@ -1,12 +1,13 @@
 package com.ifba.educampo.repository.impl;
 
 import com.ifba.educampo.annotation.Log;
-import com.ifba.educampo.entity.Email;
+import com.ifba.educampo.dto.email.EmailResponseDto;
 import com.ifba.educampo.enums.EmailStatusEnum;
 import com.ifba.educampo.repository.CustomEmailRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,72 +18,56 @@ import java.util.List;
 @Repository
 @Log
 public class CustomEmailRepositoryImpl implements CustomEmailRepository {
-    private static final String SELECT_ALL_EMAILS = "SELECT e FROM Email e WHERE e.deleted = false";
+    private static final String SELECT_ALL_EMAILS = "SELECT new com.ifba.educampo.dto.email.EmailResponseDto(ch.id, ch.sender, ch.recipients, ch.message, ch.subject, ch.status)" +
+            "FROM CommunicationHistory ch INNER JOIN FETCH ch.recipients cr WHERE ch.deleted = false";
+
     @PersistenceContext
     private EntityManager em;
 
-    public Page<Email> findAllWithFilterAndDeletedFalse(
-            String owner,
-            String emailTo,
-            String emailFrom,
-            EmailStatusEnum status,
-            Pageable pageable
-    ) {
-        TypedQuery<Email> typedQuery = getFindAllQuery(owner, emailTo, emailFrom, status);
-        int totalElements = typedQuery.getResultList().size();
-
-        setQueryParameter(owner, emailTo, emailFrom, status, typedQuery);
-
-        setPagination(pageable, typedQuery);
-
-        List<Email> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, totalElements);
-    }
-
-    private void setPagination(Pageable pageable, TypedQuery<Email> typedQuery) {
+    private void setPagination(Pageable pageable, TypedQuery<?> typedQuery) {
         typedQuery.setMaxResults(pageable.getPageSize());
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
+    @Override
+    public Page<EmailResponseDto> findAllWithFilter(String sender, String recipient, EmailStatusEnum status, Pageable pageable) {
+        StringBuilder query = new StringBuilder(SELECT_ALL_EMAILS);
 
-    private void setQueryParameter(String owner, String emailTo, String emailFrom, EmailStatusEnum status, TypedQuery<Email> typedQuery) {
-        if (owner != null) {
-            typedQuery.setParameter("owner", owner);
+        TypedQuery<EmailResponseDto> typedQuery = filterEmail(query, sender, recipient, status);
+        int totalElements = typedQuery.getResultList().size();
+
+        setPagination(pageable, typedQuery);
+
+        List<EmailResponseDto> resultList = typedQuery.getResultList();
+        return new PageImpl<>(resultList, pageable, totalElements);
+    }
+
+    private TypedQuery<EmailResponseDto> filterEmail(StringBuilder query, String sender, String recipient, EmailStatusEnum status) {
+        if (!StringUtils.isEmpty(sender)) {
+            query.append(" AND ch.sender = :sender");
         }
 
-        if (emailTo != null) {
-            typedQuery.setParameter("emailTo", emailTo);
+        if (!StringUtils.isEmpty(recipient)) {
+            query.append(" AND cr.recipient = :recipient");
         }
 
-        if (emailFrom != null) {
-            typedQuery.setParameter("emailFrom", emailFrom);
+        if (status != null) {
+            query.append(" AND ch.status = :status");
+        }
+
+        TypedQuery<EmailResponseDto> typedQuery = em.createQuery(query.toString(), EmailResponseDto.class);
+
+        if (!StringUtils.isEmpty(sender)) {
+            typedQuery.setParameter("sender", sender);
+        }
+
+        if (!StringUtils.isEmpty(recipient)) {
+            typedQuery.setParameter("recipient", recipient);
         }
 
         if (status != null) {
             typedQuery.setParameter("status", status);
         }
-    }
 
-    private TypedQuery<Email> getFindAllQuery(String owner, String emailTo, String emailFrom, EmailStatusEnum status) {
-        StringBuilder query = new StringBuilder(SELECT_ALL_EMAILS);
-
-        if (owner != null) {
-            query.append(" AND e.owner LIKE CONCAT('%', :owner, '%')");
-        }
-
-        if (emailTo != null) {
-            query.append(" AND e.emailTo LIKE CONCAT('%', :emailTo, '%')");
-        }
-
-        if (emailFrom != null) {
-            query.append(" AND e.emailFrom LIKE CONCAT('%', :emailFrom, '%')");
-        }
-
-        if (status != null) {
-            query.append(" AND e.status = :status");
-        }
-
-        query.append(" ORDER BY e.id ASC");
-
-        return em.createQuery(query.toString(), Email.class);
+        return typedQuery;
     }
 }

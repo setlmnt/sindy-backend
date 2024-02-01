@@ -23,7 +23,7 @@ public class CustomMonthlyFeeRepositoryImpl implements CustomMonthlyFeeRepositor
     @PersistenceContext
     private EntityManager em;
 
-    private static void setPagination(Pageable pageable, TypedQuery<MonthlyFee> typedQuery) {
+    private void setPagination(Pageable pageable, TypedQuery<MonthlyFee> typedQuery) {
         typedQuery.setMaxResults(pageable.getPageSize());
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }

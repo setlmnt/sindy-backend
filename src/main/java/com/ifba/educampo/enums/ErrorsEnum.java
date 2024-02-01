@@ -36,7 +36,9 @@ public enum ErrorsEnum {
     INTERNAL_ERROR("Internal error", HttpStatus.INTERNAL_SERVER_ERROR),
     RESOURCE_NOT_FOUND("Resource not found", HttpStatus.NOT_FOUND),
     INVALID_PARAMETER("Invalid parameter", HttpStatus.BAD_REQUEST),
-    MESSAGE_NOT_READABLE("Message not readable", HttpStatus.BAD_REQUEST);
+    MESSAGE_NOT_READABLE("Message not readable", HttpStatus.BAD_REQUEST),
+    EMAIL_TEMPLATE_NOT_FOUND("Email template not found", HttpStatus.NOT_FOUND),
+    EMAIL_TEMPLATE_PROCESSING_ERROR("Error while processing email template", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String title;
     private final HttpStatus status;

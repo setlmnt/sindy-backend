@@ -1,22 +1,23 @@
 package com.ifba.educampo.dto.email;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * EmailDto
  */
 public record EmailDto(
         @NotBlank
-        String owner,
-        @NotBlank
-        @jakarta.validation.constraints.Email
-        String emailFrom,
-        @NotBlank
-        @jakarta.validation.constraints.Email
-        String emailTo,
-        @NotBlank
         String subject,
-        @NotBlank
-        String text
+        @NotNull
+        String message,
+        @NotNull
+        String[] recipients,
+        @NotNull
+        List<String> templatesName
 ) {
 }

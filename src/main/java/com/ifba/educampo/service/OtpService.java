@@ -7,5 +7,5 @@ public interface OtpService {
 
     void verifyOtp(String username, String code);
 
-    void sendOtpToEmailAsync(UserResponseDto userResponseDto, String otp);
+    void sendOtpToEmail(UserResponseDto userResponseDto, String otp);
 }
