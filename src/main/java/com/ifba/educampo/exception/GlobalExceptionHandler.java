@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,12 +75,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = "One or more fields are invalid. Fill in correctly and try again.";
         BindingResult bindingResult = ex.getBindingResult();
 
-        List<ExceptionResponse.Field> errors = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> ExceptionResponse.Field.builder()
-                        .field(fieldError.getField())
-                        .message(fieldError.getDefaultMessage())
-                        .build())
-                .collect(Collectors.toList());
+        List<ExceptionResponse.Field> errors = bindingResult.getAllErrors()
+                .stream()
+                .map(error -> {
+                    String name = error.getObjectName();
+
+                    if (error instanceof FieldError) {
+                        name = ((FieldError) error).getField();
+                    }
+
+                    return ExceptionResponse.Field.builder().field(name).message(error.getDefaultMessage()).build();
+                })
+                .toList();
 
         ExceptionResponse exceptionResponse = getExceptionResponse(errorType.getTitle(), status.value())
                 .detail(detail)
