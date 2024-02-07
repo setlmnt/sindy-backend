@@ -7,7 +7,7 @@ import br.com.sindy.domain.dto.localOffice.LocalOfficePutDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
 import br.com.sindy.domain.entity.LocalOffice;
 import br.com.sindy.domain.entity.associate.Associate;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.LocalOfficeMapper;
 import br.com.sindy.domain.mapper.associate.AssociateMapper;
@@ -35,7 +35,7 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         Page<Associate> associates = localOfficeRepository.listAllAssociates(id, pageable)
                 .orElseThrow(() -> {
                     log.error("Associates from local office with ID {} not found.", id);
-                    return new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND);
+                    return new ApiException(ErrorEnum.ASSOCIATE_NOT_FOUND);
                 });
         return associates.map(associateMapper::toResponseDto);
     }
@@ -45,7 +45,7 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         LocalOffice localOffice = localOfficeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Local office with ID {} not found.", id);
-                    return new ApiException(ErrorsEnum.LOCAL_OFFICE_NOT_FOUND);
+                    return new ApiException(ErrorEnum.LOCAL_OFFICE_NOT_FOUND);
                 });
         return localOfficeMapper.toResponseDto(localOffice);
     }

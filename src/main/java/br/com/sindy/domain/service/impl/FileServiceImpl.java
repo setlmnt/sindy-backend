@@ -3,7 +3,7 @@ package br.com.sindy.domain.service.impl;
 import br.com.sindy.core.annotation.Log;
 import br.com.sindy.domain.dto.FileResponseDto;
 import br.com.sindy.domain.entity.File;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.FileMapper;
 import br.com.sindy.domain.repository.FileRepository;
@@ -84,7 +84,7 @@ public class FileServiceImpl implements FileService {
                 }
             } catch (IOException e) {
                 log.error("An error occurred while loading the file", e);
-                throw new ApiException(ErrorsEnum.ERROR_WHILE_LOADING_FILE);
+                throw new ApiException(ErrorEnum.ERROR_WHILE_LOADING_FILE);
             }
 
             log.error("File not found: " + name);
@@ -101,7 +101,7 @@ public class FileServiceImpl implements FileService {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("An error occurred while storing the file", e);
-            throw new ApiException(ErrorsEnum.ERROR_WHILE_STORING_FILE);
+            throw new ApiException(ErrorEnum.ERROR_WHILE_STORING_FILE);
         }
     }
 
@@ -112,7 +112,7 @@ public class FileServiceImpl implements FileService {
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
             log.error("An error occurred while deleting the file", e);
-            throw new ApiException(ErrorsEnum.ERROR_WHILE_DELETE_FILE);
+            throw new ApiException(ErrorEnum.ERROR_WHILE_DELETE_FILE);
         }
     }
 
@@ -124,7 +124,7 @@ public class FileServiceImpl implements FileService {
                 Files.createDirectories(path);
             } catch (IOException e) {
                 log.error("An error occurred while creating the upload directory", e);
-                throw new ApiException(ErrorsEnum.ERROR_WHILE_CREATING_DIRECTORY);
+                throw new ApiException(ErrorEnum.ERROR_WHILE_CREATING_DIRECTORY);
             }
         }
     }

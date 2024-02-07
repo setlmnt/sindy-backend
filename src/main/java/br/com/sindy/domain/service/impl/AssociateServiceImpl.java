@@ -7,7 +7,7 @@ import br.com.sindy.domain.dto.associate.AssociateResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
 import br.com.sindy.domain.entity.Address;
 import br.com.sindy.domain.entity.associate.*;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.enums.PeriodEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.exception.ExceptionResponse;
@@ -68,7 +68,7 @@ public class AssociateServiceImpl implements AssociateService {
         Associate associate = associateRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Associate with ID {} not found", id);
-                    return new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND);
+                    return new ApiException(ErrorEnum.ASSOCIATE_NOT_FOUND);
                 });
         return associateMapper.toResponseDto(associate);
     }
@@ -230,7 +230,7 @@ public class AssociateServiceImpl implements AssociateService {
         }
 
         if (!errors.isEmpty()) {
-            throw new ApiException(ErrorsEnum.INVALID_ASSOCIATE, errors);
+            throw new ApiException(ErrorEnum.INVALID_ASSOCIATE, errors);
         }
     }
 
@@ -254,7 +254,7 @@ public class AssociateServiceImpl implements AssociateService {
         }
 
         if (!errors.isEmpty()) {
-            throw new ApiException(ErrorsEnum.INVALID_ASSOCIATE, errors);
+            throw new ApiException(ErrorEnum.INVALID_ASSOCIATE, errors);
         }
     }
 

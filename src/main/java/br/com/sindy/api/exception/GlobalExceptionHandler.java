@@ -1,7 +1,7 @@
 package br.com.sindy.api.exception;
 
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.enums.ErrorTypeEnum;
-import br.com.sindy.domain.enums.ErrorsEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.exception.ExceptionResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -43,14 +43,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleApiException(ApiException ex, HttpServletRequest request) {
         log.error("API exception in {}", request.getRequestURI(), ex);
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ex.getErrorsEnum().getTitle(),
-                getHttpStatus(ex.getErrorsEnum().getStatus()).value()
+                ex.getErrorEnum().getTitle(),
+                getHttpStatus(ex.getErrorEnum().getStatus()).value()
         )
                 .detail(ex.getDetail())
                 .fields(ex.getFields())
                 .path(request.getRequestURI())
                 .build();
-        return new ResponseEntity<>(exceptionResponse, getHttpStatus(ex.getErrorsEnum().getStatus()));
+        return new ResponseEntity<>(exceptionResponse, getHttpStatus(ex.getErrorEnum().getStatus()));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -58,8 +58,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ExceptionResponse handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
         log.error("Access Denied", ex);
         return getExceptionResponse(
-                ErrorsEnum.ACCESS_DENIED.getTitle(),
-                getHttpStatus(ErrorsEnum.ACCESS_DENIED.getStatus()).value()
+                ErrorEnum.ACCESS_DENIED.getTitle(),
+                getHttpStatus(ErrorEnum.ACCESS_DENIED.getStatus()).value()
         )
                 .path(request.getRequestURI())
                 .build();
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         log.error("Method argument not valid", ex);
 
-        ErrorsEnum errorType = ErrorsEnum.INVALID_DATA;
+        ErrorEnum errorType = ErrorEnum.INVALID_DATA;
         String detail = "One or more fields are invalid. Fill in correctly and try again.";
         BindingResult bindingResult = ex.getBindingResult();
 
@@ -107,8 +107,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = DEFAULT_MESSAGE;
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.INTERNAL_ERROR.getTitle(),
-                getHttpStatus(ErrorsEnum.INTERNAL_ERROR.getStatus()).value()
+                ErrorEnum.INTERNAL_ERROR.getTitle(),
+                getHttpStatus(ErrorEnum.INTERNAL_ERROR.getStatus()).value()
         )
                 .detail(detail)
                 .path(getInstance(request))
@@ -118,7 +118,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex,
                 exceptionResponse,
                 new HttpHeaders(),
-                getHttpStatus(ErrorsEnum.INTERNAL_ERROR.getStatus()),
+                getHttpStatus(ErrorEnum.INTERNAL_ERROR.getStatus()),
                 request
         );
     }
@@ -135,7 +135,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("Resource %s not found", ex.getRequestURL());
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.INTERNAL_ERROR.getTitle(),
+                ErrorEnum.INTERNAL_ERROR.getTitle(),
                 status.value()
         )
                 .detail(detail)
@@ -180,7 +180,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.INVALID_PARAMETER.getTitle(),
+                ErrorEnum.INVALID_PARAMETER.getTitle(),
                 status.value()
         )
                 .detail(detail)
@@ -210,7 +210,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = "The request body is invalid. Check syntax error.";
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.MESSAGE_NOT_READABLE.getTitle(),
+                ErrorEnum.MESSAGE_NOT_READABLE.getTitle(),
                 status.value()
         )
                 .detail(detail)
@@ -233,7 +233,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("The property '%s' does not exist. Correct or remove this property and try again.", path);
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.MESSAGE_NOT_READABLE.getTitle(),
+                ErrorEnum.MESSAGE_NOT_READABLE.getTitle(),
                 status.value()
         )
                 .detail(detail)
@@ -259,7 +259,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
         ExceptionResponse exceptionResponse = getExceptionResponse(
-                ErrorsEnum.MESSAGE_NOT_READABLE.getTitle(),
+                ErrorEnum.MESSAGE_NOT_READABLE.getTitle(),
                 status.value()
         )
                 .detail(detail)

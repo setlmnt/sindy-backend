@@ -7,7 +7,7 @@ import br.com.sindy.domain.dto.monthlyFee.MonthlyFeePutDto;
 import br.com.sindy.domain.dto.monthlyFee.MonthlyFeeResponseDto;
 import br.com.sindy.domain.entity.MonthlyFee;
 import br.com.sindy.domain.entity.associate.Associate;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.exception.ExceptionResponse;
 import br.com.sindy.domain.mapper.associate.AssociateMapper;
@@ -58,7 +58,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         MonthlyFee monthlyFee = monthlyFeeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Monthly fee with ID {} not found.", id);
-                    return new ApiException(ErrorsEnum.MONTHLY_FEE_NOT_FOUND);
+                    return new ApiException(ErrorEnum.MONTHLY_FEE_NOT_FOUND);
                 });
 
         return monthlyFeeMapper.toResponseDto(monthlyFee);
@@ -165,7 +165,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
                 }
             }
 
-            if (!errors.isEmpty()) throw new ApiException(ErrorsEnum.INVALID_MONTHLY_FEE, errors);
+            if (!errors.isEmpty()) throw new ApiException(ErrorEnum.INVALID_MONTHLY_FEE, errors);
         }
     }
 
@@ -244,7 +244,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
             }
         }
 
-        if (!errors.isEmpty()) throw new ApiException(ErrorsEnum.INVALID_MONTHLY_FEE, errors);
+        if (!errors.isEmpty()) throw new ApiException(ErrorEnum.INVALID_MONTHLY_FEE, errors);
     }
 
     private MonthlyFee prepareSaveMonthlyFee(MonthlyFeePostDto dto, AssociateResponseDto associateResponseDto) {

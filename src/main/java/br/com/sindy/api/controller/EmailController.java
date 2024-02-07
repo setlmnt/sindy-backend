@@ -4,6 +4,8 @@ import br.com.sindy.domain.dto.email.EmailResponseDto;
 import br.com.sindy.domain.enums.EmailStatusEnum;
 import br.com.sindy.domain.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Email", description = "Email API")
 @RestController
 @RequestMapping("/api/v1/emails")
+@SecurityRequirements({
+        @SecurityRequirement(name = "bearerAuth"),
+        @SecurityRequirement(name = "cookieAuth")
+})
 @RequiredArgsConstructor
 public class EmailController {
     private final EmailService emailService;

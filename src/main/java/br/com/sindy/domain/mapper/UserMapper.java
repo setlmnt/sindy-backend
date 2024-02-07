@@ -1,6 +1,5 @@
 package br.com.sindy.domain.mapper;
 
-import br.com.sindy.domain.dto.user.UserLoginDto;
 import br.com.sindy.domain.dto.user.UserPutDto;
 import br.com.sindy.domain.dto.user.UserRegisterDto;
 import br.com.sindy.domain.dto.user.UserResponseDto;
@@ -22,9 +21,6 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     User registerDtoToEntity(UserRegisterDto userRegisterDto);
-
-    @Mapping(target = "id", ignore = true)
-    User loginDtoToEntity(UserLoginDto userLoginDto);
 
     User putDtoToEntity(UserPutDto userPutDto);
 }

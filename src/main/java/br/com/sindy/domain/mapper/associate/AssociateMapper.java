@@ -26,6 +26,4 @@ public interface AssociateMapper {
 
     @Mapping(target = "id", ignore = true)
     Associate putDtoToEntity(AssociatePutDto associatePutDto);
-
-
 }

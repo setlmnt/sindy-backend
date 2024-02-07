@@ -78,6 +78,13 @@ public class EmailServiceImpl implements EmailService {
         return String.format("%s <%s>", name, email);
     }
 
+    @Override
+    public String[] unformatEmail(String email) {
+        String[] nameAndEmail = email.split(" ");
+        nameAndEmail[1] = nameAndEmail[1].replace("<", "").replace(">", "");
+        return nameAndEmail;
+    }
+
     private MimeMessage getMessage(EmailDto emailDto) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -92,9 +99,9 @@ public class EmailServiceImpl implements EmailService {
         List<Recipient> recipients = new ArrayList<>();
 
         for (String recipient : emailDto.recipients()) {
-            String[] recipientNameAndEmail = recipient.split(" ");
-            String name = recipientNameAndEmail[0];
-            String email = recipientNameAndEmail[1].replace("<", "").replace(">", "");
+            String[] recipientData = unformatEmail(recipient);
+            String name = recipientData[0];
+            String email = recipientData[1];
 
             Recipient communicationRecipient = new Recipient();
             communicationRecipient.setName(name);
@@ -109,7 +116,8 @@ public class EmailServiceImpl implements EmailService {
     private CommunicationHistory getCommunicationHistory(EmailDto emailDto) {
         CommunicationHistory communicationHistory = new CommunicationHistory();
         communicationHistory.setTemplates(getEmailTemplates(emailDto.templatesName()));
-        communicationHistory.setSender(emailFrom);
+        communicationHistory.setSenderName(emailName);
+        communicationHistory.setSenderEmail(emailFrom);
         communicationHistory.setSubject(emailDto.subject());
         communicationHistory.setMessage(emailDto.message());
         return communicationHistory;

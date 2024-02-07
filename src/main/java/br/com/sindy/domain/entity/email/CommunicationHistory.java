@@ -17,8 +17,11 @@ import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 @Table(name = "communication_histories")
 @Inheritance(strategy = SINGLE_TABLE)
 public class CommunicationHistory extends BaseEntity<Long> {
-    @Column(name = "sender", nullable = false)
-    private String sender;
+    @Column(name = "sender_name", nullable = false)
+    private String senderName;
+
+    @Column(name = "sender_email", nullable = false)
+    private String senderEmail;
 
     @Column(name = "subject")
     private String subject;

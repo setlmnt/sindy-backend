@@ -1,6 +1,6 @@
 package br.com.sindy.domain.service.impl;
 
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ReportServiceImpl implements ReportService {
             return JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e) {
             log.error("Error generating report. " + e.getMessage());
-            throw new ApiException(ErrorsEnum.ERROR_WHILE_GENERATING_REPORT);
+            throw new ApiException(ErrorEnum.ERROR_WHILE_GENERATING_REPORT);
         }
     }
 
@@ -38,14 +38,14 @@ public class ReportServiceImpl implements ReportService {
         Path path = Paths.get("src/main/resources/templates", reportTemplate + ".jrxml");
 
         if (!path.toFile().exists()) {
-            throw new ApiException(ErrorsEnum.REPORT_NOT_FOUND);
+            throw new ApiException(ErrorEnum.REPORT_NOT_FOUND);
         }
 
         try {
             return JasperCompileManager.compileReport(path.toString());
         } catch (Exception e) {
             log.error("Error generating report. " + e.getMessage());
-            throw new ApiException(ErrorsEnum.ERROR_WHILE_GENERATING_REPORT);
+            throw new ApiException(ErrorEnum.ERROR_WHILE_GENERATING_REPORT);
         }
     }
 

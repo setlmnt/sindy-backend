@@ -14,7 +14,6 @@ public interface LocalOfficeMapper {
     @Mapping(target = "id", ignore = true)
     LocalOffice responseDtoToEntity(LocalOfficeResponseDto localOfficeResponseDto);
 
-    @Mapping(target = "id", ignore = false)
     LocalOffice responseDtoToEntityWithId(LocalOfficeResponseDto localOfficeResponseDto);
 
     LocalOfficePostDto toPostDto(LocalOffice localOffice);

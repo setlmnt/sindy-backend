@@ -17,4 +17,6 @@ public interface EmailService {
     void send(EmailDto emailDto);
 
     String formatEmail(String name, String email);
+
+    String[] unformatEmail(String email);
 }

@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EmailStatusEnum {
-    SENT("S"),
-    ERROR("E"),
-    PENDING("P");
+    SENT("S", "sent"),
+    ERROR("E", "error"),
+    PENDING("P", "pending");
 
     private final String value;
+    private final String description;
 }

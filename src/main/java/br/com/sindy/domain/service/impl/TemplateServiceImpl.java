@@ -1,7 +1,7 @@
 package br.com.sindy.domain.service.impl;
 
 import br.com.sindy.domain.entity.Template;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.repository.EmailTemplateRepository;
 import br.com.sindy.domain.service.TemplateService;
@@ -34,7 +34,7 @@ public class TemplateServiceImpl implements TemplateService {
             return processTemplate(templateVariables, template).toString();
         } catch (Exception e) {
             log.error("Error while processing template {}", templateId, e);
-            throw new ApiException(ErrorsEnum.EMAIL_TEMPLATE_PROCESSING_ERROR);
+            throw new ApiException(ErrorEnum.EMAIL_TEMPLATE_PROCESSING_ERROR);
         }
     }
 
@@ -51,7 +51,7 @@ public class TemplateServiceImpl implements TemplateService {
         Optional<Template> emailTemplate = emailTemplateRepository.findByName(templateName);
         if (emailTemplate.isEmpty()) {
             log.error("Email template {} not found", templateName);
-            throw new ApiException(ErrorsEnum.EMAIL_TEMPLATE_NOT_FOUND);
+            throw new ApiException(ErrorEnum.EMAIL_TEMPLATE_NOT_FOUND);
         }
         return emailTemplate.get();
     }

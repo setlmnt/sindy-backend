@@ -4,7 +4,7 @@ import br.com.sindy.core.annotation.Log;
 import br.com.sindy.domain.dto.TokenDto;
 import br.com.sindy.domain.dto.user.UserLoginDto;
 import br.com.sindy.domain.entity.user.User;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.service.AuthService;
 import com.auth0.jwt.JWT;
@@ -47,13 +47,13 @@ public class AuthServiceImpl implements AuthService {
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             if (!authentication.isAuthenticated()) {
-                throw new ApiException(ErrorsEnum.INVALID_CREDENTIALS);
+                throw new ApiException(ErrorEnum.INVALID_CREDENTIALS);
             }
 
             String tokenJwt = generateToken((User) authentication.getPrincipal());
             return new TokenDto(tokenJwt);
         } catch (BadCredentialsException e) {
-            throw new ApiException(ErrorsEnum.INVALID_CREDENTIALS);
+            throw new ApiException(ErrorEnum.INVALID_CREDENTIALS);
         }
     }
 

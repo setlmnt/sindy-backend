@@ -6,7 +6,7 @@ import br.com.sindy.domain.dto.syndicate.SyndicatePutDto;
 import br.com.sindy.domain.dto.syndicate.SyndicateResponseDto;
 import br.com.sindy.domain.entity.Address;
 import br.com.sindy.domain.entity.Syndicate;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.SyndicateMapper;
 import br.com.sindy.domain.repository.SyndicateRepository;
@@ -34,7 +34,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         return syndicateMapper.toResponseDto(syndicateRepository.find()
                 .orElseThrow(() -> {
                     log.error("Syndicate not found");
-                    return new ApiException(ErrorsEnum.SYNDICATE_NOT_FOUND);
+                    return new ApiException(ErrorEnum.SYNDICATE_NOT_FOUND);
                 })
         );
     }
@@ -43,7 +43,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         Optional<Syndicate> syndicateExits = syndicateRepository.find();
         if (syndicateExits.isPresent()) {
             log.error("Syndicate already exists");
-            throw new ApiException(ErrorsEnum.SYNDICATE_ALREADY_EXISTS);
+            throw new ApiException(ErrorEnum.SYNDICATE_ALREADY_EXISTS);
         }
 
         log.info("Saving syndicate: {}", dto);

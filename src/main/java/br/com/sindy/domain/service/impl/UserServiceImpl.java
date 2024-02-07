@@ -6,7 +6,7 @@ import br.com.sindy.domain.dto.user.UserRegisterDto;
 import br.com.sindy.domain.dto.user.UserResponseDto;
 import br.com.sindy.domain.dto.user.UserUpdatePasswordDto;
 import br.com.sindy.domain.entity.user.User;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.enums.RoleEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.UserMapper;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(userRegisterDto.username());
 
         if (user != null) {
-            throw new ApiException(ErrorsEnum.INVALID_USERNAME);
+            throw new ApiException(ErrorEnum.INVALID_USERNAME);
         }
 
         user = userMapper.registerDtoToEntity(userRegisterDto);

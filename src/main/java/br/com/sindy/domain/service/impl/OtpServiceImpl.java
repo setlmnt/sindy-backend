@@ -5,7 +5,7 @@ import br.com.sindy.domain.dto.email.EmailDto;
 import br.com.sindy.domain.dto.user.OtpDto;
 import br.com.sindy.domain.dto.user.UserResponseDto;
 import br.com.sindy.domain.entity.user.Otp;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.OtpMapper;
 import br.com.sindy.domain.repository.OtpRepository;
@@ -58,11 +58,11 @@ public class OtpServiceImpl implements OtpService {
         Otp otp = otpRepository.findByCodeAndUsername(code, username);
 
         if (otp == null) {
-            throw new ApiException(ErrorsEnum.INVALID_OTP);
+            throw new ApiException(ErrorEnum.INVALID_OTP);
         }
 
         if (otp.isExpired()) {
-            throw new ApiException(ErrorsEnum.OTP_EXPIRED);
+            throw new ApiException(ErrorEnum.OTP_EXPIRED);
         }
 
         otp.delete();

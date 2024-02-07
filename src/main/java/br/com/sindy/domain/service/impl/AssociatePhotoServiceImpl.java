@@ -4,7 +4,7 @@ import br.com.sindy.core.annotation.Log;
 import br.com.sindy.domain.dto.FileResponseDto;
 import br.com.sindy.domain.entity.File;
 import br.com.sindy.domain.entity.associate.Associate;
-import br.com.sindy.domain.enums.ErrorsEnum;
+import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.FileMapper;
 import br.com.sindy.domain.repository.AssociateRepository;
@@ -43,7 +43,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto findByAssociateId(Long id) {
         log.info("Finding image by associate id {}", id);
         File file = fileRepository.findProfilePictureByAssociateId(id)
-                .orElseThrow(() -> new ApiException(ErrorsEnum.ASSOCIATE_IMAGE_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ErrorEnum.ASSOCIATE_IMAGE_NOT_FOUND));
         return fileMapper.toResponseDto(file);
     }
 
@@ -59,7 +59,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
 
         log.info("Uploading associate photo");
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            throw new ApiException(ErrorsEnum.FILE_MUST_BE_IMAGE);
+            throw new ApiException(ErrorEnum.FILE_MUST_BE_IMAGE);
         }
         FileResponseDto associateImage = upload(associateId, file, uploadDir);
         log.info("Associate photo uploaded");
@@ -88,11 +88,11 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto saveDocument(Long associateId, MultipartFile file, String uploadDir) {
         log.info("Saving document with associate id {}", associateId);
         if (!Objects.requireNonNull(file.getContentType()).startsWith("application/") && !Objects.requireNonNull(file.getContentType()).startsWith("text/")) {
-            throw new ApiException(ErrorsEnum.FILE_MUST_BE_DOCUMENT);
+            throw new ApiException(ErrorEnum.FILE_MUST_BE_DOCUMENT);
         }
 
         Associate associate = associateRepository.findById(associateId)
-                .orElseThrow(() -> new ApiException(ErrorsEnum.ASSOCIATE_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ErrorEnum.ASSOCIATE_NOT_FOUND));
 
         FileResponseDto fileResponseDto = upload(associateId, file, uploadDir);
         File image = fileMapper.responseDtoToEntity(fileResponseDto);
@@ -133,7 +133,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
     public FileResponseDto findDocumentByAssociateIdAndDocumentId(Long associateId, Long documentId) {
         log.info("Finding document by associate id {} and document id {}", associateId, documentId);
         File file = fileRepository.findByIdAndDeletedFalse(documentId)
-                .orElseThrow(() -> new ApiException(ErrorsEnum.DOCUMENT_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ErrorEnum.DOCUMENT_NOT_FOUND));
         return fileMapper.toResponseDto(file);
     }
 
