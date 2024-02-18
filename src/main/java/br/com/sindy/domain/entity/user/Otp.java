@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -24,6 +25,6 @@ public class Otp extends BaseEntity<Long> {
     private User user;
 
     public boolean isExpired() {
-        return this.getCreatedAt().plusMinutes(30).isBefore(LocalDateTime.now());
+        return this.getCreatedAt().plusMinutes(30).isBefore(OffsetDateTime.now());
     }
 }
