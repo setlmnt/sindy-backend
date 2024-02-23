@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AssociateService {
-    Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable);
+    Page<AssociateResponseDto> findAll(String query, Pageable pageable);
 
     AssociateResponseDto findById(Long id);
 

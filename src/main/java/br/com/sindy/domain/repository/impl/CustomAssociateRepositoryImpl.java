@@ -35,15 +35,10 @@ public class CustomAssociateRepositoryImpl implements CustomAssociateRepository 
         typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
     }
 
-    public Page<Associate> findAllFromNameAndCpfAndUnionCard(
-            String name,
-            String cpf,
-            Long unionCard,
-            Pageable pageable
-    ) {
-        StringBuilder query = new StringBuilder(SELECT_ALL_ASSOCIATES);
+    public Page<Associate> findAllFromNameAndCpfAndUnionCard(String query, Pageable pageable) {
+        StringBuilder queryBuilder = new StringBuilder(SELECT_ALL_ASSOCIATES);
 
-        TypedQuery<Associate> typedQuery = filterQueryByNameAndCpfAndUnionCard(query, pageable, name, cpf, unionCard);
+        TypedQuery<Associate> typedQuery = filterQueryByNameAndCpfAndUnionCard(queryBuilder, pageable, query);
         int totalElements = typedQuery.getResultList().size();
 
         setPagination(pageable, typedQuery);
@@ -79,38 +74,22 @@ public class CustomAssociateRepositoryImpl implements CustomAssociateRepository 
     }
 
     private TypedQuery<Associate> filterQueryByNameAndCpfAndUnionCard(
-            StringBuilder query,
+            StringBuilder queryBuilder,
             Pageable pageable,
-            String name,
-            String cpf,
-            Long unionCard
+            String query
     ) {
-        if (!StringUtils.isEmpty(name)) {
-            query.append(" AND LOWER(a.name) LIKE LOWER(:name)");
+        if (!StringUtils.isEmpty(query)) {
+            queryBuilder.append(" AND (LOWER(a.name) LIKE LOWER(:name) OR LOWER(a.cpf) LIKE LOWER(:cpf) OR CAST(a.unionCard AS string) LIKE :unionCard)");
         }
 
-        if (!StringUtils.isEmpty(cpf)) {
-            query.append(" AND LOWER(a.cpf) LIKE LOWER(:cpf)");
-        }
+        queryBuilder.append(getOrders(pageable));
 
-        if (unionCard != null) {
-            query.append(" AND CAST(a.unionCard AS string) LIKE :unionCard");
-        }
+        TypedQuery<Associate> typedQuery = em.createQuery(queryBuilder.toString(), Associate.class);
 
-        query.append(getOrders(pageable));
-
-        TypedQuery<Associate> typedQuery = em.createQuery(query.toString(), Associate.class);
-
-        if (!StringUtils.isEmpty(name)) {
-            typedQuery.setParameter("name", "%" + name + "%");
-        }
-
-        if (!StringUtils.isEmpty(cpf)) {
-            typedQuery.setParameter("cpf", cpf + "%");
-        }
-
-        if (unionCard != null) {
-            typedQuery.setParameter("unionCard", unionCard + "%");
+        if (!StringUtils.isEmpty(query)) {
+            typedQuery.setParameter("name", "%" + query.toLowerCase() + "%");
+            typedQuery.setParameter("cpf", query.toLowerCase() + "%");
+            typedQuery.setParameter("unionCard", query.toLowerCase() + "%");
         }
 
         return typedQuery;

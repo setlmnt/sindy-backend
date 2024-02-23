@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
 
 @Data
 @MappedSuperclass

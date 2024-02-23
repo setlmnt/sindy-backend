@@ -52,12 +52,10 @@ public class AssociateServiceImpl implements AssociateService {
     private final LocalOfficeMapper localOfficeMapper;
     private final ReportService reportService;
 
-    public Page<AssociateResponseDto> findAll(String name, String cpf, Long unionCard, Pageable pageable) {
+    public Page<AssociateResponseDto> findAll(String query, Pageable pageable) {
         log.info("Listing all associates");
         Page<Associate> associates = associateRepository.findAllFromNameAndCpfAndUnionCard(
-                name,
-                cpf,
-                unionCard,
+                query,
                 pageable
         );
         return associates.map(associateMapper::toResponseDto);

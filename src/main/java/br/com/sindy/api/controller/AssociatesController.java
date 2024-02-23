@@ -8,6 +8,7 @@ import br.com.sindy.domain.enums.PeriodEnum;
 import br.com.sindy.domain.service.AssociatePhotoService;
 import br.com.sindy.domain.service.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,12 +52,11 @@ public class AssociatesController {
     @GetMapping
     @Cacheable(value = ASSOCIATES)
     public Page<AssociateResponseDto> findAllAssociate(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String cpf,
-            @RequestParam(required = false) Long unionCard,
+            @Parameter(description = "Search by name, cpf or union card")
+            @RequestParam(required = false) String query,
             Pageable pageable
     ) {
-        return associateService.findAll(name, cpf, unionCard, pageable);
+        return associateService.findAll(query, pageable);
     }
 
     @Operation(summary = "Find associate by id")
