@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 
 public record MonthlyFeeResponseDto(
         Long id,
@@ -27,6 +29,6 @@ public record MonthlyFeeResponseDto(
         AssociateResponseDto associate, // Associado relacionado à mensalidade
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate createdAt // Data de Criação
+        OffsetDateTime createdAt // Data de Criação
 ) {
 }

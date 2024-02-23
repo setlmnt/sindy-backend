@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface OtpRepository extends JpaRepository<Otp, Long> {
     @Modifying
     @Query(
-            "UPDATE Otp o SET o.deleted = true, o.deletedAt = CAST(UTC_TIMESTAMP() AS java.time.OffsetDateTime) WHERE o.deleted = false AND o.user.username = :username"
+            "UPDATE Otp o SET o.deleted = true, o.deletedAt = CAST(CURRENT_TIMESTAMP AS java.time.OffsetDateTime) WHERE o.deleted = false AND o.user.username = :username"
     )
     void deleteAllByUsername(@Param("username") String username);
 

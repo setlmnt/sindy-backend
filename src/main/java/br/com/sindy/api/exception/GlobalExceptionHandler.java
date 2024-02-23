@@ -29,6 +29,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -281,7 +282,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (body == null) {
             body = ExceptionResponse.builder()
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .title(status.toString())
                     .status(status.value())
                     .detail(DEFAULT_MESSAGE)
@@ -289,7 +290,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .build();
         } else if (body instanceof String) {
             body = ExceptionResponse.builder()
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .title((String) body)
                     .status(status.value())
                     .detail(DEFAULT_MESSAGE)
@@ -319,7 +320,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ExceptionResponse.ExceptionResponseBuilder getExceptionResponse(String title, int status) {
         return ExceptionResponse.builder()
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .status(status)
                 .title(title);
     }

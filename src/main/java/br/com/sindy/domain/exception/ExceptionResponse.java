@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -17,8 +18,8 @@ public class ExceptionResponse {
     private String detail;
     private String path;
     private List<Field> fields;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    private OffsetDateTime timestamp;
 
     @Getter
     @Builder

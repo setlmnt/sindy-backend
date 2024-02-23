@@ -1,27 +1,29 @@
-CREATE INDEX idx_address_city ON addresses (city);
-CREATE INDEX idx_address_neighborhood ON addresses (neighborhood);
-CREATE INDEX idx_address_zip_code ON addresses (zip_code);
+-- Índices para a tabela addresses
+CREATE INDEX idx_addresses_city ON addresses (city);
+CREATE INDEX idx_addresses_neighborhood ON addresses (neighborhood);
+CREATE INDEX idx_addresses_zip_code ON addresses (zip_code);
 
-CREATE INDEX idx_email_from ON emails (email_from);
-CREATE INDEX idx_email_to ON emails (email_to);
-CREATE INDEX idx_email_owner ON emails (owner);
-CREATE INDEX idx_email_status ON emails (status);
-CREATE INDEX idx_email_subject ON emails (subject);
-
-CREATE INDEX idx_place_of_birth_city ON places_of_birth (city);
-CREATE INDEX idx_place_of_birth_state ON places_of_birth (state);
-
-CREATE INDEX idx_syndicate_cnpj ON syndicate (cnpj);
-CREATE INDEX idx_syndicate_email ON syndicate (email);
+-- Índices para a tabela syndicate
 CREATE INDEX idx_syndicate_name ON syndicate (name);
 
-CREATE INDEX idx_user_email ON users (email);
-CREATE INDEX idx_user_role ON users (role);
+-- Índices para a tabela users
+CREATE INDEX idx_users_email ON users (email);
+CREATE INDEX idx_users_name ON users (name);
 
-CREATE INDEX idx_associate_cpf ON associates (cpf);
-CREATE INDEX idx_associate_email ON associates (email);
-CREATE INDEX idx_associate_name ON associates (name);
-CREATE INDEX idx_associate_rg ON associates (rg);
-CREATE INDEX idx_associate_union_card ON associates (union_card);
+-- Índices para a tabela otps
+CREATE INDEX idx_otps_code ON otps (code);
 
-CREATE INDEX idx_file_associate_id ON files (associate_id);
+-- Índices para a tabela associates
+CREATE INDEX idx_associates_cpf ON associates (cpf);
+CREATE INDEX idx_associates_email ON associates (email);
+CREATE INDEX idx_associates_rg ON associates (rg);
+CREATE INDEX idx_associates_name ON associates (name);
+CREATE INDEX idx_associates_union_card ON associates (union_card);
+
+-- Índices para a tabela templates
+CREATE INDEX idx_templates_name ON templates (name);
+
+-- Índices para a tabela communication_histories
+CREATE INDEX idx_communication_histories_sender_email ON communication_histories (sender_email);
+CREATE INDEX idx_communication_histories_sender_name ON communication_histories (sender_name);
+CREATE INDEX idx_communication_histories_status ON communication_histories (status);
