@@ -68,30 +68,28 @@ public class FileServiceImpl implements FileService {
     }
 
     public Resource load(String name) {
-        try {
-            log.info("Loading file {}", name);
-            Path uploadDirPath = Paths.get(uploadDir);
+        log.info("Loading file {}", name);
+        Path uploadDirPath = Paths.get(uploadDir);
 
-            try (Stream<Path> paths = Files.walk(uploadDirPath)) {
-                Path filePath = paths
-                        .filter(path -> path.getFileName().toString().equals(name))
-                        .findFirst()
-                        .orElseThrow(() -> new FileNotFoundException("File not found: " + name));
+        try (Stream<Path> paths = Files.walk(uploadDirPath)) {
+            Path filePath = paths
+                    .filter(path -> path.getFileName().toString().equals(name))
+                    .findFirst()
+                    .orElseThrow(() -> new FileNotFoundException("File not found: " + name));
 
-                Resource resource = new UrlResource(filePath.toUri());
-                if (resource.exists() || resource.isReadable()) {
-                    return resource;
-                }
-            } catch (IOException e) {
-                log.error("An error occurred while loading the file", e);
-                throw new ApiException(ErrorEnum.ERROR_WHILE_LOADING_FILE);
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
             }
-
-            log.error("File not found: " + name);
-            throw new FileNotFoundException("File not found: " + name);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e.getMessage());
+            log.error("File not found", e);
+            throw new ApiException(ErrorEnum.FILE_NOT_FOUND);
+        } catch (IOException e) {
+            log.error("An error occurred while loading the file", e);
+            throw new ApiException(ErrorEnum.ERROR_WHILE_LOADING_FILE);
         }
+
+        return null;
     }
 
     public void store(MultipartFile file, String fileName, String uploadDir) {

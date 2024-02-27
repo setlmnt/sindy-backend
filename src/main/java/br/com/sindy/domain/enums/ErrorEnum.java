@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorEnum {
     UNAUTHORIZED_USER("Unauthorized user", ErrorTypeEnum.UNAUTHORIZED),
+    FILE_NOT_FOUND("File not found", ErrorTypeEnum.NOT_FOUND),
     FILE_MUST_BE_IMAGE("File must be an image", ErrorTypeEnum.BAD_REQUEST),
     FILE_MUST_BE_DOCUMENT("File must be a document", ErrorTypeEnum.BAD_REQUEST),
     ASSOCIATE_NOT_FOUND("Associate not found", ErrorTypeEnum.NOT_FOUND),

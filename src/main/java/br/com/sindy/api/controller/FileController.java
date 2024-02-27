@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.nio.file.Files;
+
 @Tag(name = "Files", description = "Files API")
 @RestController
 @RequestMapping(value = "/api/v1/files")
@@ -31,14 +34,26 @@ public class FileController {
     @Operation(summary = "Load file by name")
     @GetMapping(path = "/{name}")
     public ResponseEntity<?> loadFile(@PathVariable String name) {
-        Resource resource = fileService.load(name);
+        try {
+            Resource resource = fileService.load(name);
 
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-        String contentType = mimeTypesMap.getContentType(resource.getFilename());
+            if (resource == null || !resource.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.parseMediaType(contentType).toString());
+            MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+            String contentType = mimeTypesMap.getContentType(resource.getFilename());
 
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+            byte[] fileBytes = Files.readAllBytes(resource.getFile().toPath());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.parseMediaType(contentType).toString());
+            headers.setContentLength(fileBytes.length);
+
+            return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
