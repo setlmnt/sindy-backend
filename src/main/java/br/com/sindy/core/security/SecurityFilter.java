@@ -1,4 +1,4 @@
-package br.com.sindy.core.config;
+package br.com.sindy.core.security;
 
 import br.com.sindy.domain.repository.UserRepository;
 import br.com.sindy.domain.service.AuthService;
