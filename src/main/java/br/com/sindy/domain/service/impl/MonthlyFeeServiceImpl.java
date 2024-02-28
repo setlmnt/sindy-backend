@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 @Log
@@ -80,6 +79,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }
 
+    @Transactional
     public MonthlyFeeResponseDto save(MonthlyFeePostDto dto) {
         log.info("Saving monthly fee.");
 
@@ -97,6 +97,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         return monthlyFeeMapper.toResponseDto(monthlyFee);
     }
 
+    @Transactional
     public MonthlyFeeResponseDto update(Long id, MonthlyFeePutDto dto) {
         log.info("Updating monthly fee with ID: {}", id);
 
@@ -115,6 +116,7 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
         return monthlyFeeMapper.toResponseDto(monthlyFee);
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting monthly fee with ID: {}", id);
         MonthlyFee monthlyFee = monthlyFeeRepository.getReferenceById(id);

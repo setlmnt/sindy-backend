@@ -14,18 +14,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class WorkRecordServiceImpl implements WorkRecordService {
     private final WorkRecordMapper workRecordMapper;
     private final WorkRecordRepository workRecordRepository;
 
+    @Transactional
     public WorkRecord save(WorkRecordPostDto dto) {
         log.info("Saving work record.");
         return workRecordRepository.save(workRecordMapper.postDtoToEntity(dto));
     }
 
+    @Transactional
     public WorkRecord update(Long id, WorkRecordPutDto dto) {
         log.info("Replacing work record with ID: {}", id);
         WorkRecord workRecord = workRecordRepository.getReferenceById(id);
@@ -34,6 +35,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
         return workRecord;
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting work record with ID: {}", id);
         WorkRecord workRecord = workRecordRepository.getReferenceById(id);

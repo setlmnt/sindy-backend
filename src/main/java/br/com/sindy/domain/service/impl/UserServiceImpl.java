@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 @Log
@@ -41,6 +40,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDto(user);
     }
 
+    @Transactional
     public UserResponseDto save(UserRegisterDto userRegisterDto) {
         log.info("Saving user {}", userRegisterDto.username());
         User user = userRepository.findUserByUsername(userRegisterDto.username());
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDto(userRepository.save(user));
     }
 
+    @Transactional
     public UserResponseDto updateByName(String name, UserPutDto userPutDto) {
         log.info("Updating user {}", name);
         User user = userRepository.getReferenceById(findByName(name).id());
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDto(userRepository.save(user));
     }
 
+    @Transactional
     public void updatePassword(Long id, UserUpdatePasswordDto changePasswordDto) {
         log.info("Updating password for user {}", id);
         User user = userRepository.getReferenceById(id);
@@ -71,6 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(changePasswordDto.password()));
     }
 
+    @Transactional
     public void deleteByName(String name) {
         log.info("Deleting user {}", name);
         User user = userRepository.getReferenceById(findByName(name).id());

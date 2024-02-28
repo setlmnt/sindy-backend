@@ -14,18 +14,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class AffiliationServiceImpl implements AffiliationService {
     private final AffiliationMapper affiliationMapper;
     private final AffiliationRepository affiliationRepository;
 
+    @Transactional
     public Affiliation save(AffiliationPostDto dto) {
         log.info("Saving affiliation.");
         return affiliationRepository.save(affiliationMapper.postDtoToEntity(dto));
     }
 
+    @Transactional
     public Affiliation update(Long id, AffiliationPutDto dto) {
         log.info("Replacing affiliation with ID: {}", id);
 
@@ -35,6 +36,7 @@ public class AffiliationServiceImpl implements AffiliationService {
         return affiliation;
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting affiliation with ID: {}", id);
         Affiliation affiliation = affiliationRepository.getReferenceById(id);

@@ -12,18 +12,17 @@ import br.com.sindy.domain.repository.OtpRepository;
 import br.com.sindy.domain.service.EmailService;
 import br.com.sindy.domain.service.OtpService;
 import br.com.sindy.domain.service.TemplateService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 @Log
@@ -36,6 +35,7 @@ public class OtpServiceImpl implements OtpService {
     private final EmailService emailService;
     private final TemplateService templateService;
 
+    @Transactional
     public String create(UserResponseDto userResponseDto) {
         log.info("Creating OTP for user {}", userResponseDto);
 
@@ -69,6 +69,7 @@ public class OtpServiceImpl implements OtpService {
     }
 
     @Async
+    @Transactional
     public void sendOtpToEmail(UserResponseDto userResponseDto, String otp) {
         log.info("Sending OTP to {}", userResponseDto.email());
 

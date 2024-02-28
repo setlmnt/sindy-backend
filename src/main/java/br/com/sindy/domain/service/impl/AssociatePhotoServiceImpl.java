@@ -27,7 +27,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class AssociatePhotoServiceImpl implements AssociatePhotoService {
@@ -47,6 +46,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         return fileMapper.toResponseDto(file);
     }
 
+    @Transactional
     public FileResponseDto save(Long associateId, MultipartFile file, String uploadDir) {
         log.info("Saving associate photo with {}", associateId);
         // Se tiver, deleta a imagem antiga do produto
@@ -70,6 +70,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         return fileMapper.toResponseDto(savedFile);
     }
 
+    @Transactional
     public void delete(Long associateId, String uploadDir) {
         log.info("Deleting associate photo with id {}", associateId);
         FileResponseDto fileResponseDto = findByAssociateId(associateId);
@@ -85,6 +86,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
                 .map(fileMapper::toResponseDto);
     }
 
+    @Transactional
     public FileResponseDto saveDocument(Long associateId, MultipartFile file, String uploadDir) {
         log.info("Saving document with associate id {}", associateId);
         if (!Objects.requireNonNull(file.getContentType()).startsWith("application/") && !Objects.requireNonNull(file.getContentType()).startsWith("text/")) {
@@ -137,6 +139,7 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         return fileMapper.toResponseDto(file);
     }
 
+    @Transactional
     public void deleteDocument(Long associateId, Long documentId, String uploadDir) {
         log.info("Deleting document with associate id {} and document id {}", associateId, documentId);
         FileResponseDto fileResponseDto = findDocumentByAssociateIdAndDocumentId(associateId, documentId);

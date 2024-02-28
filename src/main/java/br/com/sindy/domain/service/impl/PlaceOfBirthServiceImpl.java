@@ -14,18 +14,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class PlaceOfBirthServiceImpl implements PlaceOfBirthService {
     private final PlaceOfBirthMapper placeOfBirthMapper;
     private final PlaceOfBirthRepository placeOfBirthRepository;
 
+    @Transactional
     public PlaceOfBirth save(PlaceOfBirthPostDto dto) {
         log.info("Saving place of birth.");
         return placeOfBirthRepository.save(placeOfBirthMapper.postDtoToEntity(dto));
     }
 
+    @Transactional
     public PlaceOfBirth update(Long id, PlaceOfBirthPutDto dto) {
         log.info("Replacing place of birth with ID: {}", id);
         PlaceOfBirth placeOfBirth = placeOfBirthRepository.getReferenceById(id);
@@ -34,6 +35,7 @@ public class PlaceOfBirthServiceImpl implements PlaceOfBirthService {
         return placeOfBirth;
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting place of birth with ID: {}", id);
         PlaceOfBirth placeOfBirth = placeOfBirthRepository.getReferenceById(id);

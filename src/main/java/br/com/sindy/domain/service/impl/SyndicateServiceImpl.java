@@ -21,7 +21,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class SyndicateServiceImpl implements SyndicateService {
@@ -39,6 +38,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         );
     }
 
+    @Transactional
     public SyndicateResponseDto save(SyndicatePostDto dto) {
         Optional<Syndicate> syndicateExits = syndicateRepository.find();
         if (syndicateExits.isPresent()) {
@@ -56,6 +56,7 @@ public class SyndicateServiceImpl implements SyndicateService {
         return syndicateMapper.toResponseDto(syndicate);
     }
 
+    @Transactional
     public SyndicateResponseDto update(SyndicatePutDto dto) {
         log.info("Updating syndicate: {}", dto);
         Syndicate syndicate = syndicateRepository.getReferenceById(find().id());

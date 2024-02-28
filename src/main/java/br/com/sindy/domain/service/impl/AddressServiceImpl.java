@@ -15,17 +15,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 @Log
 public class AddressServiceImpl implements AddressService {
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
 
+    @Transactional
     public Address save(AddressPostDto dto) {
         log.info("Saving address.");
         return addressRepository.save(addressMapper.postDtoToEntity(dto));
     }
 
+    @Transactional
     public Address update(Long id, AddressPutDto dto) {
         log.info("Replacing address with ID: {}", id);
 
@@ -35,6 +36,7 @@ public class AddressServiceImpl implements AddressService {
         return address;
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting address with ID: {}", id);
         Address address = addressRepository.getReferenceById(id);

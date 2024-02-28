@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class FileServiceImpl implements FileService {
@@ -58,6 +57,7 @@ public class FileServiceImpl implements FileService {
         return fileRepository.findAll(pageable).map(fileMapper::toResponseDto);
     }
 
+    @Transactional
     public void delete(Long id, String uploadDir) {
         log.info("Deleting image with id {}", id);
         File file = fileRepository.getReferenceById(id);
@@ -92,6 +92,7 @@ public class FileServiceImpl implements FileService {
         return null;
     }
 
+    @Transactional
     public void store(MultipartFile file, String fileName, String uploadDir) {
         try {
             log.info("Storing file {}", fileName);
@@ -103,6 +104,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Transactional
     private void deleteFile(String fileName, String uploadDir) {
         try {
             log.info("Deleting file {}", fileName);

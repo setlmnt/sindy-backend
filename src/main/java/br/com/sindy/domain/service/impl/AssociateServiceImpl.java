@@ -34,7 +34,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 @Log
 public class AssociateServiceImpl implements AssociateService {
     public static final String SYNDICATE_REPORT = "syndicate.report";
@@ -74,6 +73,7 @@ public class AssociateServiceImpl implements AssociateService {
         return associateMapper.toResponseDto(associate);
     }
 
+    @Transactional
     public AssociateResponseDto save(AssociatePostDto dto) {
         log.info("Saving associate: {}", dto);
 
@@ -84,6 +84,7 @@ public class AssociateServiceImpl implements AssociateService {
         return associateMapper.toResponseDto(associate);
     }
 
+    @Transactional
     public AssociateResponseDto update(Long id, AssociatePutDto dto) {
         log.info("Replacing associate: {}", dto);
 
@@ -96,12 +97,14 @@ public class AssociateServiceImpl implements AssociateService {
         return associateMapper.toResponseDto(associate);
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting associate with ID: {}", id);
         Associate associate = associateRepository.getReferenceById(id);
         associate.delete();
     }
 
+    @Transactional
     public void deleteImage(Long associateId) {
         log.info("Deleting associate image with id {}", associateId);
         Associate associate = associateRepository.getReferenceById(associateId);
@@ -114,6 +117,7 @@ public class AssociateServiceImpl implements AssociateService {
         return associates.map(associateMapper::toResponseDto);
     }
 
+    @Transactional
     public void updatePaidStatus(Long id, boolean status) {
         log.info("Updating paid status of associate with ID: {}", id);
         Associate associate = associateRepository.getReferenceById(id);
@@ -165,6 +169,7 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     @Scheduled(cron = "1 0 0 * * *") // Every day at 12:00:01 AM
+    @Transactional
     public void setAssociateIsPaidToFalseWhenMonthlyFeeAsAlreadyExpired() {
         List<Long> associatesWithExpiredMonthlyFee = associateRepository.findAllAssociatesWithExpiredMonthlyFee();
         if (associatesWithExpiredMonthlyFee.isEmpty()) return;

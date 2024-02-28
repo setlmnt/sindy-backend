@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 @Log
 public class LocalOfficeServiceImpl implements LocalOfficeService {
@@ -55,12 +54,14 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         return localOfficeRepository.findAllAndDeletedFalse(pageable).map(localOfficeMapper::toResponseDto);
     }
 
+    @Transactional
     public LocalOfficeResponseDto save(LocalOfficePostDto dto) {
         log.info("Saving local office.");
         LocalOffice localOffice = localOfficeRepository.save(localOfficeMapper.postDtoToEntity(dto));
         return localOfficeMapper.toResponseDto(localOffice);
     }
 
+    @Transactional
     public LocalOfficeResponseDto update(Long id, LocalOfficePutDto dto) {
         log.info("Replacing local office with ID: {}", id);
 
@@ -70,6 +71,7 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
         return localOfficeMapper.toResponseDto(localOffice);
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting local office with ID: {}", id);
         LocalOffice localOffice = localOfficeRepository.getReferenceById(id);
