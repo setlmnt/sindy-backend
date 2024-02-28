@@ -6,6 +6,7 @@ import br.com.sindy.domain.dto.monthlyFee.MonthlyFeePostDto;
 import br.com.sindy.domain.dto.monthlyFee.MonthlyFeePutDto;
 import br.com.sindy.domain.dto.monthlyFee.MonthlyFeeResponseDto;
 import br.com.sindy.domain.entity.MonthlyFee;
+import br.com.sindy.domain.entity.Template;
 import br.com.sindy.domain.entity.associate.Associate;
 import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
@@ -15,6 +16,7 @@ import br.com.sindy.domain.mapper.monthlyFee.MonthlyFeeMapper;
 import br.com.sindy.domain.repository.MonthlyFeeRepository;
 import br.com.sindy.domain.service.MonthlyFeeService;
 import br.com.sindy.domain.service.ReportService;
+import br.com.sindy.domain.service.TemplateService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,15 +39,17 @@ import java.util.Map;
 @Slf4j
 @Log
 public class MonthlyFeeServiceImpl implements MonthlyFeeService {
-    public static final String SYNDICATE_REPORT = "syndicate_report";
-    public static final String MONTHLY_FEE_REPORT = "monthly_fee_report";
-    public static final String MONTHLY_FEE_SUFIX = "mensalidade";
+    public static final String SYNDICATE_REPORT = "syndicate.report";
+    public static final String MONTHLY_FEE_REPORT = "monthly.fee.report";
+    public static final String MONTHLY_FEE_SUFFIX = "mensalidade";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     private final MonthlyFeeMapper monthlyFeeMapper;
     private final MonthlyFeeRepository monthlyFeeRepository;
     private final AssociateServiceImpl associateService;
     private final AssociateMapper associateMapper;
     private final ReportService reportService;
+    private final TemplateService templateService;
 
     public Page<MonthlyFeeResponseDto> findAll(LocalDate initialDate, LocalDate finalDate, Pageable pageable) {
         log.info("Listing all monthly fees.");
@@ -120,19 +124,21 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
     public byte[] exportToPdf(Long id, HttpServletResponse response) {
         MonthlyFeeResponseDto monthlyFee = findById(id);
 
-        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
+        Template syndicateTemplate = templateService.getTemplate(SYNDICATE_REPORT);
+        JasperReport syndicateReport = reportService.compileReport(syndicateTemplate);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("monthlyFeeId", id);
         parameters.put("syndicateReport", syndicateReport);
 
-        byte[] report = reportService.generateReport(MONTHLY_FEE_REPORT, parameters);
+        Template monthlyFeeTemplate = templateService.getTemplate(MONTHLY_FEE_REPORT);
+        byte[] report = reportService.generatePdfReport(monthlyFeeTemplate, parameters);
 
-        String fileName = monthlyFee.associate().name() + "-" + MONTHLY_FEE_SUFIX + ".pdf";
+        String fileName = monthlyFee.associate().name().replace(" ", "_") + "-" + MONTHLY_FEE_SUFFIX + ".pdf";
         response.setContentType("application/pdf");
         response.setHeader(
                 "Content-Disposition",
-                "attachment; filename=" + fileName.replace(" ", "_")
+                "attachment; filename=" + fileName
         );
 
         return report;

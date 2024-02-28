@@ -28,9 +28,8 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public String getProcessedTemplate(String templateId, Map<String, Object> templateVariables) {
-        Template template = getEmailTemplate(templateId);
-
         try {
+            Template template = getTemplate(templateId);
             return processTemplate(templateVariables, template).toString();
         } catch (Exception e) {
             log.error("Error while processing template {}", templateId, e);
@@ -38,21 +37,24 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
 
-    private StringWriter processTemplate(Map<String, Object> templateVariables, Template emailTemplate) throws IOException, TemplateException {
+    public StringWriter processTemplate(Map<String, Object> templateVariables, Template emailTemplate) throws IOException, TemplateException {
         Configuration cfg = new Configuration(new Version(CONFIGURATION_VERSION));
         StringReader reader = new StringReader(emailTemplate.getBody());
         freemarker.template.Template template = new freemarker.template.Template(emailTemplate.getName(), reader, cfg);
         StringWriter writer = new StringWriter();
+
         template.process(templateVariables, writer);
+
         return writer;
     }
 
-    private Template getEmailTemplate(String templateName) {
+    public Template getTemplate(String templateName) {
         Optional<Template> emailTemplate = emailTemplateRepository.findByName(templateName);
         if (emailTemplate.isEmpty()) {
             log.error("Email template {} not found", templateName);
             throw new ApiException(ErrorEnum.EMAIL_TEMPLATE_NOT_FOUND);
         }
+
         return emailTemplate.get();
     }
 }

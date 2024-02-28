@@ -6,6 +6,7 @@ import br.com.sindy.domain.dto.associate.AssociatePutDto;
 import br.com.sindy.domain.dto.associate.AssociateResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
 import br.com.sindy.domain.entity.Address;
+import br.com.sindy.domain.entity.Template;
 import br.com.sindy.domain.entity.associate.*;
 import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.enums.PeriodEnum;
@@ -36,9 +37,10 @@ import java.util.*;
 @Transactional
 @Log
 public class AssociateServiceImpl implements AssociateService {
-    public static final String ASSOCIATE_REPORT = "associate_report";
-    public static final String SYNDICATE_REPORT = "syndicate_report";
-    public static final String MEMBERSHIP_CARD_REPORT = "membership_card_report";
+    public static final String SYNDICATE_REPORT = "syndicate.report";
+    public static final String ASSOCIATE_REPORT = "associate.report";
+    public static final String MEMBERSHIP_CARD_REPORT = "membership.card.report";
+
     private final AssociateMapper associateMapper;
     private final AssociateRepository associateRepository;
     private final AddressService addressService;
@@ -51,6 +53,7 @@ public class AssociateServiceImpl implements AssociateService {
     private final LocalOfficeService localOfficeService;
     private final LocalOfficeMapper localOfficeMapper;
     private final ReportService reportService;
+    private final TemplateService templateService;
 
     public Page<AssociateResponseDto> findAll(String query, Pageable pageable) {
         log.info("Listing all associates");
@@ -121,19 +124,21 @@ public class AssociateServiceImpl implements AssociateService {
         AssociateResponseDto associateResponseDto = findById(id);
         Associate associate = associateMapper.responseDtoToEntity(associateResponseDto);
 
-        JasperReport syndicateReport = reportService.compileReport(SYNDICATE_REPORT);
+        Template syndicateTemplate = templateService.getTemplate(SYNDICATE_REPORT);
+        JasperReport syndicateReport = reportService.compileReport(syndicateTemplate);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("associateId", id);
         parameters.put("syndicateReport", syndicateReport);
 
-        byte[] report = reportService.generateReport(ASSOCIATE_REPORT, parameters);
+        Template assocaiteTemplate = templateService.getTemplate(ASSOCIATE_REPORT);
+        byte[] report = reportService.generatePdfReport(assocaiteTemplate, parameters);
 
-        String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
+        String fileName = associate.getName().replace(" ", "_") + "-" + associate.getUnionCard() + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader(
                 "Content-Disposition",
-                "attachment; filename=" + fileName.replace(" ", "_")
+                "attachment; filename=" + fileName
         );
 
         return report;
@@ -146,7 +151,8 @@ public class AssociateServiceImpl implements AssociateService {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("associateId", id);
 
-        byte[] report = reportService.generateReport(MEMBERSHIP_CARD_REPORT, parameters);
+        Template membershipTemplate = templateService.getTemplate(MEMBERSHIP_CARD_REPORT);
+        byte[] report = reportService.generatePdfReport(membershipTemplate, parameters);
 
         String fileName = associate.getName() + "-" + associate.getUnionCard() + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);

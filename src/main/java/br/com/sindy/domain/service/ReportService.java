@@ -1,11 +1,12 @@
 package br.com.sindy.domain.service;
 
+import br.com.sindy.domain.entity.Template;
 import net.sf.jasperreports.engine.JasperReport;
 
 import java.util.Map;
 
 public interface ReportService {
-    byte[] generateReport(String reportTemplate, Map<String, Object> parameters);
+    byte[] generatePdfReport(Template template, Map<String, Object> parameters);
 
-    JasperReport compileReport(String reportTemplate);
+    JasperReport compileReport(Template template);
 }
