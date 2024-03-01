@@ -15,8 +15,10 @@ import java.util.TimeZone;
 @EnableAsync
 @EnableCaching
 public class SindyApplication {
+    public static final String TIME_ZONE = "UTC";
+
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone(TIME_ZONE));
         SpringApplication.run(SindyApplication.class, args);
     }
 }

@@ -17,6 +17,7 @@ import br.com.sindy.domain.mapper.LocalOfficeMapper;
 import br.com.sindy.domain.mapper.associate.AssociateMapper;
 import br.com.sindy.domain.mapper.associate.DependentsMapper;
 import br.com.sindy.domain.repository.AssociateRepository;
+import br.com.sindy.domain.repository.spec.AssociateSpecs;
 import br.com.sindy.domain.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -56,8 +57,8 @@ public class AssociateServiceImpl implements AssociateService {
 
     public Page<AssociateResponseDto> findAll(String query, Pageable pageable) {
         log.info("Listing all associates");
-        Page<Associate> associates = associateRepository.findAllFromNameAndCpfAndUnionCard(
-                query,
+        Page<Associate> associates = associateRepository.findAll(
+                AssociateSpecs.filterFindAll(query),
                 pageable
         );
         return associates.map(associateMapper::toResponseDto);
@@ -113,7 +114,10 @@ public class AssociateServiceImpl implements AssociateService {
 
     public Page<AssociateResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
         log.info("Listing all birthday associates");
-        Page<Associate> associates = associateRepository.findAllBirthdayAssociates(pageable, period);
+        Page<Associate> associates = associateRepository.findAll(
+                AssociateSpecs.findAllBirthdayAssociates(period),
+                pageable
+        );
         return associates.map(associateMapper::toResponseDto);
     }
 

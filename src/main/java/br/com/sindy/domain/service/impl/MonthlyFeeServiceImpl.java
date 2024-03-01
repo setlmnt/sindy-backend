@@ -14,6 +14,7 @@ import br.com.sindy.domain.exception.ExceptionResponse;
 import br.com.sindy.domain.mapper.associate.AssociateMapper;
 import br.com.sindy.domain.mapper.monthlyFee.MonthlyFeeMapper;
 import br.com.sindy.domain.repository.MonthlyFeeRepository;
+import br.com.sindy.domain.repository.spec.MonthlyFeeSpecs;
 import br.com.sindy.domain.service.MonthlyFeeService;
 import br.com.sindy.domain.service.ReportService;
 import br.com.sindy.domain.service.TemplateService;
@@ -52,8 +53,10 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
 
     public Page<MonthlyFeeResponseDto> findAll(LocalDate initialDate, LocalDate finalDate, Pageable pageable) {
         log.info("Listing all monthly fees.");
-        Page<MonthlyFee> monthlyFees = monthlyFeeRepository
-                .findAllFromInitialDateAndFinalDate(initialDate, finalDate, pageable);
+        Page<MonthlyFee> monthlyFees = monthlyFeeRepository.findAll(
+                MonthlyFeeSpecs.filter(initialDate, finalDate),
+                pageable
+        );
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }
 
@@ -74,8 +77,10 @@ public class MonthlyFeeServiceImpl implements MonthlyFeeService {
             Pageable pageable
     ) {
         log.info("Finding monthly fee by associate ID {}.", associateId);
-        Page<MonthlyFee> monthlyFees = monthlyFeeRepository
-                .findAllFromAssociateIdAndInitialDateAndFinalDate(associateId, initialDate, finalDate, pageable);
+        Page<MonthlyFee> monthlyFees = monthlyFeeRepository.findAll(
+                MonthlyFeeSpecs.filter(associateId, initialDate, finalDate),
+                pageable
+        );
         return monthlyFees.map(monthlyFeeMapper::toResponseDto);
     }
 

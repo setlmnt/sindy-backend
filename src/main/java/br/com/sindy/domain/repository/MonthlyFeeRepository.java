@@ -1,6 +1,9 @@
 package br.com.sindy.domain.repository;
 
 import br.com.sindy.domain.entity.MonthlyFee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,7 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 @Repository
-public interface MonthlyFeeRepository extends JpaRepository<MonthlyFee, Long>, CustomMonthlyFeeRepository {
+public interface MonthlyFeeRepository extends JpaRepository<MonthlyFee, Long> {
+    Page<MonthlyFee> findAll(Specification<MonthlyFee> spec, Pageable pageable);
+
     @Query(
             "SELECT mf FROM MonthlyFee mf where mf.associate.id = :id AND mf.deleted = false ORDER BY mf.createdAt DESC LIMIT 1"
     )

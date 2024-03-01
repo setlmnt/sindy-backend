@@ -7,10 +7,11 @@ import br.com.sindy.domain.entity.Template;
 import br.com.sindy.domain.entity.email.CommunicationHistory;
 import br.com.sindy.domain.entity.email.Recipient;
 import br.com.sindy.domain.enums.EmailStatusEnum;
+import br.com.sindy.domain.mapper.email.EmailMapper;
 import br.com.sindy.domain.repository.CommunicationHistoryRepository;
 import br.com.sindy.domain.repository.CommunicationRecipientRepository;
-import br.com.sindy.domain.repository.CustomEmailRepository;
 import br.com.sindy.domain.repository.EmailTemplateRepository;
+import br.com.sindy.domain.repository.spec.CommunicationHistorySpecs;
 import br.com.sindy.domain.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -36,8 +37,8 @@ public class EmailServiceImpl implements EmailService {
     private final CommunicationHistoryRepository communicationHistoryRepository;
     private final CommunicationRecipientRepository communicationRecipientRepository;
     private final EmailTemplateRepository emailTemplateRepository;
-    private final CustomEmailRepository customEmailRepository;
     private final JavaMailSender emailSender;
+    private final EmailMapper emailMapper;
     @Value("${email.from}")
     private String emailFrom;
     @Value("${email.name}")
@@ -49,7 +50,13 @@ public class EmailServiceImpl implements EmailService {
             EmailStatusEnum status,
             Pageable pageable
     ) {
-        return customEmailRepository.findAllWithFilter(sender, recipient, status, pageable);
+        // TODO: Problema de N+1 em recipients
+        Page<CommunicationHistory> communicationHistories = communicationHistoryRepository.findAll(
+                CommunicationHistorySpecs.filter(sender, recipient, status),
+                pageable
+        );
+
+        return communicationHistories.map(emailMapper::toResponseDto);
     }
 
     @Async
