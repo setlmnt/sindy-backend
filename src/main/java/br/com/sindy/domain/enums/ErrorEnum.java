@@ -36,8 +36,8 @@ public enum ErrorEnum {
     RESOURCE_NOT_FOUND("Resource not found", ErrorTypeEnum.NOT_FOUND),
     INVALID_PARAMETER("Invalid parameter", ErrorTypeEnum.BAD_REQUEST),
     MESSAGE_NOT_READABLE("Message not readable", ErrorTypeEnum.BAD_REQUEST),
-    EMAIL_TEMPLATE_NOT_FOUND("Email template not found", ErrorTypeEnum.NOT_FOUND),
-    EMAIL_TEMPLATE_PROCESSING_ERROR("Error while processing email template", ErrorTypeEnum.INTERNAL_ERROR);
+    TEMPLATE_NOT_FOUND("Template not found", ErrorTypeEnum.NOT_FOUND),
+    TEMPLATE_PROCESSING_ERROR("Error while processing template", ErrorTypeEnum.INTERNAL_ERROR);
 
     private final String title;
     private final ErrorTypeEnum status;

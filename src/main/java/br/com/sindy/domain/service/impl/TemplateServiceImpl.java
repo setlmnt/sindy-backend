@@ -3,11 +3,12 @@ package br.com.sindy.domain.service.impl;
 import br.com.sindy.domain.entity.Template;
 import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
-import br.com.sindy.domain.repository.EmailTemplateRepository;
+import br.com.sindy.domain.repository.TemplateRepository;
 import br.com.sindy.domain.service.TemplateService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import freemarker.template.Version;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,11 @@ import java.util.Optional;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class TemplateServiceImpl implements TemplateService {
     public static final String CONFIGURATION_VERSION = "2.3.31";
 
-    @Autowired
-    private EmailTemplateRepository emailTemplateRepository;
+    private final TemplateRepository templateRepository;
 
     @Override
     public String getProcessedTemplate(String templateId, Map<String, Object> templateVariables) {
@@ -33,7 +34,7 @@ public class TemplateServiceImpl implements TemplateService {
             return processTemplate(templateVariables, template).toString();
         } catch (Exception e) {
             log.error("Error while processing template {}", templateId, e);
-            throw new ApiException(ErrorEnum.EMAIL_TEMPLATE_PROCESSING_ERROR);
+            throw new ApiException(ErrorEnum.TEMPLATE_PROCESSING_ERROR);
         }
     }
 
@@ -49,12 +50,12 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     public Template getTemplate(String templateName) {
-        Optional<Template> emailTemplate = emailTemplateRepository.findByName(templateName);
-        if (emailTemplate.isEmpty()) {
-            log.error("Email template {} not found", templateName);
-            throw new ApiException(ErrorEnum.EMAIL_TEMPLATE_NOT_FOUND);
+        Optional<Template> template = templateRepository.findByName(templateName);
+        if (template.isEmpty()) {
+            log.error("Template {} not found", templateName);
+            throw new ApiException(ErrorEnum.TEMPLATE_NOT_FOUND);
         }
 
-        return emailTemplate.get();
+        return template.get();
     }
 }

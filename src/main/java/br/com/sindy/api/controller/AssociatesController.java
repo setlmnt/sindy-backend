@@ -41,12 +41,15 @@ public class AssociatesController {
     public static final String PROFILE_PICTURE = "profile-picture";
     public static final String DOCUMENTS = "documents";
     public static final String DOCUMENT = "document";
-    private final AssociateService associateService;
-    private final AssociatePhotoService associatePhotoService;
+
     @Value("${app.upload.images.dir}")
     private String uploadProfilePictureDir;
+
     @Value("${app.upload.docs.dir}")
     private String uploadDocsDir;
+
+    private final AssociateService associateService;
+    private final AssociatePhotoService associatePhotoService;
 
     @Operation(summary = "Find all associates")
     @GetMapping
@@ -60,11 +63,29 @@ public class AssociatesController {
     }
 
     @Operation(summary = "Find associate by id")
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Cacheable(value = ASSOCIATE, key = "#id")
     public AssociateResponseDto findAssociateById(@PathVariable Long id) {
         System.out.println("findAssociateById");
         return associateService.findById(id);
+    }
+
+    @Operation(summary = "Export associate to pdf")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] exportAssociateToPdf(
+            @PathVariable Long id,
+            HttpServletResponse response
+    ) {
+        return associateService.exportAssociateToPdf(id, response);
+    }
+
+    @Operation(summary = "Export associate membership card to pdf")
+    @GetMapping(path = "/{id}/membership-card", produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] exportAssociateMembershipCardToPdf(
+            @PathVariable Long id,
+            HttpServletResponse response
+    ) {
+        return associateService.exportAssociateMembershipCardToPdf(id, response);
     }
 
     @Operation(summary = "Find all birthday associates")
@@ -166,23 +187,5 @@ public class AssociatesController {
             @PathVariable Long documentId
     ) {
         associatePhotoService.deleteDocument(associateId, documentId, uploadDocsDir);
-    }
-
-    @Operation(summary = "Export associate to pdf")
-    @GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
-    public byte[] exportAssociateToPdf(
-            @PathVariable Long id,
-            HttpServletResponse response
-    ) {
-        return associateService.exportAssociateToPdf(id, response);
-    }
-
-    @Operation(summary = "Export associate membership card to pdf")
-    @GetMapping(path = "/{id}/membership-card/export/pdf", produces = "application/pdf")
-    public byte[] exportAssociateMembershipCardToPdf(
-            @PathVariable Long id,
-            HttpServletResponse response
-    ) {
-        return associateService.exportAssociateMembershipCardToPdf(id, response);
     }
 }

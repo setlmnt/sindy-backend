@@ -1,4 +1,4 @@
-package br.com.sindy.domain.mapper.monthlyFee;
+package br.com.sindy.domain.mapper;
 
 import br.com.sindy.domain.dto.monthlyFee.MonthlyFeePostDto;
 import br.com.sindy.domain.dto.monthlyFee.MonthlyFeePutDto;

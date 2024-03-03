@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EmailTemplateRepository extends CrudRepository<Template, String> {
+public interface TemplateRepository extends CrudRepository<Template, String> {
     @Query(
             "SELECT et FROM Template et WHERE et.name = :name AND et.deleted = false"
     )

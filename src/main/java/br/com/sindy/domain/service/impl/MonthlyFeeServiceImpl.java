@@ -12,7 +12,7 @@ import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.exception.ExceptionResponse;
 import br.com.sindy.domain.mapper.associate.AssociateMapper;
-import br.com.sindy.domain.mapper.monthlyFee.MonthlyFeeMapper;
+import br.com.sindy.domain.mapper.MonthlyFeeMapper;
 import br.com.sindy.domain.repository.MonthlyFeeRepository;
 import br.com.sindy.domain.repository.spec.MonthlyFeeSpecs;
 import br.com.sindy.domain.service.MonthlyFeeService;

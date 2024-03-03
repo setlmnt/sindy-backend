@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -47,12 +48,21 @@ public class MonthlyFeesController {
     }
 
     @Operation(summary = "Find monthly fee by id")
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Cacheable(value = MONTHLY_FEE, key = "#id")
     public MonthlyFeeResponseDto findMonthlyFeeById(
             @PathVariable Long id
     ) {
         return monthlyFeeService.findById(id);
+    }
+
+    @Operation(summary = "Export monthly fee to pdf")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] exportMonthlyFeeToPdf(
+            @PathVariable Long id,
+            HttpServletResponse response
+    ) {
+        return monthlyFeeService.exportToPdf(id, response);
     }
 
     @Operation(summary = "Find all monthly fees by associate id")
@@ -92,14 +102,5 @@ public class MonthlyFeesController {
     @CacheEvict(value = {MONTHLY_FEES, MONTHLY_FEE, MONTHLY_FEES_ASSOCIATE}, allEntries = true)
     public void delete(@PathVariable Long id) {
         monthlyFeeService.delete(id);
-    }
-
-    @Operation(summary = "Export monthly fee to pdf")
-    @GetMapping(path = "/{id}/export/pdf", produces = "application/pdf")
-    public byte[] exportMonthlyFeeToPdf(
-            @PathVariable Long id,
-            HttpServletResponse response
-    ) {
-        return monthlyFeeService.exportToPdf(id, response);
     }
 }

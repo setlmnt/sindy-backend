@@ -1,4 +1,4 @@
-package br.com.sindy.domain.mapper.email;
+package br.com.sindy.domain.mapper;
 
 import br.com.sindy.domain.dto.email.EmailResponseDto;
 import br.com.sindy.domain.entity.email.CommunicationHistory;

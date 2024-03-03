@@ -7,10 +7,10 @@ import br.com.sindy.domain.entity.Template;
 import br.com.sindy.domain.entity.email.CommunicationHistory;
 import br.com.sindy.domain.entity.email.Recipient;
 import br.com.sindy.domain.enums.EmailStatusEnum;
-import br.com.sindy.domain.mapper.email.EmailMapper;
+import br.com.sindy.domain.mapper.EmailMapper;
 import br.com.sindy.domain.repository.CommunicationHistoryRepository;
 import br.com.sindy.domain.repository.CommunicationRecipientRepository;
-import br.com.sindy.domain.repository.EmailTemplateRepository;
+import br.com.sindy.domain.repository.TemplateRepository;
 import br.com.sindy.domain.repository.spec.CommunicationHistorySpecs;
 import br.com.sindy.domain.service.EmailService;
 import jakarta.mail.MessagingException;
@@ -36,7 +36,7 @@ import java.util.List;
 public class EmailServiceImpl implements EmailService {
     private final CommunicationHistoryRepository communicationHistoryRepository;
     private final CommunicationRecipientRepository communicationRecipientRepository;
-    private final EmailTemplateRepository emailTemplateRepository;
+    private final TemplateRepository templateRepository;
     private final JavaMailSender emailSender;
     private final EmailMapper emailMapper;
     @Value("${email.from}")
@@ -130,6 +130,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private List<Template> getEmailTemplates(List<String> names) {
-        return emailTemplateRepository.findByNames(names);
+        return templateRepository.findByNames(names);
     }
 }
