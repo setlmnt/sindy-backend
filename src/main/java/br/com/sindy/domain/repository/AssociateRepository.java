@@ -10,9 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AssociateRepository extends JpaRepository<Associate, Long>, CustomAssociateRepository {
     Page<Associate> findAll(Specification<Associate> spec, Pageable pageable);
+
+    @Query(
+            "SELECT a FROM Associate a JOIN FETCH a.address LEFT JOIN FETCH a.address LEFT JOIN FETCH a.affiliation LEFT JOIN FETCH a.dependents LEFT JOIN FETCH a.localOffice LEFT JOIN FETCH a.placeOfBirth LEFT JOIN FETCH a.profilePicture LEFT JOIN FETCH a.workRecord WHERE a.id = :id"
+    )
+    Optional<Associate> findById(@Param("id") Long id);
 
     Associate findByCpf(String cpf);
 
@@ -36,5 +42,5 @@ public interface AssociateRepository extends JpaRepository<Associate, Long>, Cus
     @Query(
             "UPDATE Associate a SET a.isPaid = :isPaid WHERE a.id IN :ids"
     )
-    void updateAssociatesIsPaidByIds(List<Long> ids, boolean isPaid);
+    void updateAssociatesIsPaidByIds(@Param("ids") List<Long> ids, @Param("isPaid") boolean isPaid);
 }

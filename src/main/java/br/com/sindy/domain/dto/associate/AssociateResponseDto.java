@@ -1,6 +1,6 @@
 package br.com.sindy.domain.dto.associate;
 
-import br.com.sindy.domain.dto.FileResponseDto;
+import br.com.sindy.domain.dto.FileSimplifiedResponseDto;
 import br.com.sindy.domain.dto.address.AddressResponseDto;
 import br.com.sindy.domain.dto.associate.affiliation.AffiliationResponseDto;
 import br.com.sindy.domain.dto.associate.dependents.DependentsResponseDto;
@@ -13,43 +13,35 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record AssociateResponseDto(
         Long id,
-        String name, // Nome
-        Long unionCard, // Carteira Sindical
-        String cpf, // CPF
-        String rg, // RG
-        String profession, // Profissão
-        String workplace, // Local de Trabalho
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        String phone, // Telefone
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        String email, // E-mail
-        String nationality, // Nacionalidade
+        String name,
+        Long unionCard,
+        String cpf,
+        String rg,
+        String profession,
+        String workplace,
+        String phone,
+        String email,
+        String nationality,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate birthAt, // Data de Nascimento
-        Boolean isLiterate, // Alfabetizado
-        Boolean isVoter, // Eleitor
-        Boolean isPaid, // Pagou a Mensalidade
-        MaritalStatusEnum maritalStatus, // Estado Civil
+        LocalDate birthAt,
+        Boolean isLiterate,
+        Boolean isVoter,
+        Boolean isPaid,
+        MaritalStatusEnum maritalStatus,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate associationAt, // Data de Associação
+        LocalDate associationAt,
         Boolean deleted,
-        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalOfficeResponseDto localOffice,
-
-        @JsonInclude(JsonInclude.Include.NON_NULL)
         AddressResponseDto address,
-
-        @JsonInclude(JsonInclude.Include.NON_NULL)
         DependentsResponseDto dependents,
         AffiliationResponseDto affiliation,
         PlaceOfBirthResponseDto placeOfBirth,
-
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        FileResponseDto associatePhoto,
+        FileSimplifiedResponseDto profilePicture,
         WorkRecordResponseDto workRecord
 ) {
 }

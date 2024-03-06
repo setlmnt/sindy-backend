@@ -31,10 +31,9 @@ import java.util.Objects;
 })
 @RequiredArgsConstructor
 public class FileController {
+    private final FileService fileService;
     @Value("${app.upload.dir}")
     private String uploadDir;
-
-    private final FileService fileService;
 
     @Operation(summary = "Load file by name")
     @GetMapping(path = "/{name}")

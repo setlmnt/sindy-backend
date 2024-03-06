@@ -6,6 +6,7 @@ import br.com.sindy.domain.dto.FileResponseDto;
 import br.com.sindy.domain.dto.associate.AssociatePostDto;
 import br.com.sindy.domain.dto.associate.AssociatePutDto;
 import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.enums.PeriodEnum;
 import br.com.sindy.domain.service.AssociateFileService;
 import br.com.sindy.domain.service.AssociateService;
@@ -49,7 +50,7 @@ public class AssociatesController {
     @Operation(summary = "Find all associates")
     @GetMapping
     @Cacheable(value = ASSOCIATES)
-    public Page<AssociateResponseDto> findAllAssociate(
+    public Page<AssociateSimplifiedResponseDto> findAll(
             @Parameter(description = "Search by name, cpf or union card")
             @RequestParam(required = false) String query,
             Pageable pageable
@@ -86,7 +87,7 @@ public class AssociatesController {
     @Operation(summary = "Find all birthday associates")
     @GetMapping(path = "/birthdays")
     @Cacheable(value = BIRTHDAYS, key = "#period")
-    public Page<AssociateResponseDto> findAllBirthdayAssociates(
+    public Page<AssociateSimplifiedResponseDto> findAllBirthdayAssociates(
             Pageable pageable,
             @RequestParam(required = false, defaultValue = "DAY") PeriodEnum period
     ) {
@@ -97,14 +98,14 @@ public class AssociatesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = {ASSOCIATES, BIRTHDAYS, LOCAL_OFFICE_ASSOCIATES}, allEntries = true)
-    public AssociateResponseDto save(@RequestBody @Valid AssociatePostDto dto) {
+    public AssociateSimplifiedResponseDto save(@RequestBody @Valid AssociatePostDto dto) {
         return associateService.save(dto);
     }
 
     @Operation(summary = "Update associate")
     @PutMapping(path = "/{id}")
     @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS}, allEntries = true)
-    public AssociateResponseDto update(
+    public AssociateSimplifiedResponseDto update(
             @PathVariable Long id,
             @RequestBody @Valid AssociatePutDto dto
     ) {

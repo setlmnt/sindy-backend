@@ -3,6 +3,7 @@ package br.com.sindy.domain.mapper.associate;
 import br.com.sindy.domain.dto.associate.AssociatePostDto;
 import br.com.sindy.domain.dto.associate.AssociatePutDto;
 import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.entity.associate.Associate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,6 +11,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AssociateMapper {
     AssociateResponseDto toResponseDto(Associate associate);
+
+    AssociateSimplifiedResponseDto toSimplifiedResponseDto(Associate associate);
 
     @Mapping(target = "id", ignore = true)
     Associate responseDtoToEntity(AssociateResponseDto associateResponseDto);

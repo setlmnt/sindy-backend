@@ -1,6 +1,6 @@
 package br.com.sindy.api.controller;
 
-import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePostDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePutDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
@@ -50,7 +50,7 @@ public class LocalOfficesController {
     @Operation(summary = "Find all associates by local office id")
     @GetMapping(path = "/{id}/associates")
     @Cacheable(value = LOCAL_OFFICE_ASSOCIATES, key = "#id")
-    public Page<AssociateResponseDto> findAssociatesByLocalOfficeId(@PathVariable Long id, Pageable pageable) {
+    public Page<AssociateSimplifiedResponseDto> findAssociatesByLocalOfficeId(@PathVariable Long id, Pageable pageable) {
         return (localOfficeService.listAllAssociates(id, pageable));
     }
 

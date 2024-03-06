@@ -35,20 +35,17 @@ import java.util.Optional;
 @Slf4j
 @Log
 public class AssociateFileServiceImpl implements AssociateFileService {
-    @Value("${app.file.url}")
-    private String uploadUrl;
-
-    @Value("${app.upload.images.dir}")
-    private String uploadProfilePictureDir;
-
-    @Value("${app.upload.docs.dir}")
-    private String uploadDocsDir;
-
     private final FileMapper fileMapper;
     private final FileRepository fileRepository;
     private final FileService fileService;
     private final AssociateServiceImpl associateService;
     private final AssociateRepository associateRepository;
+    @Value("${app.file.url}")
+    private String uploadUrl;
+    @Value("${app.upload.images.dir}")
+    private String uploadProfilePictureDir;
+    @Value("${app.upload.docs.dir}")
+    private String uploadDocsDir;
 
     @PostConstruct
     public void postConstruct() {

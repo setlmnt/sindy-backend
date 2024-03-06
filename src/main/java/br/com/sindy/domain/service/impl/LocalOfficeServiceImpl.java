@@ -1,7 +1,7 @@
 package br.com.sindy.domain.service.impl;
 
 import br.com.sindy.core.annotation.Log;
-import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePostDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePutDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
@@ -29,14 +29,14 @@ public class LocalOfficeServiceImpl implements LocalOfficeService {
     private final AssociateMapper associateMapper;
     private final LocalOfficeRepository localOfficeRepository;
 
-    public Page<AssociateResponseDto> listAllAssociates(Long id, Pageable pageable) {
+    public Page<AssociateSimplifiedResponseDto> listAllAssociates(Long id, Pageable pageable) {
         log.info("Listing all associates from local office with ID: {}", id);
         Page<Associate> associates = localOfficeRepository.listAllAssociates(id, pageable)
                 .orElseThrow(() -> {
                     log.error("Associates from local office with ID {} not found.", id);
                     return new ApiException(ErrorEnum.ASSOCIATE_NOT_FOUND);
                 });
-        return associates.map(associateMapper::toResponseDto);
+        return associates.map(associateMapper::toSimplifiedResponseDto);
     }
 
     public LocalOfficeResponseDto findLocalOffice(Long id) {

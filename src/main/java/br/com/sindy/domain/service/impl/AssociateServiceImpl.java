@@ -4,6 +4,7 @@ import br.com.sindy.core.annotation.Log;
 import br.com.sindy.domain.dto.associate.AssociatePostDto;
 import br.com.sindy.domain.dto.associate.AssociatePutDto;
 import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
 import br.com.sindy.domain.entity.Address;
 import br.com.sindy.domain.entity.Template;
@@ -55,13 +56,13 @@ public class AssociateServiceImpl implements AssociateService {
     private final ReportService reportService;
     private final TemplateService templateService;
 
-    public Page<AssociateResponseDto> findAll(String query, Pageable pageable) {
+    public Page<AssociateSimplifiedResponseDto> findAll(String query, Pageable pageable) {
         log.info("Listing all associates");
         Page<Associate> associates = associateRepository.findAll(
                 AssociateSpecs.filterFindAll(query),
                 pageable
         );
-        return associates.map(associateMapper::toResponseDto);
+        return associates.map(associateMapper::toSimplifiedResponseDto);
     }
 
     public AssociateResponseDto findById(Long id) {
@@ -75,18 +76,18 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     @Transactional
-    public AssociateResponseDto save(AssociatePostDto dto) {
+    public AssociateSimplifiedResponseDto save(AssociatePostDto dto) {
         log.info("Saving associate: {}", dto);
 
         validateAssociateCreation(dto);
 
         Associate associate = saveAssociate(dto);
 
-        return associateMapper.toResponseDto(associate);
+        return associateMapper.toSimplifiedResponseDto(associate);
     }
 
     @Transactional
-    public AssociateResponseDto update(Long id, AssociatePutDto dto) {
+    public AssociateSimplifiedResponseDto update(Long id, AssociatePutDto dto) {
         log.info("Replacing associate: {}", dto);
 
         validateAssociateUpdating(id, dto);
@@ -95,7 +96,7 @@ public class AssociateServiceImpl implements AssociateService {
         Associate updatedAssociate = getUpdatedAssociate(dto, associate);
 
         associate.update(updatedAssociate);
-        return associateMapper.toResponseDto(associate);
+        return associateMapper.toSimplifiedResponseDto(associate);
     }
 
     @Transactional
@@ -112,13 +113,13 @@ public class AssociateServiceImpl implements AssociateService {
         associate.setProfilePicture(null);
     }
 
-    public Page<AssociateResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
+    public Page<AssociateSimplifiedResponseDto> findAllBirthdayAssociates(Pageable pageable, PeriodEnum period) {
         log.info("Listing all birthday associates");
         Page<Associate> associates = associateRepository.findAll(
                 AssociateSpecs.findAllBirthdayAssociates(period),
                 pageable
         );
-        return associates.map(associateMapper::toResponseDto);
+        return associates.map(associateMapper::toSimplifiedResponseDto);
     }
 
     @Transactional

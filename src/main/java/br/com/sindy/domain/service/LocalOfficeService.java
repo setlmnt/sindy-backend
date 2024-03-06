@@ -1,6 +1,6 @@
 package br.com.sindy.domain.service;
 
-import br.com.sindy.domain.dto.associate.AssociateResponseDto;
+import br.com.sindy.domain.dto.associate.AssociateSimplifiedResponseDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePostDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficePutDto;
 import br.com.sindy.domain.dto.localOffice.LocalOfficeResponseDto;
@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface LocalOfficeService {
-    Page<AssociateResponseDto> listAllAssociates(Long id, Pageable pageable);
+    Page<AssociateSimplifiedResponseDto> listAllAssociates(Long id, Pageable pageable);
 
     LocalOfficeResponseDto findLocalOffice(Long id);
 

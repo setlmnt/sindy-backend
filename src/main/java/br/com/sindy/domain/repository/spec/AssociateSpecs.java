@@ -2,6 +2,7 @@ package br.com.sindy.domain.repository.spec;
 
 import br.com.sindy.domain.entity.associate.Associate;
 import br.com.sindy.domain.enums.PeriodEnum;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +14,8 @@ public class AssociateSpecs {
     public static Specification<Associate> filterFindAll(String filter) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            root.fetch("profilePicture", JoinType.LEFT);
 
             if (!StringUtils.isEmpty(filter)) {
                 predicates.add(builder.or(
