@@ -1,22 +1,16 @@
 package br.com.sindy.domain.service.impl;
 
 import br.com.sindy.core.annotation.Log;
-import br.com.sindy.domain.dto.FileResponseDto;
 import br.com.sindy.domain.entity.File;
 import br.com.sindy.domain.enums.ErrorEnum;
 import br.com.sindy.domain.exception.ApiException;
-import br.com.sindy.domain.mapper.FileMapper;
 import br.com.sindy.domain.repository.FileRepository;
 import br.com.sindy.domain.service.FileService;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,30 +27,9 @@ import java.util.stream.Stream;
 @Slf4j
 @Log
 public class FileServiceImpl implements FileService {
-    private final FileMapper fileMapper;
     private final FileRepository fileRepository;
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
-
-    @Value("${app.upload.images.dir}")
-    private String uploadProfilePictureDir;
-
-    @Value("${app.upload.docs.dir}")
-    private String uploadDocsDir;
-
-    @PostConstruct
-    public void postConstruct() {
-        log.info("Ensuring upload directory exists");
-        ensureUploadDirExists(uploadProfilePictureDir);
-        ensureUploadDirExists(uploadDocsDir);
-    }
-
-    public Page<FileResponseDto> findAll(Pageable pageable) {
-        log.info("Listing all images");
-        return fileRepository.findAll(pageable).map(fileMapper::toResponseDto);
-    }
-
+    @Override
     @Transactional
     public void delete(Long id, String uploadDir) {
         log.info("Deleting image with id {}", id);
@@ -67,7 +40,8 @@ public class FileServiceImpl implements FileService {
         deleteFile(file.getArchiveName(), uploadDir);
     }
 
-    public Resource load(String name) {
+    @Override
+    public Resource load(String name, String uploadDir) {
         log.info("Loading file {}", name);
         Path uploadDirPath = Paths.get(uploadDir);
 
@@ -92,6 +66,7 @@ public class FileServiceImpl implements FileService {
         return null;
     }
 
+    @Override
     @Transactional
     public void store(MultipartFile file, String fileName, String uploadDir) {
         try {
@@ -104,8 +79,9 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
     @Transactional
-    private void deleteFile(String fileName, String uploadDir) {
+    public void deleteFile(String fileName, String uploadDir) {
         try {
             log.info("Deleting file {}", fileName);
             Path filePath = Paths.get(uploadDir).resolve(fileName);
@@ -113,19 +89,6 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             log.error("An error occurred while deleting the file", e);
             throw new ApiException(ErrorEnum.ERROR_WHILE_DELETE_FILE);
-        }
-    }
-
-    private void ensureUploadDirExists(String dir) {
-        Path path = Paths.get(dir);
-        if (!Files.exists(path)) {
-            log.info("Creating upload directory at {}", dir);
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                log.error("An error occurred while creating the upload directory", e);
-                throw new ApiException(ErrorEnum.ERROR_WHILE_CREATING_DIRECTORY);
-            }
         }
     }
 }

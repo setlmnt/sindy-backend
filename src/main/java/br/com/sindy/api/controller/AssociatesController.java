@@ -1,11 +1,13 @@
 package br.com.sindy.api.controller;
 
+import br.com.sindy.core.annotation.FileSize;
+import br.com.sindy.core.annotation.FileType;
 import br.com.sindy.domain.dto.FileResponseDto;
 import br.com.sindy.domain.dto.associate.AssociatePostDto;
 import br.com.sindy.domain.dto.associate.AssociatePutDto;
 import br.com.sindy.domain.dto.associate.AssociateResponseDto;
 import br.com.sindy.domain.enums.PeriodEnum;
-import br.com.sindy.domain.service.AssociatePhotoService;
+import br.com.sindy.domain.service.AssociateFileService;
 import br.com.sindy.domain.service.AssociateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -42,14 +43,8 @@ public class AssociatesController {
     public static final String DOCUMENTS = "documents";
     public static final String DOCUMENT = "document";
 
-    @Value("${app.upload.images.dir}")
-    private String uploadProfilePictureDir;
-
-    @Value("${app.upload.docs.dir}")
-    private String uploadDocsDir;
-
     private final AssociateService associateService;
-    private final AssociatePhotoService associatePhotoService;
+    private final AssociateFileService associateFileService;
 
     @Operation(summary = "Find all associates")
     @GetMapping
@@ -128,7 +123,7 @@ public class AssociatesController {
     @GetMapping(path = "/{associateId}/profile-picture")
     @Cacheable(value = PROFILE_PICTURE, key = "#associateId")
     public FileResponseDto findPhoto(@PathVariable Long associateId) {
-        return associatePhotoService.findByAssociateId(associateId);
+        return associateFileService.findByAssociateId(associateId);
     }
 
     @Operation(summary = "Upload associate photo")
@@ -137,9 +132,9 @@ public class AssociatesController {
     @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS, PROFILE_PICTURE}, allEntries = true)
     public FileResponseDto uploadPhoto(
             @PathVariable Long associateId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") @FileSize @FileType(type = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}) MultipartFile file
     ) {
-        return associatePhotoService.save(associateId, file, uploadProfilePictureDir);
+        return associateFileService.saveProfilePicture(associateId, file);
     }
 
     @Operation(summary = "Delete associate photo")
@@ -147,14 +142,14 @@ public class AssociatesController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS, PROFILE_PICTURE}, allEntries = true)
     public void deletePhoto(@PathVariable Long associateId) {
-        associatePhotoService.delete(associateId, uploadProfilePictureDir);
+        associateFileService.deleteProfilePicture(associateId);
     }
 
     @Operation(summary = "Find associate document by associate id")
     @GetMapping(path = "/{associateId}/documents")
     @Cacheable(value = DOCUMENTS, key = "#associateId")
     public Page<FileResponseDto> findDocuments(@PathVariable Long associateId, Pageable pageable) {
-        return associatePhotoService.findDocumentsByAssociateId(associateId, pageable);
+        return associateFileService.findByAssociateId(associateId, pageable);
     }
 
     @Operation(summary = "Find associate document by associate id and document id")
@@ -164,7 +159,7 @@ public class AssociatesController {
             @PathVariable Long associateId,
             @PathVariable Long documentId
     ) {
-        return associatePhotoService.findDocumentByAssociateIdAndDocumentId(associateId, documentId);
+        return associateFileService.findByAssociateIdAndDocumentId(associateId, documentId);
     }
 
     @Operation(summary = "Upload associate document")
@@ -173,9 +168,9 @@ public class AssociatesController {
     @CacheEvict(value = DOCUMENTS, allEntries = true)
     public FileResponseDto uploadDocument(
             @PathVariable Long associateId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") @FileSize(max = "5MB") @FileType(type = MediaType.APPLICATION_PDF_VALUE) MultipartFile file
     ) {
-        return associatePhotoService.saveDocument(associateId, file, uploadDocsDir);
+        return associateFileService.saveDocument(associateId, file);
     }
 
     @Operation(summary = "Delete associate document")
@@ -186,6 +181,6 @@ public class AssociatesController {
             @PathVariable Long associateId,
             @PathVariable Long documentId
     ) {
-        associatePhotoService.deleteDocument(associateId, documentId, uploadDocsDir);
+        associateFileService.deleteDocument(associateId, documentId);
     }
 }

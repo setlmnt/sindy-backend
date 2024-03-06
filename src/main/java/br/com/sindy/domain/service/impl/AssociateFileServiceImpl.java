@@ -9,8 +9,9 @@ import br.com.sindy.domain.exception.ApiException;
 import br.com.sindy.domain.mapper.FileMapper;
 import br.com.sindy.domain.repository.AssociateRepository;
 import br.com.sindy.domain.repository.FileRepository;
-import br.com.sindy.domain.service.AssociatePhotoService;
+import br.com.sindy.domain.service.AssociateFileService;
 import br.com.sindy.domain.service.FileService;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -29,39 +34,51 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @Log
-public class AssociatePhotoServiceImpl implements AssociatePhotoService {
+public class AssociateFileServiceImpl implements AssociateFileService {
+    @Value("${app.file.url}")
+    private String uploadUrl;
+
+    @Value("${app.upload.images.dir}")
+    private String uploadProfilePictureDir;
+
+    @Value("${app.upload.docs.dir}")
+    private String uploadDocsDir;
+
     private final FileMapper fileMapper;
     private final FileRepository fileRepository;
     private final FileService fileService;
     private final AssociateServiceImpl associateService;
     private final AssociateRepository associateRepository;
 
-    @Value("${app.file.url}")
-    private String uploadUrl;
+    @PostConstruct
+    public void postConstruct() {
+        log.info("Ensuring upload directory exists");
+        ensureUploadDirExists(uploadProfilePictureDir);
+        ensureUploadDirExists(uploadDocsDir);
+    }
 
+    @Override
     public FileResponseDto findByAssociateId(Long id) {
-        log.info("Finding image by associate id {}", id);
+        log.info("Finding file by associate id {}", id);
         File file = fileRepository.findProfilePictureByAssociateId(id)
                 .orElseThrow(() -> new ApiException(ErrorEnum.ASSOCIATE_IMAGE_NOT_FOUND));
         return fileMapper.toResponseDto(file);
     }
 
+    @Override
     @Transactional
-    public FileResponseDto save(Long associateId, MultipartFile file, String uploadDir) {
+    public FileResponseDto saveProfilePicture(Long associateId, MultipartFile file) {
         log.info("Saving associate photo with {}", associateId);
-        // Se tiver, deleta a imagem antiga do produto
-        Optional<File> image = fileRepository.findProfilePictureByAssociateId(associateId);
-        if (image.isPresent()) {
+
+        Optional<File> newFile = fileRepository.findProfilePictureByAssociateId(associateId);
+        if (newFile.isPresent()) {
             log.info("Deleting old associate photo");
-            delete(associateId, uploadDir);
+            deleteProfilePicture(associateId);
             log.info("Old associate photo deleted");
         }
 
         log.info("Uploading associate photo");
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            throw new ApiException(ErrorEnum.FILE_MUST_BE_IMAGE);
-        }
-        FileResponseDto associateImage = upload(associateId, file, uploadDir);
+        FileResponseDto associateImage = upload(associateId, file, uploadProfilePictureDir);
         log.info("Associate photo uploaded");
 
         log.info("Associate Photo saved");
@@ -70,37 +87,52 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         return fileMapper.toResponseDto(savedFile);
     }
 
+    @Override
     @Transactional
-    public void delete(Long associateId, String uploadDir) {
+    public void deleteProfilePicture(Long associateId) {
         log.info("Deleting associate photo with id {}", associateId);
         FileResponseDto fileResponseDto = findByAssociateId(associateId);
         log.info("Deleting associate photo from associate");
         associateService.deleteImage(associateId);
         log.info("Deleting associate photo from directory");
-        fileService.delete(fileResponseDto.id(), uploadDir);
+        fileService.delete(fileResponseDto.id(), uploadProfilePictureDir);
     }
 
-    public Page<FileResponseDto> findDocumentsByAssociateId(Long associateId, Pageable pageable) {
+    @Override
+    public FileResponseDto findByAssociateIdAndDocumentId(Long associateId, Long documentId) {
+        log.info("Finding document by associate id {} and document id {}", associateId, documentId);
+        File file = fileRepository.findByIdAndDeletedFalse(documentId)
+                .orElseThrow(() -> new ApiException(ErrorEnum.DOCUMENT_NOT_FOUND));
+        return fileMapper.toResponseDto(file);
+    }
+
+    @Override
+    @Transactional
+    public void deleteDocument(Long associateId, Long documentId) {
+        log.info("Deleting document with associate id {} and document id {}", associateId, documentId);
+        FileResponseDto fileResponseDto = findByAssociateIdAndDocumentId(associateId, documentId);
+        fileService.delete(fileResponseDto.id(), uploadDocsDir);
+    }
+
+    @Override
+    public Page<FileResponseDto> findByAssociateId(Long associateId, Pageable pageable) {
         log.info("Finding documents by associate id {}", associateId);
         return fileRepository.findImagesByAssociateId(associateId, pageable)
                 .map(fileMapper::toResponseDto);
     }
 
+    @Override
     @Transactional
-    public FileResponseDto saveDocument(Long associateId, MultipartFile file, String uploadDir) {
+    public FileResponseDto saveDocument(Long associateId, MultipartFile file) {
         log.info("Saving document with associate id {}", associateId);
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("application/") && !Objects.requireNonNull(file.getContentType()).startsWith("text/")) {
-            throw new ApiException(ErrorEnum.FILE_MUST_BE_DOCUMENT);
-        }
-
         Associate associate = associateRepository.findById(associateId)
                 .orElseThrow(() -> new ApiException(ErrorEnum.ASSOCIATE_NOT_FOUND));
 
-        FileResponseDto fileResponseDto = upload(associateId, file, uploadDir);
-        File image = fileMapper.responseDtoToEntity(fileResponseDto);
-        image.setAssociate(associate);
+        FileResponseDto fileResponseDto = upload(associateId, file, uploadDocsDir);
+        File newFile = fileMapper.responseDtoToEntity(fileResponseDto);
+        newFile.setAssociate(associate);
 
-        File savedDocument = fileRepository.save(image);
+        File savedDocument = fileRepository.save(newFile);
         return fileMapper.toResponseDto(savedDocument);
     }
 
@@ -108,19 +140,19 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         log.info("Uploading file with id {}", associateId);
         String newFileName = generateNewFilename(associateId, file);
         fileService.store(file, newFileName, uploadDir);
-        File image = getImageFromFile(file, newFileName);
-        return fileMapper.toResponseDto(image);
+        File newFile = getNewFile(file, newFileName);
+        return fileMapper.toResponseDto(newFile);
     }
 
-    private File getImageFromFile(MultipartFile file, String newFileName) {
-        log.info("Getting associate photo from file");
-        File image = new File();
-        image.setOriginalName(file.getOriginalFilename());
-        image.setArchiveName(newFileName);
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setUrl(uploadUrl + "/" + newFileName);
-        return image;
+    private File getNewFile(MultipartFile file, String newFileName) {
+        log.info("Getting new file from {}", file);
+        File newFile = new File();
+        newFile.setOriginalName(file.getOriginalFilename());
+        newFile.setArchiveName(newFileName);
+        newFile.setContentType(file.getContentType());
+        newFile.setSize(file.getSize());
+        newFile.setUrl(uploadUrl + "/" + newFileName);
+        return newFile;
     }
 
     private String generateNewFilename(Long associateId, MultipartFile file) {
@@ -132,17 +164,16 @@ public class AssociatePhotoServiceImpl implements AssociatePhotoService {
         );
     }
 
-    public FileResponseDto findDocumentByAssociateIdAndDocumentId(Long associateId, Long documentId) {
-        log.info("Finding document by associate id {} and document id {}", associateId, documentId);
-        File file = fileRepository.findByIdAndDeletedFalse(documentId)
-                .orElseThrow(() -> new ApiException(ErrorEnum.DOCUMENT_NOT_FOUND));
-        return fileMapper.toResponseDto(file);
-    }
-
-    @Transactional
-    public void deleteDocument(Long associateId, Long documentId, String uploadDir) {
-        log.info("Deleting document with associate id {} and document id {}", associateId, documentId);
-        FileResponseDto fileResponseDto = findDocumentByAssociateIdAndDocumentId(associateId, documentId);
-        fileService.delete(fileResponseDto.id(), uploadDir);
+    private void ensureUploadDirExists(String dir) {
+        Path path = Paths.get(dir);
+        if (!Files.exists(path)) {
+            log.info("Creating upload directory at {}", dir);
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                log.error("An error occurred while creating the upload directory", e);
+                throw new ApiException(ErrorEnum.ERROR_WHILE_CREATING_DIRECTORY);
+            }
+        }
     }
 }
