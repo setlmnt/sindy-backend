@@ -11,7 +11,6 @@ import br.com.sindy.domain.mapper.EmailMapper;
 import br.com.sindy.domain.repository.CommunicationHistoryRepository;
 import br.com.sindy.domain.repository.CommunicationRecipientRepository;
 import br.com.sindy.domain.repository.TemplateRepository;
-import br.com.sindy.domain.repository.spec.CommunicationHistorySpecs;
 import br.com.sindy.domain.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,9 +50,10 @@ public class EmailServiceImpl implements EmailService {
             EmailStatusEnum status,
             Pageable pageable
     ) {
-        // TODO: Problema de N+1 em recipients
-        Page<CommunicationHistory> communicationHistories = communicationHistoryRepository.findAll(
-                CommunicationHistorySpecs.filter(sender, recipient, status),
+        Page<CommunicationHistory> communicationHistories = communicationHistoryRepository.findAllWithFilter(
+                sender,
+                recipient,
+                status,
                 pageable
         );
 
@@ -129,7 +130,7 @@ public class EmailServiceImpl implements EmailService {
         return communicationHistory;
     }
 
-    private List<Template> getEmailTemplates(List<String> names) {
+    private Set<Template> getEmailTemplates(List<String> names) {
         return templateRepository.findByNames(names);
     }
 }

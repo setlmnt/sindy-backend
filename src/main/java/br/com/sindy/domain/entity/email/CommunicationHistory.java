@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 
@@ -38,8 +38,8 @@ public class CommunicationHistory extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "communication_history_id"),
             inverseJoinColumns = @JoinColumn(name = "template_id")
     )
-    private List<Template> templates;
+    private Set<Template> templates;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "communicationHistory")
-    private List<Recipient> recipients;
+    private Set<Recipient> recipients;
 }

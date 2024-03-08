@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface TemplateRepository extends CrudRepository<Template, String> {
@@ -19,5 +20,5 @@ public interface TemplateRepository extends CrudRepository<Template, String> {
     @Query(
             "SELECT et FROM Template et WHERE et.name IN :names AND et.deleted = false"
     )
-    List<Template> findByNames(@Param("names") List<String> names);
+    Set<Template> findByNames(@Param("names") List<String> names);
 }
