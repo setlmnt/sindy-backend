@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Syndicate", description = "Syndicate API")
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 })
 @RequiredArgsConstructor
 public class SyndicateController {
-    public static final String SYNDICATE = "syndicate";
-
     private final SyndicateService syndicateService;
 
     @Operation(summary = "Find syndicate")
     @GetMapping
-    @Cacheable(value = SYNDICATE)
     public SyndicateResponseDto find() {
         return syndicateService.find();
     }
@@ -44,7 +39,6 @@ public class SyndicateController {
 
     @Operation(summary = "Update syndicate")
     @PutMapping
-    @CacheEvict(value = SYNDICATE, allEntries = true)
     public SyndicateResponseDto update(
             @RequestBody @Valid SyndicatePutDto dto
     ) {

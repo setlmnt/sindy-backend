@@ -18,8 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,20 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 })
 @RequiredArgsConstructor
 public class AssociatesController {
-    public static final String ASSOCIATES = "associates";
-    public static final String ASSOCIATE = "associate";
-    public static final String BIRTHDAYS = "birthdays";
-    public static final String LOCAL_OFFICE_ASSOCIATES = "local-office-associates";
-    public static final String PROFILE_PICTURE = "profile-picture";
-    public static final String DOCUMENTS = "documents";
-    public static final String DOCUMENT = "document";
-
     private final AssociateService associateService;
     private final AssociateFileService associateFileService;
 
     @Operation(summary = "Find all associates")
     @GetMapping
-    @Cacheable(value = ASSOCIATES)
     public Page<AssociateSimplifiedResponseDto> findAll(
             @Parameter(description = "Search by name, cpf or union card")
             @RequestParam(required = false) String query,
@@ -60,7 +49,6 @@ public class AssociatesController {
 
     @Operation(summary = "Find associate by id")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Cacheable(value = ASSOCIATE, key = "#id")
     public AssociateResponseDto findAssociateById(@PathVariable Long id) {
         System.out.println("findAssociateById");
         return associateService.findById(id);
@@ -86,7 +74,6 @@ public class AssociatesController {
 
     @Operation(summary = "Find all birthday associates")
     @GetMapping(path = "/birthdays")
-    @Cacheable(value = BIRTHDAYS, key = "#period")
     public Page<AssociateSimplifiedResponseDto> findAllBirthdayAssociates(
             Pageable pageable,
             @RequestParam(required = false, defaultValue = "DAY") PeriodEnum period
@@ -97,14 +84,12 @@ public class AssociatesController {
     @Operation(summary = "Save associate")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = {ASSOCIATES, BIRTHDAYS, LOCAL_OFFICE_ASSOCIATES}, allEntries = true)
     public AssociateSimplifiedResponseDto save(@RequestBody @Valid AssociatePostDto dto) {
         return associateService.save(dto);
     }
 
     @Operation(summary = "Update associate")
     @PutMapping(path = "/{id}")
-    @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS}, allEntries = true)
     public AssociateSimplifiedResponseDto update(
             @PathVariable Long id,
             @RequestBody @Valid AssociatePutDto dto
@@ -115,14 +100,12 @@ public class AssociatesController {
     @Operation(summary = "Delete associate")
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS}, allEntries = true)
     public void delete(@PathVariable Long id) {
         associateService.delete(id);
     }
 
     @Operation(summary = "Find associate photo by associate id")
     @GetMapping(path = "/{associateId}/profile-picture")
-    @Cacheable(value = PROFILE_PICTURE, key = "#associateId")
     public FileResponseDto findPhoto(@PathVariable Long associateId) {
         return associateFileService.findByAssociateId(associateId);
     }
@@ -130,7 +113,6 @@ public class AssociatesController {
     @Operation(summary = "Upload associate photo")
     @PostMapping(path = "/{associateId}/profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS, PROFILE_PICTURE}, allEntries = true)
     public FileResponseDto uploadPhoto(
             @PathVariable Long associateId,
             @RequestParam("file") @FileSize @FileType(type = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}) MultipartFile file
@@ -141,21 +123,18 @@ public class AssociatesController {
     @Operation(summary = "Delete associate photo")
     @DeleteMapping(path = "/{associateId}/profile-picture")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {ASSOCIATES, ASSOCIATE, BIRTHDAYS, PROFILE_PICTURE}, allEntries = true)
     public void deletePhoto(@PathVariable Long associateId) {
         associateFileService.deleteProfilePicture(associateId);
     }
 
     @Operation(summary = "Find associate document by associate id")
     @GetMapping(path = "/{associateId}/documents")
-    @Cacheable(value = DOCUMENTS, key = "#associateId")
     public Page<FileResponseDto> findDocuments(@PathVariable Long associateId, Pageable pageable) {
         return associateFileService.findByAssociateId(associateId, pageable);
     }
 
     @Operation(summary = "Find associate document by associate id and document id")
     @GetMapping(path = "/{associateId}/documents/{documentId}")
-    @Cacheable(value = DOCUMENT, key = "#documentId")
     public FileResponseDto findDocument(
             @PathVariable Long associateId,
             @PathVariable Long documentId
@@ -166,7 +145,6 @@ public class AssociatesController {
     @Operation(summary = "Upload associate document")
     @PostMapping(path = "/{associateId}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = DOCUMENTS, allEntries = true)
     public FileResponseDto uploadDocument(
             @PathVariable Long associateId,
             @RequestParam("file") @FileSize(max = "5MB") @FileType(type = MediaType.APPLICATION_PDF_VALUE) MultipartFile file
@@ -177,7 +155,6 @@ public class AssociatesController {
     @Operation(summary = "Delete associate document")
     @DeleteMapping(path = "/{associateId}/documents/{documentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {DOCUMENTS, DOCUMENT}, allEntries = true)
     public void deleteDocument(
             @PathVariable Long associateId,
             @PathVariable Long documentId

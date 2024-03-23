@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,36 +27,29 @@ import java.security.Principal;
 })
 @RequiredArgsConstructor
 public class UserController {
-    public static final String USERS = "users";
-    public static final String USER = "user";
-
     private final UserService userService;
     private final OtpService otpService;
 
     @Operation(summary = "Find all users")
     @GetMapping
-    @Cacheable(value = USERS)
     public Page<UserResponseDto> findAll(Pageable pageable) {
         return userService.findAll(pageable);
     }
 
     @Operation(summary = "Find user by id")
     @GetMapping("/me")
-    @Cacheable(value = USER, key = "#principal.name")
     public UserResponseDto findById(Principal principal) {
         return userService.findByName(principal.getName());
     }
 
     @Operation(summary = "Update user")
     @PutMapping
-    @CacheEvict(value = {USERS, USER}, allEntries = true)
     public UserResponseDto update(Principal principal, @RequestBody UserPutDto userPutDto) {
         return userService.updateByName(principal.getName(), userPutDto);
     }
 
     @Operation(summary = "Delete user")
     @DeleteMapping
-    @CacheEvict(value = {USERS, USER}, allEntries = true)
     public void delete(Principal principal) {
         userService.deleteByName(principal.getName());
     }
